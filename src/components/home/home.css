@@ -1,0 +1,28 @@
+
+
+
+#navigation{
+    /* margin: 10px; */
+    position: absolute;
+    height: 910px;
+    width: 1400px;
+    gap: 4px;
+    /* border: 7px solid rgba(29, 77, 132, 0.987); */
+}
+.navigate{
+    margin-top: 30px;
+ color: rgba(29, 77, 132, 0.987);
+ font-size: 19px;
+ font-weight: lighter;
+ height: 30px;
+ font-family: Verdana, Geneva, Tahoma, sans-serif;
+ border-color: rgba(253, 253, 253, 0.475);
+ /* border-top: 4px solid rgba(231, 193, 77, 0.257); */
+
+ margin-left: 60px;
+}
+.navigate:hover{
+    border-top: 4px solid rgba(231, 192, 77, 0.646);
+    
+
+}
