@@ -1,9 +1,11 @@
 
 import {createSlice} from '@reduxjs/toolkit'
-import {allSchoolsThunk, getDebtOfSchool, getExpendituresOfSchool, getTotalSumOfSchool} from './getSchoolThunk'
+import {allSchoolsThunk, getDebtOfSchool, getExpendituresOfSchool, getSchoolBySsymbolThunk, getTotalSumOfSchool} from './getSchoolThunk'
+import { addSchoolThunk } from './schoolThunk';
 
 const INITIAL_STATE = {
    allSchools : [],
+   currSchool:{},
    exp : []
 //    schoolDebt :Number
 }
@@ -28,6 +30,10 @@ export const schoolSlice = createSlice({
             console.log("ppp");
             // state.schoolDebt = action.payload
         })
+        builder.addCase(getSchoolBySsymbolThunk.fulfilled, (state,action)=>{
+           
+            state.currSchool = action.payload
+        })
         builder.addCase(getTotalSumOfSchool.fulfilled, (state,action)=>{
             console.log("ppp");
             // state.schoolDebt = action.payload
@@ -37,7 +43,8 @@ export const schoolSlice = createSlice({
             console.log("ppp");
              state.exp = action.payload
         })
-
+        builder.addCase(addSchoolThunk.fulfilled, (state,action)=>{
+        })
 
 
     }

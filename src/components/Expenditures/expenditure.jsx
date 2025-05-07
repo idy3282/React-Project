@@ -11,35 +11,7 @@ export const Expenditure = ()=>{
 
 
 const columns = [
-  // { field: 'id', headerName: 'ID', width: 70 },
-  // { field: 'school Symbol', headerName: 'School Symbol', width: 130 },
-  // { field: 'categoryId', headerName: 'CategoryId', width: 130 },
-  // {
-  //   field: 'supplierNum',
-  //   headerName: 'SupplierNum',
-  //   type: 'number',
-  //   width: 90,
-  // },
-  // {
-  //   field: 'ExpenditureSum',
-  //   headerName: 'סכום הוצאה',
-  //   type: 'money',
-  //   width: 90,
-  // },
-  // {
-  //   field: 'date',
-  //   headerName: 'Date',
-  //   type: 'date',
-  //   width: 150,
-  // },
-  // {
-  //   field: 'ordererName',
-  //   headerName: 'Orderer Name',
-  //   description: 'This column has a value getter and is not sortable.',
-  //   sortable: false,
-  //   width: 160,
-  //   // valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-  // },
+  
 ];
 const expenditures = useSelector(e => e.expenditure.allExpenditures)
 
