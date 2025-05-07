@@ -223,7 +223,11 @@
 
 
 // }
-// // }   
+
+
+
+
+// }   
 
 // import { useEffect } from 'react';
 // import { useSelector, useDispatch } from 'react-redux'
@@ -253,7 +257,7 @@
 // import { allExpendituresThunk } from '../../Redux/Slices/Expenditures/getExpendituresThunk';
 // import { getSupplierNameByLNumThunk } from '../../Redux/Slices/Suplliers/getSupplierThunk';
 
-// export const Exp = () => {
+// export const Expenditures = () => {
 //   const [page, setPage] = React.useState(0);
 //   const [search, setSearch] = React.useState(false);
 //   const [typeSearch, setTypeSearch] = React.useState('');
@@ -583,6 +587,9 @@ import {
   useTheme,
   alpha
 } from '@mui/material';
+
+
+
 import { styled, keyframes } from '@mui/material/styles';
 import { allExpendituresThunk } from '../../Redux/Slices/Expenditures/getExpendituresThunk';
 import { getSupplierNameByLNumThunk } from '../../Redux/Slices/Suplliers/getSupplierThunk';
@@ -614,6 +621,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import TuneIcon from '@mui/icons-material/Tune';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { getSchoolBySsymbolThunk } from '../../Redux/Slices/Schools/getSchoolThunk';
 
 // Animations
 const fadeIn = keyframes`
@@ -788,9 +796,11 @@ export const Exp = () => {
   
   // Redux state
   const currUser = useSelector(u => u.user.currUser);
+  const currSchool = useSelector(s => s.school.currSchool);
   const categories = useSelector(e => e.category.allCategories || []);
-  const expendituresCopy = useSelector(e => e.expenditure.allExpenditures || []);
-  const expenditures = [...expendituresCopy];
+  const allExpenditures = useSelector(e => e.expenditure.allExpenditures || []);
+  var expendituresOfSchool=[];
+  const expenditures = [...expendituresOfSchool];
   
   // Local state
   const [page, setPage] = useState(0);
@@ -932,7 +942,20 @@ export const Exp = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await dispatch(allExpendituresThunk());
+      if(currUser.schoolSymbol != 0) {
+        
+        await dispatch(getSchoolBySsymbolThunk(currUser.schoolSymbol));
+        while(!currSchool);
+            expendituresOfSchool = currSchool.expenditures;
+        console.log("expendForSchool",expendituresOfSchool);
+        console.log("Expenditures",expenditures);
+      } 
+      else {
+        await dispatch(allExpendituresThunk(currUser.schoolSymbol));
+        while(allExpenditures);
+            expendituresOfSchool = allExpenditures;
+      }
+      
       await dispatch(allCategoriesThunk());
       setLoading(false);
     };
@@ -1447,7 +1470,7 @@ export const Exp = () => {
                 {filteredData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    return (
+                    return ((row.schoolSymbol==currUser.schoolSymbol || currUser.schoolSymbol==0) &&  
                       <StyledTableRow 
                         hover 
                         role="checkbox" 
@@ -1869,6 +1892,6 @@ export const Exp = () => {
     );
   };
   
-  // Missing imports
+//   // Missing imports
 
   
