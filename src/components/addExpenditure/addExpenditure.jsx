@@ -1095,6 +1095,7 @@ export const AddExpenditure = () => {
   // Handle success message close
   const handleSuccessClose = () => {
     setSuccess(false);
+    navigate("/work");
   };
 
   // Handle opening supplier dialog

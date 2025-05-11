@@ -1,0 +1,244 @@
+/* ExpStyles.css - עיצוב מודרני לקומפוננטת ההוצאות */
+
+/* עיצוב כללי למיכל הראשי */
+.expenditures-container {
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  /* כותרת הדף */
+  .expenditures-title {
+    font-weight: 700;
+    color: #263238;
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+  }
+  
+  .expenditures-subtitle {
+    color: #546e7a;
+    margin-bottom: 2rem;
+  }
+  
+  /* כפתור חיפוש */
+  .search-button {
+    background-color: #00796b;
+    color: white;
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 1rem;
+  }
+  
+  .search-button:hover {
+    background-color: #00695c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* דיאלוג חיפוש */
+  .search-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  .search-dialog-button {
+    padding: 12px 20px;
+    margin: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    color: #00796b;
+    background-color: rgba(0, 121, 107, 0.08);
+  }
+  
+  .search-dialog-button:hover {
+    background-color: rgba(0, 121, 107, 0.15);
+  }
+  
+  /* שדה קלט */
+  .search-input {
+    border-radius: 30px;
+    padding: 10px 16px;
+    border: 1px solid #e0e0e0;
+    margin: 1rem 0;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .search-input:focus {
+    border-color: #00796b;
+    box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+    outline: none;
+  }
+  
+  /* רשימת תוצאות קטגוריה */
+  .category-results {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+  
+  .category-item {
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .category-item:hover {
+    background-color: rgba(0, 121, 107, 0.08);
+  }
+  
+  /* טבלת הוצאות */
+  .expenditures-table-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .expenditures-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  /* כותרות הטבלה */
+  .expenditures-table-header {
+    background-color: #00796b;
+    color: white;
+  }
+  
+  .expenditures-table-header-cell {
+    padding: 16px;
+    font-weight: 600;
+    text-align: right;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  /* שורות הטבלה */
+  .expenditures-table-row {
+    transition: background-color 0.2s ease;
+  }
+  
+  .expenditures-table-row:nth-child(even) {
+    background-color: rgba(224, 242, 241, 0.3);
+  }
+  
+  .expenditures-table-row:hover {
+    background-color: rgba(0, 121, 107, 0.08);
+  }
+  
+  /* תאי הטבלה */
+  .expenditures-table-cell {
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  /* עיצוב לערכים מספריים */
+  .numeric-cell {
+    text-align: left;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+  }
+  
+  /* עיצוב לקטגוריות */
+  .category-cell {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-weight: 500;
+    color: white;
+    background-color: #00796b;
+  }
+  
+  /* עיצוב לתאריכים */
+  .date-cell {
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  /* עיצוב לפעולות דפדוף */
+  .pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px;
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  /* אנימציות */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  /* מצב טעינה */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    min-height: 200px;
+  }
+  
+  .loading-spinner {
+    border: 4px solid rgba(0, 121, 107, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #00796b;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* מצב ללא נתונים */
+  .no-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+  }
+  
+  .no-data-icon {
+    font-size: 48px;
+    color: #00796b;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+  }
+  
+  .no-data-title {
+    font-weight: 600;
+    color: #263238;
+    margin-bottom: 0.5rem;
+  }
+  
+  .no-data-message {
+    color: #546e7a;
+    margin-bottom: 1.5rem;
+  }
+  
