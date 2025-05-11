@@ -1,3 +1,26 @@
+/**
+ * LogIn component for user authentication in a school budget management system.
+ * 
+ * This component provides a login interface where users can enter their username and user ID.
+ * It handles user authentication by dispatching a Redux thunk to verify user credentials,
+ * and navigates to different routes based on the user's school symbol.
+ * 
+ * @component
+ * @returns {React.ReactElement} A login form with username and password inputs
+ * 
+ * @features
+ * - Password visibility toggle
+ * - Input validation
+ * - Error handling for invalid credentials
+ * - Responsive design with Material-UI components
+ * - Animated login interface
+ * 
+ * @dependencies
+ * - React
+ * - Redux
+ * - React Router
+ * - Material-UI
+ */
 // import { Button, Dialog, Input, styled, useAutocomplete } from "@mui/material"
 // import { useState } from "react"
 // import { useDispatch, useSelector } from "react-redux"
