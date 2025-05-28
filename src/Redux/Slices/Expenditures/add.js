@@ -7,7 +7,7 @@ export const addExpThunk = createAsyncThunk(
       async(exp) => {
 
     
-        const response = await fetch("https://localhost:7086/api/Expenditures/create"
+        const response = await fetch("https://localhost:7222/api/Expenditures/create"
         ,{
             
         method:'POST',

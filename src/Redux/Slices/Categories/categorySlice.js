@@ -1,13 +1,11 @@
 
 import {createSlice} from '@reduxjs/toolkit'
 import { getDebtCategoryThunk, allCategoriesThunk, getCategoryByNameThunk } from './getCategoriesThunk';
-import { addCategoryThunk, updateCategoryThunk } from './categoryThunk';
-import { allDataThunk } from '../AllData/allDataThunk';
+import { addCategoryThunk } from './categoryThunk';
 
 
 const INITIAL_STATE = {
-   allCategories : [],
-   debtOfCategory : 0.00,
+   allCategories : []
 }
 
 export const categorySlice = createSlice({
@@ -21,25 +19,16 @@ export const categorySlice = createSlice({
 
     extraReducers: (builder)=>{
 
-        // builder.addCase(allDataThunk.fulfilled, (state,action)=>{
-        //     state.allCategories = action.payload.categories;
-        //     console.log("in the slice  ",state.allCategories);
-        // })
         builder.addCase(allCategoriesThunk.fulfilled, (state,action)=>{
-            state.allCategories = action.payload;
-            console.log("in the slice  ",state.allCategories);
+            state.allCategories = action.payload
         })
         builder.addCase(getDebtCategoryThunk.fulfilled, (state,action)=>{
-             state.debtOfCategory = action.payload
-             console.log("in the slice  "+state.debtOfCategory);
+            // state.allCategories = action.payload
         })
         builder.addCase(getCategoryByNameThunk.fulfilled, (state,action)=>{
             // state.allCategories = action.payload
         })
         builder.addCase(addCategoryThunk.fulfilled, (state,action)=>{
-            
-        })
-        builder.addCase(updateCategoryThunk.fulfilled, (state,action)=>{
             
         })
     }

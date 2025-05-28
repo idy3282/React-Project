@@ -2,7 +2,6 @@
 import {createSlice} from '@reduxjs/toolkit'
 import { allExpendituresThunk, getExpenditureByIdThunk } from './getExpendituresThunk';
 import { addExpThunk } from './add';
-import { allDataThunk } from '../AllData/allDataThunk';
 
 
 const INITIAL_STATE = {
@@ -23,13 +22,10 @@ export const expenditureSlice = createSlice({
     extraReducers: (builder)=>{
 //מוסיף את התנק שהוא קריאת שרת וכך יכול למלא נתונים 
         builder.addCase(allExpendituresThunk.fulfilled, (state,action)=>{
-            state.allExpenditures = action.payload;
-            console.log("in the slice  ",state.allExpenditures);
+            
+            state.allExpenditures = action.payload
         })
-        // builder.addCase(allDataThunk.fulfilled, (state,action)=>{
-        //     state.allExpenditures = action.payload.expenditures;
-        //     console.log("in the slice  ",state.allExpenditures);
-        // })
+
         builder.addCase(getExpenditureByIdThunk.fulfilled, (state,action)=>{
             
             state.expenditureById = action.payload

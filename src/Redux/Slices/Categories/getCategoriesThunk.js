@@ -7,7 +7,7 @@ export const allCategoriesThunk = createAsyncThunk(
 
    async() => {
     
-    const response = await fetch(`https://localhost:7086/api/Category/GetAllCategories`);
+    const response = await fetch(`https://localhost:7222/api/Category/GetAllCategories`);
         if(response.ok){
 
             const data= await response.json();
@@ -26,7 +26,7 @@ export const getCategoryByNameThunk = createAsyncThunk(
  
     async(name) => {
      
-     const response = await fetch(`https://localhost:7086/api/Category/GetCategoryByName/${name}`);
+     const response = await fetch(`https://localhost:7222/api/Category/GetCategoryByName/${name}`);
      
          if(response.ok){
  
@@ -47,11 +47,11 @@ export const getDebtCategoryThunk = createAsyncThunk(
  
     async(name) => {
      
-     const response = await fetch(`https://localhost:7086/api/Category/GetDebtSum/${name}`);
+     const response = await fetch(`https://localhost:7222/api/Category/GetDebtSum/${name}`);
          if(response.ok){
  
              const data= await response.json();
-             console.log(" חוב thnjujuk"+data);
+             console.log(data);
             return data;
          }
  

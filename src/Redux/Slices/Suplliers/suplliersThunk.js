@@ -9,7 +9,7 @@ export const addSuppThunk = createAsyncThunk(
       async(supp) => {
 
       console.log(supp);
-        const response = await fetch(`https://localhost:7086/api/Supplier`,{
+        const response = await fetch(`https://localhost:7222/api/Supplier`,{
             
         method:'POST',
         body: JSON.stringify(supp),
@@ -21,7 +21,7 @@ export const addSuppThunk = createAsyncThunk(
            if(response.ok){
    
                const data= await response.json();
-               console.log(data+" new supp");
+               console.log(data+" new user");
               return data;
            }
    
