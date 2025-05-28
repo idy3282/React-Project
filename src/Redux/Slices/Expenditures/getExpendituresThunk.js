@@ -7,7 +7,7 @@ export const allExpendituresThunk = createAsyncThunk(
 
    async() => {
     
-    const response = await fetch('https://localhost:7086/api/Expenditures/GetAllExpenditures');
+    const response = await fetch('https://localhost:7222/api/Expenditures/GetAllExpenditures');
         if(response.ok){
 
             const data= await response.json();
@@ -28,7 +28,7 @@ export const getExpenditureByIdThunk = createAsyncThunk(
    
       async(id) => {
        
-       const response = await fetch(`https://localhost:7086/api/Expenditures/GetExpenditureById/${id}`);
+       const response = await fetch(`https://localhost:7222/api/Expenditures/GetExpenditureById/${id}`);
            if(response.ok){
    
                const data= await response.json();

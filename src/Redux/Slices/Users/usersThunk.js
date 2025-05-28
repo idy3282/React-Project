@@ -8,7 +8,7 @@ export const addUserThunk = createAsyncThunk(
       async(user) => {
 
       console.log(user);
-        const response = await fetch("https://localhost:7086/api/User/create",{
+        const response = await fetch("https://localhost:7222/api/User/create",{
             
         method:'POST',
         body: JSON.stringify(user),

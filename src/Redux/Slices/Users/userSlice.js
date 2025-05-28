@@ -2,7 +2,6 @@
 import {createSlice} from '@reduxjs/toolkit'
 import { allUsersThunk, getUserById } from './getUsersThunk';
 import { addUserThunk } from './usersThunk';
-import { allDataThunk } from '../AllData/allDataThunk';
 
 
 
@@ -28,15 +27,8 @@ export const userSlice = createSlice({
 
     extraReducers: (builder)=>{
 
-        // builder.addCase(allDataThunk.fulfilled, (state,action)=>{
-
-        //     state.allUsers = action.payload.users
-        //     console.log("in the slice  ",state.allUsers);
-        // })
         builder.addCase(allUsersThunk.fulfilled, (state,action)=>{
-
             state.allUsers = action.payload
-           
         })
         builder.addCase(addUserThunk.fulfilled, (state,action)=>{
             state.newUser = action.payload

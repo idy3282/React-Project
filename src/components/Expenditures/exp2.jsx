@@ -1732,12 +1732,11 @@ export const Exp = () => {
 
   return (
     <Paper className="expenditures-container" sx={{ 
-      direction: 'rtl',
-      width: '95%', 
+      width: '100%', 
       overflow: 'hidden',
       borderRadius: '16px',
       boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-      marginLeft: '24px'
+      padding: '24px'
     }}>
       <Box sx={{ 
         display: 'flex', 
@@ -2064,4 +2063,4 @@ export const Exp = () => {
   );
 };
 
-// export default Exp;
+export default Exp;
