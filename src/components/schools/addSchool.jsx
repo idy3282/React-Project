@@ -226,7 +226,7 @@ const FormButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const AddSchool = ({ onClose }) => {
+export const AddSchool = ({onClose}) => {
   const dispatch = useDispatch();
   
   // Colors based on your theme
@@ -313,7 +313,7 @@ export const AddSchool = ({ onClose }) => {
   };
   
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2 ,direction: 'rtl'}}>
       <Box sx={{ mb: 3 }}>
         <Typography 
           variant="h6" 
@@ -425,7 +425,7 @@ export const AddSchool = ({ onClose }) => {
         </Grid>
         
         <Grid item xs={12} sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 2 }}>
-          <FormButton
+          <FormButton 
             variant="outlined"
             onClick={onClose}
             disabled={loading}
@@ -442,8 +442,9 @@ export const AddSchool = ({ onClose }) => {
           </FormButton>
           
           <FormButton
+         
             variant="contained"
-            onClick={handleSubmit}
+            onClick={()=>{debugger;handleSubmit(); }}
             disabled={loading}
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
             sx={{
@@ -454,6 +455,7 @@ export const AddSchool = ({ onClose }) => {
               },
             }}
           >
+            
             {loading ? "שומר..." : "הוסף מוסד"}
           </FormButton>
         </Grid>

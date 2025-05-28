@@ -23,7 +23,7 @@ export const Routing = () => {
       <Route path='/' element={<LogIn/>} />
       <Route path='/home' element={<Home/>} />
       <Route path='/expenitures' element={<Exp/>} />
-      <Route path='/users' element={<User/>} />
+      <Route path='/users' element={<User></User>} />
       <Route path='/suppliers' element={<Supplier/>} />
       <Route path='/categories' element={<Category />} />
       <Route path='/schools' element={<School/>} />

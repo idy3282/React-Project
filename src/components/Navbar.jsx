@@ -16,10 +16,11 @@ import {
   useMediaQuery,
   useTheme,
   Menu,
-  MenuItem
+  MenuItem,
+  Popover,
+  Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -30,52 +31,55 @@ import CategoryIcon from '@mui/icons-material/Category';
 import PeopleIcon from '@mui/icons-material/People';
 import SchoolIcon from '@mui/icons-material/School';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useNavigate, useLocation } from 'react-router-dom'; // הוספת useLocation
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Styled components
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    backgroundColor: '#fff',
-    color: '#333',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.08)', // צל יותר בולט
-    height: 70, // גובה גדול יותר לתפריט
-  }));
-  const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-    height: 70, // גובה מותאם לתפריט
-    padding: theme.spacing(0, 3), // ריווח צדדי גדול יותר
-  }));
-  const LogoContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    '& .MuiAvatar-root': {
-      width: 42, // אווטאר גדול יותר
-      height: 42, // אווטאר גדול יותר
-      transition: 'transform 0.3s ease',
-      '&:hover': {
-        transform: 'scale(1.1)', // אפקט הגדלה בעת מעבר עכבר
-      }
-    },
-    '& .MuiTypography-root': {
-      fontSize: '1.3rem', // גודל טקסט גדול יותר
-      fontWeight: 700,
-      marginLeft: theme.spacing(1.5), // מרווח גדול יותר מהאייקון
-    }
-  }));
+  backgroundColor: '#fff',
+  color: '#333',
+  boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+  height: 70,
+}));
 
-  const NavButton = styled(Button)(({ theme }) => ({
-    margin: theme.spacing(0, 1), // מרווח גדול יותר בין הכפתורים
-    padding: theme.spacing(1, 2), // ריווח פנימי גדול יותר
-    fontWeight: 600,
-    fontSize: '0.95rem', // גודל טקסט גדול יותר
-    color: '#555',
-    borderRadius: 8, // פינות מעוגלות יותר
-    transition: 'all 0.2s ease',
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  height: 70,
+  padding: theme.spacing(0, 3),
+}));
+
+const LogoContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'pointer',
+  '& .MuiAvatar-root': {
+    width: 42,
+    height: 42,
+    transition: 'transform 0.3s ease',
     '&:hover': {
-      backgroundColor: 'rgba(0,0,0,0.05)',
-      transform: 'translateY(-2px)', // אפקט הרמה בעת מעבר עכבר
-    },
-  }));
+      transform: 'scale(1.1)',
+    }
+  },
+  '& .MuiTypography-root': {
+    fontSize: '1.3rem',
+    fontWeight: 700,
+    marginLeft: theme.spacing(1.5),
+  }
+}));
+
+const NavButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(0, 1),
+  padding: theme.spacing(1, 2),
+  fontWeight: 600,
+  fontSize: '0.95rem',
+  color: '#555',
+  borderRadius: 0, // שינוי לקו ישר במקום מעוגל
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    transform: 'translateY(-2px)',
+  },
+}));
 
 const DrawerHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -97,14 +101,25 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-const Navbar = () => {
+const UserProfilePopover = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  minWidth: 250,
+  maxWidth: 300,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.spacing(1.5),
+}));
+
+export const Navbar = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const location = useLocation(); // שימוש ב-useLocation
+  const location = useLocation();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [userProfileAnchorEl, setUserProfileAnchorEl] = useState(null);
   
   const currUser = useSelector(s => s.user.currUser);
   
@@ -171,6 +186,14 @@ const Navbar = () => {
     setAnchorEl(null);
   };
   
+  const handleUserProfileOpen = (event) => {
+    setUserProfileAnchorEl(event.currentTarget);
+  };
+  
+  const handleUserProfileClose = () => {
+    setUserProfileAnchorEl(null);
+  };
+  
   const handleNavigate = (path) => {
     navigate(path);
     if (isMobile) {
@@ -181,7 +204,7 @@ const Navbar = () => {
   
   const drawer = (
     <>
-      <DrawerHeader  style={{direction:"rtl"}} >
+      {/* <DrawerHeader style={{direction:"rtl"}}>
         <Avatar
           sx={{
             bgcolor: colors.primary,
@@ -195,7 +218,7 @@ const Navbar = () => {
         <Typography variant="h6" sx={{ fontWeight: 700, color: colors.text }}>
           ניהול הוצאות
         </Typography>
-      </DrawerHeader>
+      </DrawerHeader> */}
       <Divider />
       <List>
         {navigationOptions.map((option, index) => (
@@ -224,7 +247,7 @@ const Navbar = () => {
   return (
     <>
       <StyledAppBar position="fixed">
-        <Toolbar>
+        <StyledToolbar>
           {isMobile ? (
             <>
               <IconButton
@@ -236,7 +259,7 @@ const Navbar = () => {
               >
                 <MenuIcon />
               </IconButton>
-              <LogoContainer onClick={() => navigate('/work')} sx={{ flexGrow: 1 }}>
+              {/* <LogoContainer onClick={() => navigate('/work')} sx={{ flexGrow: 1 }}>
                 <Avatar
                   sx={{
                     bgcolor: colors.primary,
@@ -250,11 +273,11 @@ const Navbar = () => {
                 <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
                   ניהול הוצאות
                 </Typography>
-              </LogoContainer>
+              </LogoContainer> */}
             </>
           ) : (
             <>
-              <LogoContainer onClick={() => navigate('/work')} sx={{ mr: 3 }}>
+              {/* <LogoContainer onClick={() => navigate('/work')} sx={{ mr: 3 }}>
                 <Avatar
                   sx={{
                     bgcolor: colors.primary,
@@ -266,64 +289,42 @@ const Navbar = () => {
                   <SchoolIcon sx={{ fontSize: 20 }} />
                 </Avatar>
                 <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
-                  ניהול הוצאות
+                   הוצאות
                 </Typography>
-              </LogoContainer>
+              </LogoContainer> */}
               
               <Box sx={{ flexGrow: 1, display: 'flex' }}>
-                {navigationOptions.slice(0, 4).map((option, index) => (
+                {/* הצגת כל האפשרויות בתפריט העליון - כולל קטגוריות ומשתמשים */}
+                {navigationOptions.map((option, index) => (
                   <NavButton 
                     key={index}
                     onClick={() => handleNavigate(option.path)}
                     sx={{
-                      borderBottom: location.pathname === option.path ? `3px solid ${option.color}` : 'none',
+                      borderTop: location.pathname === option.path ? `3px solid ${option.color}` : 'none',
                       color: location.pathname === option.path ? option.color : '#555',
                     }}
                   >
                     {option.title}
                   </NavButton>
                 ))}
-                
-                <NavButton
-                  endIcon={<KeyboardArrowDownIcon />}
-                  onClick={handleMenuOpen}
-                >
-                  עוד
-                </NavButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                >
-                  {navigationOptions.slice(4).map((option, index) => (
-                    <MenuItem 
-                      key={index} 
-                      onClick={() => handleNavigate(option.path)}
-                      sx={{
-                        color: option.color,
-                        fontWeight: 500,
-                      }}
-                    >
-                      <ListItemIcon sx={{ color: option.color }}>
-                        {option.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={option.title} />
-                    </MenuItem>
-                  ))}
-                </Menu>
               </Box>
             </>
           )}
           
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* <Typography variant="body2" sx={{ mr: 1, display: { xs: 'none', sm: 'block' } }}>
-              {currUser?.name ? `שלום, ${currUser.name}` : 'שלום, אורח'}
-            </Typography> */}
-            <Avatar sx={{ bgcolor: colors.secondary, width: 35, height: 35 }}>
-              <AccountCircleIcon onClick={()=>alert('פונקציה זו בבנייה')} />
+            <Avatar 
+              sx={{ 
+                bgcolor: colors.secondary, 
+                width: 35, 
+                height: 35,
+                cursor: 'pointer'
+              }}
+              onClick={handleUserProfileOpen}
+            >
+              <AccountCircleIcon />
             </Avatar>
           </Box>
-        </Toolbar>
+        </StyledToolbar>
       </StyledAppBar>
       
       <StyledDrawer
@@ -335,10 +336,65 @@ const Navbar = () => {
         {drawer}
       </StyledDrawer>
       
+      {/* פופאפ פרטי משתמש */}
+      <Popover
+        open={Boolean(userProfileAnchorEl)}
+        anchorEl={userProfileAnchorEl}
+        onClose={handleUserProfileClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <UserProfilePopover>
+          <Avatar
+            sx={{
+              bgcolor: colors.primary,
+              width: 60,
+              height: 60,
+            }}
+          >
+            <PersonIcon sx={{ fontSize: 40 }} />
+          </Avatar>
+          
+          <Typography variant="h6" sx={{ fontWeight: 700, textAlign: 'center' }}>
+            {currUser?.name || 'משתמש'}
+          </Typography>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <EmailIcon fontSize="small" color="action" />
+            <Typography variant="body2">
+              {currUser?.email || 'אין מידע על אימייל'}
+            </Typography>
+          </Box>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <PeopleIcon fontSize="small" color="action" />
+            <Typography variant="body2">
+              {currUser?.role === 1 ? 'מנהל' : 'משתמש רגיל'}
+            </Typography>
+          </Box>
+          
+          <Divider sx={{ width: '100%', my: 1 }} />
+          
+          <Button 
+            variant="outlined" 
+            color="primary" 
+            size="small"
+            onClick={handleUserProfileClose}
+            fullWidth
+          >
+            סגור
+          </Button>
+        </UserProfilePopover>
+      </Popover>
+      
       {/* Add toolbar spacing to prevent content from hiding under the AppBar */}
       <Toolbar />
     </>
   );
 };
-
-export default Navbar;
