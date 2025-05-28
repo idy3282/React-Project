@@ -549,6 +549,7 @@ export const LogIn = () => {
   
   const checkUser = async () => {
     // Validate inputs
+    debugger;
     if (!name.trim() || !id.trim()) {
       setMsg(true);
       return;
@@ -559,17 +560,30 @@ export const LogIn = () => {
       setMsg(false);
       
       const u = await dispatch(getUserById(parseInt(id)));
-      
-      if ((u.userName != name) || u.payload != undefined && u.payload.id > 0) {
+
+
+      if(u.payload.userName === name  && u.payload != undefined) {
         if (u.payload.schoolSymbol == 0) {
           navigate('home');
         } else if (u.payload.schoolSymbol != 0) {
           navigate('/work');
         }
-      } else {
-        u.payload = undefined;
-        setMsg(true);
+        
+        
       }
+       else {
+          u.payload = undefined;
+          setMsg(true);}
+      // if ((u.userName === name) || u.payload != undefined && u.payload.id > 0) {
+      //   if (u.payload.schoolSymbol == 0) {
+      //     navigate('home');
+      //   } else if (u.payload.schoolSymbol != 0) {
+      //     navigate('/work');
+      //   }
+      // } else {
+      //   u.payload = undefined;
+      //   setMsg(true);
+      // }
       
       setId("");
     } catch (error) {
@@ -587,7 +601,7 @@ export const LogIn = () => {
   };
   
   return (
-    <LoginContainer maxWidth="xl">
+    <LoginContainer maxWidth="xl" sx={{direction: 'rtl'}}>
       <Zoom in={mounted} timeout={800}>
         <LoginCard elevation={0}>
           <LoginForm>

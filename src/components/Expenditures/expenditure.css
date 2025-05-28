@@ -2,6 +2,7 @@
 
 /* עיצוב כללי למיכל הראשי */
 .expenditures-container {
+  direction: rtl;
     background-color: #f8f9fa;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);

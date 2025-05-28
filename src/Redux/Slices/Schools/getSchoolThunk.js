@@ -27,7 +27,7 @@ export const getExpendituresOfSchool = createAsyncThunk(
  
     async(schoolSymbol) => {
      
-     const response = await fetch(`https://localhost:7222/api/School/GetExpenditures/${schoolSymbol}`);
+     const response = await fetch(`https://localhost:7086/api/School/GetExpenditures/${schoolSymbol}`);
          if(response.ok){
  
              const data= await response.json();
@@ -45,7 +45,7 @@ export const getExpendituresOfSchool = createAsyncThunk(
  
     async(schoolSymbol) => {
      
-     const response = await fetch(`https://localhost:7222/api/School/GetSchoolBySymbol/${schoolSymbol}`);
+     const response = await fetch(`https://localhost:7086/api/School/GetSchoolBySymbol/${schoolSymbol}`);
          if(response.ok){
  
              const data= await response.json();
@@ -65,7 +65,7 @@ export const getDebtOfSchool = createAsyncThunk(
  
     async(name) => {
      
-     const response = await fetch(`https://localhost:7222/api/School/GetDebtOfSchool/${name}`);
+     const response = await fetch(`https://localhost:7086/api/School/GetDebtOfSchool/${name}`);
          if(response.ok){
  
              const data= await response.json();
@@ -83,7 +83,7 @@ export const getDebtOfSchool = createAsyncThunk(
  
     async(name) => {
      
-     const response = await fetch(`'https://localhost:7222/api/School/GetSumOfEpendituresOfSchool/${name}`);
+     const response = await fetch(`https://localhost:7086/api/School/GetSumOfEpendituresOfSchool/${name}`);
          if(response.ok){
  
              const data= await response.json();
@@ -101,7 +101,7 @@ export const getDebtOfSchool = createAsyncThunk(
  
     async(name) => {
      
-     const response = await fetch(`https://localhost:7222/api/School/GetSumOfEpendituresOfSchool/${name}`);
+     const response = await fetch(`https://localhost:7086/api/School/GetSumOfEpendituresOfSchool/${name}`);
          if(response.ok){
  
              const data= await response.json();

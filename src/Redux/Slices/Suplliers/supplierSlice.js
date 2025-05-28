@@ -2,6 +2,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import { allSupplierThunk, getSupplierByNameThunk, getSupplierNameByLNumThunk } from './getSupplierThunk';
 import { addSuppThunk } from './suplliersThunk';
+import { allDataThunk } from '../AllData/allDataThunk';
 
 
 
@@ -20,8 +21,13 @@ export const supplierSlice = createSlice({
 
     extraReducers: (builder)=>{
 
+        // builder.addCase(allDataThunk.fulfilled, (state,action)=>{
+        //     state.allSuppliers = action.payload.suppliers
+        //     console.log("in the slice  ",state.allSuppliers);
+        // })
         builder.addCase(allSupplierThunk.fulfilled, (state,action)=>{
             state.allSuppliers = action.payload
+            console.log("in the slice  ",state.allSuppliers);
         })
 
         builder.addCase(getSupplierByNameThunk.fulfilled, (state,action)=>{
@@ -33,6 +39,11 @@ export const supplierSlice = createSlice({
         builder.addCase(addSuppThunk.fulfilled, (state,action)=>{
             console.log(action.payload);
         })
+        builder.addCase(addSuppThunk.rejected, (state,action)=>{
+            console.log("lui",action.payload);
+        })
+        
+
     }
 });
 

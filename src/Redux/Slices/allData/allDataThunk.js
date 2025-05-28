@@ -1,58 +1,21 @@
+import {createAsyncThunk} from '@reduxjs/toolkit'
 
-// // function App() {
-// //     const [ response , setResponse ] = useState();
-// //     const [ btnText , setbtnText ] = useState('Get Data');
-// //     const [ details , setDetails ] = useState();
+export const allDataThunk = createAsyncThunk(
+
+ 'allDataThunk',
+
+   async() => {
     
-//   export const allDataThunk =createAsyncThunk(
-//     'allDataThunk',
-//    async()=>{
-//     try {
-//       await fetch('url hidden' , {
-//         method: 'POST',
-//         header: {'Content-Type': 'application/json'},
-//       }).then(res => res.json())
-//         .then(res => setResponse(res))
-  
-//       await fetch('url hidden' , {
-//         method: 'POST',
-//         header: {'Content-Type': 'application/json'},
-//       }).then(res => res.json())
-//         .then(res => setDetails(res))
-  
-//     } catch (error) {
-//       console.log(error);
-//     };
-//   }
-//     console.log(response)
-  
-//     return (
-//       <div className="container">
-//         <header className='header'>
-//           <button onClick={fetchData}>{btnText}</button>
-//         </header>
-//         <Summary response={response} details={details} />
-//       </div>
-//     );
-//       )
+    const response = await fetch(`https://localhost:7086/GetAllData`);
+        if(response.ok){
+console.log("allData  "+response);
+            const data= await response.json();
+           return data;
+        }
 
-// //   export const allCategoriesThunk = createAsyncThunk(
+        else throw new Error('failed')
+        
 
-// //     'allCategoriesThunk',
-   
-// //       async() => {
-       
-// //        const response = await fetch(`https://localhost:7222/api/Category/GetAllCategories`);
-// //            if(response.ok){
-   
-// //                const data= await response.json();
-// //                console.log(data);
-// //               return data;
-// //            }
-   
-// //            else throw new Error('failed')
-           
-   
-   
-// //     }
-// //    );
+
+ }
+);

@@ -7,7 +7,7 @@ export const allSupplierThunk = createAsyncThunk(
 
    async() => {
     
-    const response = await fetch(`https://localhost:7222/api/Supplier/Get`);
+    const response = await fetch(`https://localhost:7086/api/Supplier/Get`);
     
         if(response.ok){
 
@@ -29,7 +29,7 @@ export const getSupplierByNameThunk = createAsyncThunk(
  
     async(name) => {
      
-     const response = await fetch(`https://localhost:7222/api/Supplier/GetSupplierByName/${name}`);
+     const response = await fetch(`https://localhost:7086/api/Supplier/GetSupplierByName/${name}`);
      
          if(response.ok){
  
@@ -51,7 +51,7 @@ export const getSupplierByNameThunk = createAsyncThunk(
  
     async(lNum) => {
      
-     const response = await fetch(`https://localhost:7222/api/Supplier/GetSupplierByName/${lNum}`);
+     const response = await fetch(`https://localhost:7086/api/Supplier/GetSupplierByName/${lNum}`);
      
          if(response.ok){
  

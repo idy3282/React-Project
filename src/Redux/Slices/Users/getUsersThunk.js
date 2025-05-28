@@ -7,7 +7,7 @@ export const allUsersThunk = createAsyncThunk(
 
    async() => {
 
-    const response = await fetch(`https://localhost:7222/api/User`);
+    const response = await fetch(`https://localhost:7086/api/User`);
         if(response.ok){
 
             const data= await response.json();
@@ -27,7 +27,7 @@ export const getUserById = createAsyncThunk(
  
     async(id) => {
  
-     const response = await fetch(`https://localhost:7222/api/User/${id}`);
+     const response = await fetch(`https://localhost:7086/api/User/${id}`);
          if(response.ok){
  
              const data= await response.json();

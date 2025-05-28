@@ -1,328 +1,387 @@
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import './home.css';
+             
 
-import { allCategoriesThunk } from "../../Redux/Slices/Categories/getCategoriesThunk";
-import { allSupplierThunk } from "../../Redux/Slices/Suplliers/getSupplierThunk";
-import { allUsersThunk } from "../../Redux/Slices/Users/getUsersThunk";
-import { allSchoolsThunk } from "../../Redux/Slices/Schools/getSchoolThunk";
 
-import {
-  Box,
-  Container,
-  Typography,
-  Paper,
-  Grid,
-  Button,
-  Avatar,
-  useTheme,
-  Card,
-  CardContent,
-  CardActionArea,
-  Chip,
-  Tabs,
-  Tab,
-  Divider,
-  IconButton
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import BusinessIcon from "@mui/icons-material/Business";
-import CategoryIcon from "@mui/icons-material/Category";
-import PeopleIcon from "@mui/icons-material/People";
-import SchoolIcon from "@mui/icons-material/School";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import SettingsIcon from "@mui/icons-material/Settings";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import BuildIcon from "@mui/icons-material/Build";
 
-// Styled components with updated theme
-const PageContainer = styled(Box)(({ theme }) => ({
-  minHeight: "100vh",
-  background: "#f8f9fa",
-  paddingTop: theme.spacing(4),
-  paddingBottom: theme.spacing(4),
-}));
-
-const ContentContainer = styled(Container)(({ theme }) => ({
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(4),
-}));
-
-const WelcomeSection = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  textAlign: "center",
-  padding: theme.spacing(4, 0),
-  background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(247,247,247,0.5) 100%)",
-  borderRadius: 16,
-}));
-
-const FeatureCard = styled(Card)(({ theme }) => ({
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  borderRadius: 16,
-  overflow: "hidden",
-  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-  border: "1px solid #e0e0e0",
-  "&:hover": {
-    transform: "translateY(-8px)",
-    boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
-  },
-}));
-
-const StatsCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  borderRadius: 16,
-  background: "#fff",
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  border: "1px solid #e0e0e0",
-  transition: "transform 0.3s ease",
-  "&:hover": {
-    transform: "translateY(-5px)",
-    boxShadow: "0 8px 16px rgba(0,0,0,0.05)",
-  },
-}));
-
-const ActionButton = styled(Button)(({ theme }) => ({
-  borderRadius: 30,
-  padding: "10px 24px",
-  fontWeight: 700,
-  textTransform: "none",
-  fontSize: "1rem",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-  transition: "all 0.3s ease",
-  "&:hover": {
-    transform: "translateY(-2px)",
-    boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
-  },
-}));
-
-const SchoolCard = styled(Card)(({ theme }) => ({
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  borderRadius: 16,
-  overflow: "hidden",
-  transition: "all 0.3s ease",
-  border: "1px solid #e0e0e0",
-  "&:hover": {
-    transform: "translateY(-5px)",
-    boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
-  },
-}));
-
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
-  );
-};
-
-export const Home = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const theme = useTheme();
-  const [tabValue, setTabValue] = useState(0);
-  
-  const schools = useSelector(s => s.school?.allSchools || []);
-  const categories = useSelector(s => s.category?.allCategories || []);
-  const suppliers = useSelector(s => s.supplier?.allSuppliers || []);
-  const users = useSelector(s => s.user?.allUsers || []);
-  const currUser = useSelector(s => s.user?.currUser || {});
-
-  const getData = async () => {
-    await dispatch(allCategoriesThunk());
-    await dispatch(allSupplierThunk());
-    await dispatch(allUsersThunk());
-    // Assuming you have a thunk for schools
-    if (allSchoolsThunk) {
-      await dispatch(allSchoolsThunk());
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
-  // Updated color palette with muted amber/orange
-  const colors = {
-    primary: "#0288d1", // Blue
-    primaryLight: "#5eb8ff",
-    primaryDark: "#005b9f",
-    secondary: "#009688", // Teal/Turquoise
-    secondaryLight: "#52c7b8",
-    secondaryDark: "#00675b",
-    accent: "#f0a030", // Muted amber/orange
-    accentLight: "#ffcf60",
-    accentDark: "#c67100",
-    text: "#263238",
-    textLight: "#546e7a",
-    background: "#f5f5f5",
-    card: "#ffffff",
-    border: "#e0e0e0",
-    success: "#4caf50",
-    warning: "#ff9800",
-    error: "#f44336",
-    info: "#2196f3",
-  };
-
-  // Navigation options with updated colors - no images, 6 options
-  const navigationOptions = [
-    {
-      title: "ניהול ספקים",
-      description: "צפייה וניהול של ספקים במערכת",
-      icon: <BusinessIcon sx={{ fontSize: 40 }} />,
-      color: colors.primary,
-      path: "/suppliers",
-      gradient: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
-    },
-    {
-      title: "ניהול משתמשים",
-      description: "ניהול הרשאות ומשתמשים בכל המוסדות",
-      icon: <PeopleIcon sx={{ fontSize: 40 }} />,
-      color: colors.secondary,
-      path: "/users",
-      gradient: `linear-gradient(135deg, ${colors.secondary}30 0%, ${colors.secondaryLight}30 100%)`,
-    },
-    {
-      title: "ניהול קטגוריות",
-      description: "הגדרת קטגוריות הוצאה למערכת כולה",
-      icon: <CategoryIcon sx={{ fontSize: 40 }} />,
-      color: colors.accent,
-      path: "/categories",
-      gradient: `linear-gradient(135deg, ${colors.accent}30 0%, ${colors.accentLight}30 100%)`,
-    },
-    {
-      title: "דוחות מערכת",
-      description: "צפייה בדוחות מרוכזים מכל המוסדות",
-      icon: <AssessmentIcon sx={{ fontSize: 40 }} />,
-      color: colors.primaryDark,
-      path: "/reports",
-      gradient: `linear-gradient(135deg, ${colors.primaryDark}30 0%, ${colors.primary}30 100%)`,
-    },
-    {
-      title: "ניהול מוסדות",
-      description: "צפייה וניהול של כל המוסדות במערכת",
-      icon: <SchoolIcon sx={{ fontSize: 40 }} />,
-      color: colors.secondaryDark,
-      path: "/schools",
-      gradient: `linear-gradient(135deg, ${colors.secondaryDark}30 0%, ${colors.secondary}30 100%)`,
-    },
-    {
-      title: "ניהול תקציבים",
-      description: "הקצאת תקציבים וניהול תקציבי המוסדות",
-      icon: <LocalAtmIcon sx={{ fontSize: 40 }} />,
-      color: colors.accentDark,
-      path: "/budgets",
-      gradient: `linear-gradient(135deg, ${colors.accentDark}30 0%, ${colors.accent}30 100%)`,
-    },
-  ];
-
-  return (
-    <PageContainer>
-      <ContentContainer maxWidth="lg">
-        {/* Welcome Section with gradient background */}
-        <WelcomeSection>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
-            <Avatar
-              sx={{
-                background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-                width: 90,
-                height: 90,
-                mb: 3,
-                boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
-              }}
+        import React, { useEffect, useState } from "react";
+        import { useDispatch, useSelector } from "react-redux";
+        import { useNavigate } from "react-router-dom";
+        import './home.css';
+        
+        import { allCategoriesThunk } from "../../Redux/Slices/Categories/getCategoriesThunk";
+        import { allSupplierThunk } from "../../Redux/Slices/Suplliers/getSupplierThunk";
+        import { allUsersThunk } from "../../Redux/Slices/Users/getUsersThunk";
+        import { allSchoolsThunk } from "../../Redux/Slices/Schools/getSchoolThunk";
+        
+        import {
+          Box,
+          Container,
+          Typography,
+          Paper,
+          Grid,
+          Button,
+          Avatar,
+          useTheme,
+          Card,
+          CardContent,
+          CardActionArea,
+          Chip,
+          Tabs,
+          Tab,
+          Divider,
+          IconButton,
+          Stack
+        } from "@mui/material";
+        import { styled } from "@mui/material/styles";
+        import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+        import ListAltIcon from "@mui/icons-material/ListAlt";
+        import BusinessIcon from "@mui/icons-material/Business";
+        import CategoryIcon from "@mui/icons-material/Category";
+        import PeopleIcon from "@mui/icons-material/People";
+        import SchoolIcon from "@mui/icons-material/School";
+        import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+        import ReceiptIcon from "@mui/icons-material/Receipt";
+        import BarChartIcon from "@mui/icons-material/BarChart";
+        import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+        import DashboardIcon from "@mui/icons-material/Dashboard";
+        import InfoIcon from "@mui/icons-material/Info";
+        import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+        import AssessmentIcon from "@mui/icons-material/Assessment";
+import { allDataThunk } from "../../Redux/Slices/AllData/allDataThunk";
+        
+        // Styled components
+        const PageContainer = styled(Box)(({ theme }) => ({
+          minHeight: "100vh",
+          background: "#f8f9fa",
+          paddingTop: theme.spacing(4),
+          paddingBottom: theme.spacing(4),
+        }));
+        
+        const ContentContainer = styled(Container)(({ theme }) => ({
+          paddingTop: theme.spacing(2),
+          paddingBottom: theme.spacing(4),
+        }));
+        
+        const WelcomeSection = styled(Box)(({ theme }) => ({
+          marginBottom: theme.spacing(4),
+          textAlign: "center",
+          padding: theme.spacing(4, 0),
+          background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(247,247,247,0.5) 100%)",
+          borderRadius: 16,
+        }));
+        
+        const FeatureCard = styled(Card)(({ theme }) => ({
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 16,
+          overflow: "hidden",
+          transition: "transform 0.3s ease, box-shadow 0.3s ease",
+          border: "1px solid #e0e0e0",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+          "&:hover": {
+            transform: "translateY(-8px)",
+            boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+          },
+        }));
+        
+        const StatsCard = styled(Paper)(({ theme }) => ({
+          padding: theme.spacing(3),
+          borderRadius: 16,
+          background: "#fff",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "1px solid #e0e0e0",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+          transition: "transform 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-5px)",
+            boxShadow: "0 8px 16px rgba(0,0,0,0.05)",
+          },
+        }));
+        
+        const ActionButton = styled(Button)(({ theme }) => ({
+          borderRadius: 30,
+          padding: "10px 24px",
+          fontWeight: 700,
+          textTransform: "none",
+          fontSize: "1rem",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+          transition: "all 0.3s ease",
+          fontFamily: 'Rubik, sans-serif',
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
+          },
+        }));
+        
+        const SchoolCard = styled(Card)(({ theme }) => ({
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 16,
+          overflow: "hidden",
+          transition: "all 0.3s ease",
+          border: "1px solid #e0e0e0",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+          "&:hover": {
+            transform: "translateY(-5px)",
+            boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+          },
+        }));
+        
+        const TabPanel = (props) => {
+          const { children, value, index, ...other } = props;
+          return (
+            <div
+              role="tabpanel"
+              hidden={value !== index}
+              id={`simple-tabpanel-${index}`}
+              aria-labelledby={`simple-tab-${index}`}
+              {...other}
             >
-              <DashboardIcon sx={{ fontSize: 55, color: "white" }} />
-            </Avatar>
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 800,
-                color: colors.text,
-                mb: 2,
-                textAlign: "center",
-              }}
-            >
-              ברוך הבא למערכת ניהול המוסדות
+              {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+            </div>
+          );
+        };
+        
+        export const Home = () => {
+          const navigate = useNavigate();
+          const dispatch = useDispatch();
+          const theme = useTheme();
+          const [tabValue, setTabValue] = useState(0);
+          
+          const schools = useSelector(s => s.school?.allSchools || []);
+          const categories = useSelector(s => s.category?.allCategories || []);
+          const suppliers = useSelector(s => s.supplier?.allSuppliers || []);
+          const users = useSelector(s => s.user?.allUsers || []);
+          // const allData = useSelector(s => s.allData?.allData || [{}]);
+
+          const currUser = useSelector(s => s.user?.currUser || {});
+        
+          const getData = async () => {
+            await dispatch(allCategoriesThunk());
+            await dispatch(allSupplierThunk());
+            await dispatch(allUsersThunk());
+            if (allSchoolsThunk) {
+              await dispatch(allSchoolsThunk());
+            }
+
+            // await dispatch(allDataThunk());
+          };
+        
+          useEffect(() => {
+            getData();
+          }, []);
+        
+          const handleTabChange = (event, newValue) => {
+            setTabValue(newValue);
+          };
+        
+          // Institution color palette - Teal and Blue accents
+          const colors = {
+            primary: "#00796b", // Teal
+            primaryLight: "#48a999",
+            primaryDark: "#004c40",
+            secondary: "#115293", // Deep Blue
+            secondaryLight: "#4f83cc",
+            secondaryDark: "#002f6c",
+            text: "#263238",
+            textLight: "#546e7a",
+            background: "#f5f5f5",
+            card: "#ffffff",
+            border: "#e0e0e0",
+            success: "#4caf50",
+            warning: "#ff9800",
+            error: "#f44336",
+            info: "#2196f3",
+          };
+        
+          // Navigation options with updated colors
+          const navigationOptions = [
+            {
+              title: "ניהול ספקים",
+              description: "צפייה וניהול של ספקים במערכת",
+              icon: <BusinessIcon sx={{ fontSize: 40 }} />,
+              color: colors.primary,
+              path: "/suppliers",
+              gradient: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
+            },
+            {
+              title: "ניהול משתמשים",
+              description: "ניהול הרשאות ומשתמשים בכל המוסדות",
+              icon: <PeopleIcon sx={{ fontSize: 40 }} />,
+              color: colors.secondary,
+              path: "/users",
+              gradient: `linear-gradient(135deg, ${colors.secondary}30 0%, ${colors.secondaryLight}30 100%)`,
+            },
+            {
+              title: "ניהול קטגוריות",
+              description: "הגדרת קטגוריות הוצאה למערכת כולה",
+              icon: <CategoryIcon sx={{ fontSize: 40 }} />,
+              color: colors.primaryLight,
+              path: "/categories",
+              gradient: `linear-gradient(135deg, ${colors.primaryLight}30 0%, ${colors.primary}30 100%)`,
+            },
+            {
+              title: "דוחות מערכת",
+              description: "צפייה בדוחות מרוכזים מכל המוסדות",
+              icon: <AssessmentIcon sx={{ fontSize: 40 }} />,
+              color: colors.secondaryLight,
+              path: "/reports",
+              gradient: `linear-gradient(135deg, ${colors.secondaryLight}30 0%, ${colors.secondary}30 100%)`,
+            },
+            {
+              title: "ניהול מוסדות",
+              description: "צפייה וניהול של כל המוסדות במערכת",
+              icon: <SchoolIcon sx={{ fontSize: 40 }} />,
+              color: colors.primaryDark,
+              path: "/schools",
+              gradient: `linear-gradient(135deg, ${colors.primaryDark}30 0%, ${colors.primary}30 100%)`,
+            },
+            {
+              title: "ניהול תקציבים",
+              description: "הקצאת תקציבים וניהול תקציבי המוסדות",
+              icon: <LocalAtmIcon sx={{ fontSize: 40 }} />,
+              color: colors.secondaryDark,
+              path: "/budgets",
+              gradient: `linear-gradient(135deg, ${colors.secondaryDark}30 0%, ${colors.secondary}30 100%)`,
+            },
+          ];
+        
+          return (
+            <PageContainer sx={{direction: "rtl"}}>
+              <ContentContainer maxWidth="lg">
+                {/* Header */}
+                <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Avatar
+                      sx={{
+                        bgcolor: `${colors.primary}15`,
+                        color: colors.primary,
+                        width: 55,
+                        height: 55,
+                        mr: 2,
+                        ml: 3
+                      }}
+                    >
+                      <DashboardIcon sx={{ fontSize: 29 }} />
+                    </Avatar>
+                    <Box>
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontWeight: 800,
+                          color: colors.text,
+                          fontFamily: 'Rubik, sans-serif',
+                        }}
+                      >
+                        מערכת ניהול המוסדות
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: colors.textLight,
+                          fontFamily: 'Rubik, sans-serif',
+                        }}
+                      >
+                        {currUser?.name ? `שלום ${currUser.name}, ` : ""}
+                        ברוך הבא למערכת ניהול המוסדות והתקציבים
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+        
+                {/* Quick Actions */}
+                <Box sx={{ mb: 4, display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+                  <ActionButton
+                    variant="contained"
+                    startIcon={<AddCircleOutlineIcon />}
+                    sx={{
+                      bgcolor: colors.primary,
+                      color: "white",
+                      "&:hover": {
+                        bgcolor: colors.primaryDark,
+                      },
+                    }}
+                    onClick={() => navigate("/addExpenditure")}
+                  >
+                    הוספת הוצאה
+                  </ActionButton>
+                  <ActionButton
+                    variant="outlined"
+                    startIcon={<ListAltIcon />}
+                    sx={{
+                      borderColor: colors.primary,
+                      color: colors.primary,
+                      "&:hover": {
+                        borderColor: colors.primaryDark,
+                        bgcolor: `${colors.primary}10`,
+                      },
+                    }}
+                    onClick={() => navigate("/expenitures")}
+                  >
+                    רשימת הוצאות
+                  </ActionButton>
+                  <ActionButton
+                    variant="outlined"
+                    startIcon={<BarChartIcon />}
+                    sx={{
+                      borderColor: colors.secondary,
+                      color: colors.secondary,
+                      "&:hover": {
+                        borderColor: colors.secondaryDark,
+                        bgcolor: `${colors.secondary}10`,
+                      },
+                    }}
+                    onClick={() => navigate("/reports")}
+                  >
+                    דוחות וסטטיסטיקות
+                  </ActionButton>
+                </Box>
+        
+                {/* Information Card */}
+                <Box sx={{ mb: 4 }}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      borderRadius: 16,
+                      border: `1px dashed ${colors.primary}`,
+                      bgcolor: `${colors.primary}08`,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        fontWeight: 700, 
+                        color: colors.text, 
+                        mb: 1, 
+                        fontFamily: 'Rubik, sans-serif',
+                        display: "flex",
+                        alignItems: "center"
+                      }}
+                    >
+                      <InfoIcon sx={{ mr: 1, color: colors.primary }} />
+                      מידע מערכתי
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: colors.textLight, fontFamily: 'Rubik, sans-serif', mb: 1 }}>
+                      • במערכת רשומים {schools?.length || 0} מוסדות, {suppliers?.length || 0} ספקים, {categories?.length || 0} קטגוריות ו-{users?.length || 0} משתמשים
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: colors.textLight, fontFamily: 'Rubik, sans-serif', mb: 1 }}>
+                      • באפשרותך לנהל את כל המוסדות, התקציבים וההוצאות במערכת בצורה מרוכזת
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: colors.textLight, fontFamily: 'Rubik, sans-serif' }}>
+              • השתמש בלשוניות למטה כדי לנווט בין אפשרויות הניהול השונות
             </Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                color: colors.textLight,
-                textAlign: "center",
-                fontWeight: 500,
-                maxWidth: 800,
-                mx: "auto",
-                mb: 4
-              }}
-            >
-              {currUser?.name ? `${currUser.name}, ` : ""}
-              כאן תוכל לנהל את כל המוסדות, התקציבים וההוצאות במערכת בצורה מרוכזת
-            </Typography>
-            
-            {/* Quick Actions - 2 buttons */}
-            <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center", mb: 4 }}>
-              <ActionButton
-                variant="outlined"
-                startIcon={<BarChartIcon />}
-                sx={{
-                  borderColor: colors.primary,
-                  color: colors.primary,
-                  "&:hover": {
-                    borderColor: colors.primaryDark,
-                    bgcolor: `${colors.primary}10`,
-                  },
-                }}
-                onClick={() => navigate("/schools")}
-              >
-                לקבלת נתונים
-              </ActionButton>
-              <ActionButton
-                variant="contained"
-                startIcon={<ListAltIcon />}
-                sx={{
-                  bgcolor: colors.accent,
-                  color: "white",
-                  "&:hover": {
-                    bgcolor: colors.accentDark,
-                  },
-                }}
-                onClick={() => navigate("/expenitures")}
-              >
-                לכל ההוצאות
-              </ActionButton>
-            </Box>
-          </Box>
-        </WelcomeSection>
+          </Paper>
+        </Box>
 
-        {/* Tabs Section with updated colors */}
+        {/* Tabs Section */}
         <Box sx={{ 
           borderBottom: 1, 
           borderColor: "divider", 
@@ -344,6 +403,7 @@ export const Home = () => {
                 fontSize: "1rem",
                 color: colors.textLight,
                 py: 2,
+                fontFamily: 'Rubik, sans-serif',
                 "&.Mui-selected": {
                   color: colors.primary,
                 }
@@ -360,498 +420,1487 @@ export const Home = () => {
           </Tabs>
         </Box>
 
-        {/* Tab Panels with updated styling - no images in cards */}
+        {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
           <Grid container spacing={3}>
             {navigationOptions.map((option, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <FeatureCard sx={{ 
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                  border: `1px solid ${option.color}40`,
-                  height: "100%"
-                }}>
+                <FeatureCard>
                   <CardActionArea 
                     onClick={() => navigate(option.path)}
                     sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+                  >
+                    {/* Decorative header */}
+                    <Box
+                      sx={{
+                        height: 80,
+                        width: "100%",
+                        background: option.gradient,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderBottom: `1px solid ${option.color}30`,
+                      }}
                     >
-                      {/* Decorative header instead of image */}
-                      <Box
+                      <Avatar
                         sx={{
-                          height: 80,
-                          width: "100%",
-                          background: option.gradient,
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          borderBottom: `1px solid ${option.color}30`,
+                          bgcolor: option.color,
+                          width: 60,
+                          height: 60,
+                          boxShadow: `0 4px 8px ${option.color}40`,
                         }}
                       >
-                        <Avatar
+                        {option.icon}
+                      </Avatar>
+                    </Box>
+                    <CardContent sx={{ p: 3, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: 700, 
+                          color: colors.text,
+                          mb: 2,
+                          textAlign: "center",
+                          borderBottom: `2px solid ${option.color}40`,
+                          pb: 1,
+                          fontFamily: 'Rubik, sans-serif',
+                        }}
+                      >
+                        {option.title}
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          color: colors.textLight,
+                          textAlign: "center",
+                          flexGrow: 1,
+                          mb: 2,
+                          fontFamily: 'Rubik, sans-serif',
+                        }}
+                      >
+                        {option.description}
+                      </Typography>
+                      <Box 
+                        sx={{ 
+                          mt: "auto", 
+                          display: "flex", 
+                          justifyContent: "center" 
+                        }}
+                      >
+                        <Chip
+                          label="לחץ לניהול"
+                          size="small"
                           sx={{
-                            bgcolor: option.color,
-                            width: 60,
-                            height: 60,
-                            boxShadow: `0 4px 8px ${option.color}40`,
+                            bgcolor: `${option.color}15`,
+                            color: option.color,
+                            fontWeight: 600,
+                            border: `1px solid ${option.color}30`,
+                            fontFamily: 'Rubik, sans-serif',
                           }}
-                        >
-                          {option.icon}
-                        </Avatar>
+                        />
                       </Box>
-                      <CardContent sx={{ p: 3, flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
-                            fontWeight: 700, 
-                            color: colors.text,
-                            mb: 2,
-                            textAlign: "center",
-                            borderBottom: `2px solid ${option.color}40`,
-                            pb: 1
-                          }}
-                        >
-                          {option.title}
-                        </Typography>
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            color: colors.textLight,
-                            textAlign: "center",
-                            flexGrow: 1
-                          }}
-                        >
-                          {option.description}
-                        </Typography>
-                        <Box 
-                          sx={{ 
-                            mt: 2, 
-                            display: "flex", 
-                            justifyContent: "center" 
-                          }}
-                        >
-                          <Chip
-                            label="לחץ לניהול"
-                            size="small"
-                            sx={{
-                              bgcolor: `${option.color}15`,
-                              color: option.color,
-                              fontWeight: 600,
-                              border: `1px solid ${option.color}40`,
-                            }}
-                          />
-                        </Box>
-                      </CardContent>
-                    </CardActionArea>
-                  </FeatureCard>
-                </Grid>
-              ))}
-            </Grid>
-          </TabPanel>
-    
-          <TabPanel value={tabValue} index={1}>
-            <Box sx={{ mb: 4 }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 700,
-                  color: colors.text,
-                  mb: 3,
-                  borderBottom: `2px solid ${colors.primary}`,
-                  pb: 1,
-                  display: "inline-block"
-                }}
-              >
-                מוסדות במערכת
-              </Typography>
-              
-              <Grid container spacing={3}>
-                {schools && schools.length > 0 ? (
-                  schools.map((school, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                      <SchoolCard sx={{ 
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                        border: `1px solid ${colors.primary}40`,
-                      }}>
-                        <CardActionArea 
-                          onClick={() => navigate(`/school/${school.id}`)}
-                          sx={{ height: "100%", display: "flex", flexDirection: "column" }}
-                        >
-                          {/* Decorative header instead of image */}
-                          <Box
-                            sx={{
-                              height: 80,
-                              width: "100%",
-                              background: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              borderBottom: `1px solid ${colors.primary}30`,
-                            }}
-                          >
-                            <Avatar
-                              sx={{
-                                bgcolor: colors.primary,
-                                width: 60,
-                                height: 60,
-                                boxShadow: `0 4px 8px ${colors.primary}40`,
-                              }}
-                            >
-                              <SchoolIcon sx={{ fontSize: 35 }} />
-                            </Avatar>
-                          </Box>
-                          <CardContent sx={{ p: 3 }}>
-                            <Typography variant="h6" sx={{ fontWeight: 700, color: colors.text, mb: 1, textAlign: "center" }}>
-                              {school.name}
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: colors.textLight, mb: 2, textAlign: "center" }}>
-                              {school.address || "כתובת לא זמינה"}
-                            </Typography>
-                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <Chip
-                                size="small"
-                                label={`${school.students || 0} תלמידים`}
-                                sx={{
-                                  bgcolor: `${colors.info}15`,
-                                  color: colors.info,
-                                  fontWeight: 600,
-                                }}
-                              />
-                              <Chip
-                                size="small"
-                                label="צפייה בפרטים"
-                                sx={{
-                                  bgcolor: `${colors.primary}15`,
-                                  color: colors.primary,
-                                  fontWeight: 600,
-                                  border: `1px solid ${colors.primary}40`,
-                                }}
-                              />
-                            </Box>
-                          </CardContent>
-                        </CardActionArea>
-                      </SchoolCard>
-                    </Grid>
-                  ))
-                ) : (
-                  <Grid item xs={12}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 4,
-                        borderRadius: 4,
-                        textAlign: "center",
-                        border: `1px dashed ${colors.border}`,
-                        bgcolor: colors.card,
-                      }}
-                    >
-                      <SchoolIcon sx={{ fontSize: 60, color: colors.textLight, mb: 2, opacity: 0.5 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: colors.text, mb: 1 }}>
-                        אין מוסדות במערכת
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: colors.textLight, mb: 3 }}>
-                        התחל להוסיף מוסדות למערכת כדי לנהל את התקציבים שלהם
-                      </Typography>
-                      <ActionButton
-                        variant="contained"
-                        sx={{
-                          bgcolor: colors.primary,
-                          color: "white",
-                          "&:hover": {
-                            bgcolor: colors.primaryDark,
-                          },
-                        }}
-                        onClick={() => navigate("/addSchool")}
-                      >
-                        הוסף מוסד חדש
-                      </ActionButton>
-                    </Paper>
-                  </Grid>
-                )}
+                    </CardContent>
+                  </CardActionArea>
+                </FeatureCard>
               </Grid>
-            </Box>
-            
-            {schools && schools.length > 0 && (
-              <Box sx={{ mt: 4, textAlign: "center" }}>
-                <ActionButton
-                  variant="contained"
-                  sx={{
-                    background: `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentDark} 100%)`,
-                    color: "white",
-                    "&:hover": {
-                      background: `linear-gradient(135deg, ${colors.accentDark} 0%, ${colors.accent} 100%)`,
-                    },
-                  }}
-                  onClick={() => navigate("/addSchool")}
-                >
-                  הוסף מוסד חדש
-                </ActionButton>
-              </Box>
-            )}
-          </TabPanel>
-    
-          <TabPanel value={tabValue} index={2}>
-            <Box sx={{ mb: 5 }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 700,
-                  color: colors.text,
-                  mb: 3,
-                  borderBottom: `2px solid ${colors.primary}`,
-                  pb: 1,
-                  display: "inline-block"
-                }}
-              >
-                סיכום נתונים מערכתי
-              </Typography>
-              
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={6} md={3}>
-                  <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primary}` }}>
-                    <Avatar
-                      sx={{
-                        bgcolor: `${colors.primary}15`,
-                        width: 70,
-                        height: 70,
-                        mb: 2,
-                        border: `2px solid ${colors.primary}`,
-                      }}
-                    >
-                      <SchoolIcon sx={{ color: colors.primary, fontSize: 35 }} />
-                    </Avatar>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
-                      {schools?.length || 0}
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
-                      מוסדות
-                    </Typography>
-                  </StatsCard>
-                </Grid>
-                
-                <Grid item xs={12} sm={6} md={3}>
-                  <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.secondary}` }}>
-                    <Avatar
-                      sx={{
-                        bgcolor: `${colors.secondary}15`,
-                        width: 70,
-                        height: 70,
-                        mb: 2,
-                        border: `2px solid ${colors.secondary}`,
-                      }}
-                    >
-                      <BusinessIcon sx={{ color: colors.secondary, fontSize: 35 }} />
-                    </Avatar>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
-                      {suppliers?.length || 0}
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
-                      ספקים
-                    </Typography>
-                  </StatsCard>
-                </Grid>
-                
-                <Grid item xs={12} sm={6} md={3}>
-                  <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.accent}` }}>
-                    <Avatar
-                      sx={{
-                        bgcolor: `${colors.accent}15`,
-                        width: 70,
-                        height: 70,
-                        mb: 2,
-                        border: `2px solid ${colors.accent}`,
-                      }}
-                    >
-                      <PeopleIcon sx={{ color: colors.accent, fontSize: 35 }} />
-                    </Avatar>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
-                      {users?.length || 0}
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
-                      משתמשים
-                    </Typography>
-                  </StatsCard>
-                </Grid>
-                
-                <Grid item xs={12} sm={6} md={3}>
-                  <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primaryLight}` }}>
-                    <Avatar
-                      sx={{
-                        bgcolor: `${colors.primaryLight}15`,
-                        width: 70,
-                        height: 70,
-                        mb: 2,
-                        border: `2px solid ${colors.primaryLight}`,
-                      }}
-                    >
-                      <CategoryIcon sx={{ color: colors.primaryLight, fontSize: 35 }} />
-                    </Avatar>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
-                      {categories?.length || 0}
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
-                      קטגוריות
-                    </Typography>
-                  </StatsCard>
-                </Grid>
-              </Grid>
-            </Box>
-            
-            {/* Charts Section with updated styling */}
-            <Box sx={{ mt: 5 }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 700,
-                  color: colors.text,
-                  mb: 3,
-                  borderBottom: `2px solid ${colors.secondary}`,
-                  pb: 1,
-                  display: "inline-block"
-                }}
-              >
-                גרפים וניתוח נתונים
-              </Typography>
-              
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      borderRadius: 4,
-                      height: 300,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: `1px solid ${colors.border}`,
-                      bgcolor: colors.card,
-                      borderLeft: `4px solid ${colors.primary}`,
-                    }}
-                  >
-                    <Box sx={{ textAlign: "center" }}>
-                      <BarChartIcon sx={{ fontSize: 60, color: colors.primary, mb: 2, opacity: 0.7 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: colors.textLight }}>
-                        התפלגות תקציבים לפי מוסדות
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: colors.textLight, mt: 1 }}>
-                        אין נתונים להצגה כרגע
-                      </Typography>
-                    </Box>
-                  </Paper>
-                </Grid>
-                
-                <Grid item xs={12} md={6}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      borderRadius: 4,
-                      height: 300,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: `1px solid ${colors.border}`,
-                      bgcolor: colors.card,
-                      borderLeft: `4px solid ${colors.accent}`,
-                    }}
-                  >
-                    <Box sx={{ textAlign: "center" }}>
-                      <TrendingUpIcon sx={{ fontSize: 60, color: colors.accent, mb: 2, opacity: 0.7 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: colors.textLight }}>
-                        מגמת הוצאות כללית
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: colors.textLight, mt: 1 }}>
-                        אין נתונים להצגה כרגע
-                      </Typography>
-                    </Box>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Box>
-          </TabPanel>
-    
-          {/* Call to Action with updated styling */}
-          <Box
-            sx={{
-              mt: 6,
-              mb: 4,
-              textAlign: "center",
-              p: 4,
-              borderRadius: 4,
-              background: `linear-gradient(135deg, ${colors.accent}08 0%, ${colors.primary}08 100%)`,
-              border: `1px dashed ${colors.accent}`,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
-            }}
-          >
+            ))}
+          </Grid>
+        </TabPanel>
+  
+        <TabPanel value={tabValue} index={1}>
+          <Box sx={{ mb: 4 }}>
             <Typography
               variant="h5"
               sx={{
                 fontWeight: 700,
                 color: colors.text,
-                mb: 2,
-              }}
-            >
-              מוכנים לנהל את כל המוסדות במקום אחד?
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: colors.textLight,
-                maxWidth: 700,
-                mx: "auto",
                 mb: 3,
+                borderBottom: `2px solid ${colors.primary}`,
+                pb: 1,
+                display: "inline-block",
+                fontFamily: 'Rubik, sans-serif',
               }}
             >
-              המערכת מאפשרת לך לנהל את כל המוסדות, התקציבים וההוצאות בצורה יעילה ומרוכזת. התחל עכשיו לנהל את המערכת בצורה חכמה יותר.
+              מוסדות במערכת
             </Typography>
-            <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-              <ActionButton
-                variant="contained"
-                sx={{
-                  background: `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentDark} 100%)`,
-                  color: "white",
-                  "&:hover": {
-                    background: `linear-gradient(135deg, ${colors.accentDark} 0%, ${colors.accent} 100%)`,
-                  },
-                }}
-                onClick={() => navigate("/schools")}
-              >
-                ניהול מוסדות
-              </ActionButton>
-              <ActionButton
-                variant="outlined"
-                sx={{
-                  borderColor: colors.primary,
-                  color: colors.primary,
-                  "&:hover": {
-                    borderColor: colors.primaryDark,
-                    bgcolor: `${colors.primary}10`,
-                  },
-                }}
-                onClick={() => navigate("/reports")}
-              >
-                צפייה בדוחות
-              </ActionButton>
-            </Box>
+            
+            <Grid container spacing={3}>
+              {schools && schools.length > 0 ? (
+                schools.map((school, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <SchoolCard>
+                      <CardActionArea 
+                        onClick={() => navigate(`/school/${school.id}`)}
+                        sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+                      >
+                        {/* Card Header */}
+                        <Box
+                          sx={{
+                            height: 90,
+                            width: "100%",
+                            background: `${colors.primary}10`,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Avatar
+                            sx={{
+                              bgcolor: colors.primary,
+                              width: 60,
+                              height: 60,
+                              boxShadow: `0 4px 12px ${colors.primary}40`,
+                            }}
+                          >
+                            <SchoolIcon sx={{ fontSize: 32 }} />
+                          </Avatar>
+                        </Box>
+                        <CardContent sx={{ p: 3 }}>
+                          <Typography 
+                            variant="h6" 
+                            sx={{ 
+                              fontWeight: 700, 
+                              color: colors.text, 
+                              mb: 1, 
+                              textAlign: "center",
+                              fontFamily: 'Rubik, sans-serif',
+                            }}
+                          >
+                            {school.name}
+                          </Typography>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: colors.textLight, 
+                              mb: 2, 
+                              textAlign: "center",
+                              fontFamily: 'Rubik, sans-serif',
+                            }}
+                          >
+                            {school.address || "כתובת לא זמינה"}
+                          </Typography>
+                          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <Chip
+                              size="small"
+                              label={`${school.students || 0} תלמידים`}
+                              sx={{
+                                bgcolor: `${colors.primaryLight}15`,
+                                color: colors.primaryLight,
+                                fontWeight: 600,
+                                fontFamily: 'Rubik, sans-serif',
+                              }}
+                            />
+                            <Chip
+                              size="small"
+                              label="צפייה בפרטים"
+                              sx={{
+                                bgcolor: `${colors.secondary}15`,
+                                color: colors.secondary,
+                                fontWeight: 600,
+                                border: `1px solid ${colors.secondary}30`,
+                                fontFamily: 'Rubik, sans-serif',
+                              }}
+                            />
+                          </Box>
+                        </CardContent>
+                      </CardActionArea>
+                    </SchoolCard>
+                  </Grid>
+                ))
+              ) : (
+                <Grid item xs={12}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 4,
+                      borderRadius: 16,
+                      textAlign: "center",
+                      border: `1px dashed ${colors.border}`,
+                      bgcolor: colors.card,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    <SchoolIcon sx={{ fontSize: 60, color: colors.primaryLight, mb: 2, opacity: 0.7 }} />
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        fontWeight: 600, 
+                        color: colors.text, 
+                        mb: 1,
+                        fontFamily: 'Rubik, sans-serif',
+                      }}
+                    >
+                      אין מוסדות במערכת
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: colors.textLight, 
+                        mb: 3,
+                        fontFamily: 'Rubik, sans-serif',
+                      }}
+                    >
+                      התחל להוסיף מוסדות למערכת כדי לנהל את התקציבים שלהם
+                    </Typography>
+                    <ActionButton
+                      variant="contained"
+                      sx={{
+                        bgcolor: colors.primary,
+                        color: "white",
+                        "&:hover": {
+                          bgcolor: colors.primaryDark,
+                        },
+                      }}
+                      onClick={() => navigate("/addSchool")}
+                    >
+                      הוסף מוסד חדש
+                    </ActionButton>
+                  </Paper>
+                </Grid>
+              )}
+            </Grid>
           </Box>
           
-          {/* Footer with updated styling */}
-          <Box
+          {schools && schools.length > 0 && (
+            <Box sx={{ mt: 4, textAlign: "center" }}>
+              <ActionButton
+                variant="contained"
+                startIcon={<AddCircleOutlineIcon />}
+                sx={{
+                  bgcolor: colors.primary,
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: colors.primaryDark,
+                  },
+                }}
+                onClick={() => navigate("/addSchool")}
+              >
+                הוסף מוסד חדש
+              </ActionButton>
+            </Box>
+          )}
+        </TabPanel>
+  
+        <TabPanel value={tabValue} index={2}>
+          <Box sx={{ mb: 5 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: colors.text,
+                mb: 3,
+                borderBottom: `2px solid ${colors.primary}`,
+                pb: 1,
+                display: "inline-block",
+                fontFamily: 'Rubik, sans-serif',
+              }}
+            >
+              סיכום נתונים מערכתי
+            </Typography>
+            
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} md={3}>
+                <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primary}` }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: `${colors.primary}15`,
+                      width: 70,
+                      height: 70,
+                      mb: 2,
+                      border: `2px solid ${colors.primary}`,
+                    }}
+                  >
+                    <SchoolIcon sx={{ color: colors.primary, fontSize: 35 }} />
+                  </Avatar>
+                  <Typography 
+                    variant="h3" 
+                    sx={{ 
+                      fontWeight: 700, 
+                      color: colors.text, 
+                      mb: 1,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    {schools?.length || 0}
+                  </Typography>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      color: colors.textLight, 
+                      fontWeight: 600,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    מוסדות
+                  </Typography>
+                </StatsCard>
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.secondary}` }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: `${colors.secondary}15`,
+                      width: 70,
+                      height: 70,
+                      mb: 2,
+                      border: `2px solid ${colors.secondary}`,
+                    }}
+                  >
+                    <BusinessIcon sx={{ color: colors.secondary, fontSize: 35 }} />
+                  </Avatar>
+                  <Typography 
+                    variant="h3" 
+                    sx={{ 
+                      fontWeight: 700, 
+                      color: colors.text, 
+                      mb: 1,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    {suppliers?.length || 0}
+                  </Typography>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      color: colors.textLight, 
+                      fontWeight: 600,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    ספקים
+                  </Typography>
+                </StatsCard>
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primaryLight}` }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: `${colors.primaryLight}15`,
+                      width: 70,
+                      height: 70,
+                      mb: 2,
+                      border: `2px solid ${colors.primaryLight}`,
+                    }}
+                  >
+                    <PeopleIcon sx={{ color: colors.primaryLight, fontSize: 35 }} />
+                  </Avatar>
+                  <Typography 
+                    variant="h3" 
+                    sx={{ 
+                      fontWeight: 700, 
+                      color: colors.text, 
+                      mb: 1,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    {users?.length || 0}
+                  </Typography>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      color: colors.textLight, 
+                      fontWeight: 600,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    משתמשים
+                  </Typography>
+                </StatsCard>
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.secondaryLight}` }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: `${colors.secondaryLight}15`,
+                      width: 70,
+                      height: 70,
+                      mb: 2,
+                      border: `2px solid ${colors.secondaryLight}`,
+                    }}
+                  >
+                                <CategoryIcon sx={{ color: colors.secondaryLight, fontSize: 35 }} />
+                  </Avatar>
+                  <Typography 
+                    variant="h3" 
+                    sx={{ 
+                      fontWeight: 700, 
+                      color: colors.text, 
+                      mb: 1,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    {categories?.length || 0}
+                  </Typography>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      color: colors.textLight, 
+                      fontWeight: 600,
+                      fontFamily: 'Rubik, sans-serif',
+                    }}
+                  >
+                    קטגוריות
+                  </Typography>
+                </StatsCard>
+              </Grid>
+            </Grid>
+          </Box>
+          
+          {/* Charts Section */}
+          <Box sx={{ mt: 5 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: colors.text,
+                mb: 3,
+                borderBottom: `2px solid ${colors.secondary}`,
+                pb: 1,
+                display: "inline-block",
+                fontFamily: 'Rubik, sans-serif',
+              }}
+            >
+              גרפים וניתוח נתונים
+            </Typography>
+            
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    borderRadius: 16,
+                    height: 300,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: `1px solid ${colors.border}`,
+                    bgcolor: colors.card,
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                    borderLeft: `4px solid ${colors.primary}`,
+                  }}
+                >
+                  <Box sx={{ textAlign: "center" }}>
+                    <BarChartIcon sx={{ fontSize: 60, color: colors.primary, mb: 2, opacity: 0.7 }} />
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        fontWeight: 600, 
+                        color: colors.textLight,
+                        fontFamily: 'Rubik, sans-serif',
+                      }}
+                    >
+                      התפלגות תקציבים לפי מוסדות
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: colors.textLight, 
+                        mt: 1,
+                        fontFamily: 'Rubik, sans-serif',
+                      }}
+                    >
+                      אין נתונים להצגה כרגע
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Grid>
+              
+              <Grid item xs={12} md={6}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    borderRadius: 16,
+                    height: 300,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: `1px solid ${colors.border}`,
+                    bgcolor: colors.card,
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                    borderLeft: `4px solid ${colors.secondary}`,
+                  }}
+                >
+                  <Box sx={{ textAlign: "center" }}>
+                    <TrendingUpIcon sx={{ fontSize: 60, color: colors.secondary, mb: 2, opacity: 0.7 }} />
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        fontWeight: 600, 
+                        color: colors.textLight,
+                        fontFamily: 'Rubik, sans-serif',
+                      }}
+                    >
+                      מגמת הוצאות כללית
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: colors.textLight, 
+                        mt: 1,
+                        fontFamily: 'Rubik, sans-serif',
+                      }}
+                    >
+                      אין נתונים להצגה כרגע
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Grid>
+            </Grid>
+          </Box>
+        </TabPanel>
+  
+        {/* Call to Action */}
+        <Box
+          sx={{
+            mt: 6,
+            mb: 4,
+            textAlign: "center",
+            p: 4,
+            borderRadius: 16,
+            background: `linear-gradient(135deg, ${colors.primary}08 0%, ${colors.secondary}08 100%)`,
+            border: `1px dashed ${colors.primary}`,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+          }}
+        >
+          <Typography
+            variant="h5"
             sx={{
-              textAlign: "center",
-              mt: 6,
-              pt: 3,
-              borderTop: `1px solid ${colors.border}`,
-              color: colors.textLight
+              fontWeight: 700,
+              color: colors.text,
+              mb: 2,
+              fontFamily: 'Rubik, sans-serif',
             }}
           >
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              מערכת ניהול מוסדות ותקציבים © {new Date().getFullYear()}
-            </Typography>
-          </Box>
-        </ContentContainer>
-      </PageContainer>
-    );
-  };
+            מוכנים לנהל את כל המוסדות במקום אחד?
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: colors.textLight,
+              maxWidth: 700,
+              mx: "auto",
+              mb: 3,
+              fontFamily: 'Rubik, sans-serif',
+            }}
+          >
+            המערכת מאפשרת לך לנהל את כל המוסדות, התקציבים וההוצאות בצורה יעילה ומרוכזת. התחל עכשיו לנהל את המערכת בצורה חכמה יותר.
+          </Typography>
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <ActionButton
+              variant="contained"
+              sx={{
+                bgcolor: colors.primary,
+                color: "white",
+                "&:hover": {
+                  bgcolor: colors.primaryDark,
+                },
+              }}
+              onClick={() => navigate("/addExpenditure")}
+            >
+              הוספת הוצאה חדשה
+            </ActionButton>
+            <ActionButton
+              variant="outlined"
+              sx={{
+                borderColor: colors.secondary,
+                color: colors.secondary,
+                "&:hover": {
+                  borderColor: colors.secondaryDark,
+                  bgcolor: `${colors.secondary}10`,
+                },
+              }}
+              onClick={() => navigate("/reports")}
+            >
+              צפייה בדוחות
+            </ActionButton>
+          </Stack>
+        </Box>
+        
+        {/* Footer */}
+        <Box
+          sx={{
+            textAlign: "center",
+            mt: 6,
+            pt: 3,
+            borderTop: `1px solid ${colors.border}`,
+            color: colors.textLight
+          }}
+        >
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              fontWeight: 500,
+              fontFamily: 'Rubik, sans-serif',
+            }}
+          >
+            מערכת ניהול מוסדות ותקציבים © {new Date().getFullYear()}
+          </Typography>
+        </Box>
+      </ContentContainer>
+    </PageContainer>
+  );
+};
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import './home.css';
+
+// import { allCategoriesThunk } from "../../Redux/Slices/Categories/getCategoriesThunk";
+// import { allSupplierThunk } from "../../Redux/Slices/Suplliers/getSupplierThunk";
+// import { allUsersThunk } from "../../Redux/Slices/Users/getUsersThunk";
+// import { allSchoolsThunk } from "../../Redux/Slices/Schools/getSchoolThunk";
+
+// import {
+//   Box,
+//   Container,
+//   Typography,
+//   Paper,
+//   Grid,
+//   Button,
+//   Avatar,
+//   useTheme,
+//   Card,
+//   CardContent,
+//   CardActionArea,
+//   Chip,
+//   Tabs,
+//   Tab,
+//   Divider,
+//   IconButton
+// } from "@mui/material";
+// import { styled } from "@mui/material/styles";
+// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+// import ListAltIcon from "@mui/icons-material/ListAlt";
+// import BusinessIcon from "@mui/icons-material/Business";
+// import CategoryIcon from "@mui/icons-material/Category";
+// import PeopleIcon from "@mui/icons-material/People";
+// import SchoolIcon from "@mui/icons-material/School";
+// import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+// import ReceiptIcon from "@mui/icons-material/Receipt";
+// import BarChartIcon from "@mui/icons-material/BarChart";
+// import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+// import DashboardIcon from "@mui/icons-material/Dashboard";
+// import SettingsIcon from "@mui/icons-material/Settings";
+// import NotificationsIcon from "@mui/icons-material/Notifications";
+// import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+// import AssessmentIcon from "@mui/icons-material/Assessment";
+// import BuildIcon from "@mui/icons-material/Build";
+
+// // Styled components with updated theme
+// const PageContainer = styled(Box)(({ theme }) => ({
+//   minHeight: "100vh",
+//   background: "#f8f9fa",
+//   paddingTop: theme.spacing(4),
+//   paddingBottom: theme.spacing(4),
+// }));
+
+// const ContentContainer = styled(Container)(({ theme }) => ({
+//   paddingTop: theme.spacing(2),
+//   paddingBottom: theme.spacing(4),
+// }));
+
+// const WelcomeSection = styled(Box)(({ theme }) => ({
+//   marginBottom: theme.spacing(4),
+//   textAlign: "center",
+//   padding: theme.spacing(4, 0),
+//   background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(247,247,247,0.5) 100%)",
+//   borderRadius: 16,
+// }));
+
+// const FeatureCard = styled(Card)(({ theme }) => ({
+//   height: "100%",
+//   display: "flex",
+//   flexDirection: "column",
+//   borderRadius: 16,
+//   overflow: "hidden",
+//   transition: "transform 0.3s ease, box-shadow 0.3s ease",
+//   border: "1px solid #e0e0e0",
+//   "&:hover": {
+//     transform: "translateY(-8px)",
+//     boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+//   },
+// }));
+
+// const StatsCard = styled(Paper)(({ theme }) => ({
+//   padding: theme.spacing(3),
+//   borderRadius: 16,
+//   background: "#fff",
+//   height: "100%",
+//   display: "flex",
+//   flexDirection: "column",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   border: "1px solid #e0e0e0",
+//   transition: "transform 0.3s ease",
+//   "&:hover": {
+//     transform: "translateY(-5px)",
+//     boxShadow: "0 8px 16px rgba(0,0,0,0.05)",
+//   },
+// }));
+
+// const ActionButton = styled(Button)(({ theme }) => ({
+//   borderRadius: 30,
+//   padding: "10px 24px",
+//   fontWeight: 700,
+//   textTransform: "none",
+//   fontSize: "1rem",
+//   boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+//   transition: "all 0.3s ease",
+//   "&:hover": {
+//     transform: "translateY(-2px)",
+//     boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
+//   },
+// }));
+
+// const SchoolCard = styled(Card)(({ theme }) => ({
+//   height: "100%",
+//   display: "flex",
+//   flexDirection: "column",
+//   borderRadius: 16,
+//   overflow: "hidden",
+//   transition: "all 0.3s ease",
+//   border: "1px solid #e0e0e0",
+//   "&:hover": {
+//     transform: "translateY(-5px)",
+//     boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+//   },
+// }));
+
+// const TabPanel = (props) => {
+//   const { children, value, index, ...other } = props;
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`simple-tabpanel-${index}`}
+//       aria-labelledby={`simple-tab-${index}`}
+//       {...other}
+//     >
+//       {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+//     </div>
+//   );
+// };
+
+// export const Home = () => {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   const theme = useTheme();
+//   const [tabValue, setTabValue] = useState(0);
+  
+//   const schools = useSelector(s => s.school?.allSchools || []);
+//   const categories = useSelector(s => s.category?.allCategories || []);
+//   const suppliers = useSelector(s => s.supplier?.allSuppliers || []);
+//   const users = useSelector(s => s.user?.allUsers || []);
+//   const currUser = useSelector(s => s.user?.currUser || {});
+
+//   const getData = async () => {
+//     await dispatch(allCategoriesThunk());
+//     await dispatch(allSupplierThunk());
+//     await dispatch(allUsersThunk());
+//     // Assuming you have a thunk for schools
+//     if (allSchoolsThunk) {
+//       await dispatch(allSchoolsThunk());
+//     }
+//   };
+
+//   useEffect(() => {
+//     getData();
+//   }, []);
+
+//   const handleTabChange = (event, newValue) => {
+//     setTabValue(newValue);
+//   };
+
+//   // Updated color palette with muted amber/orange
+//   const colors = {
+//     primary: "#0288d1", // Blue
+//     primaryLight: "#5eb8ff",
+//     primaryDark: "#005b9f",
+//     secondary: "#009688", // Teal/Turquoise
+//     secondaryLight: "#52c7b8",
+//     secondaryDark: "#00675b",
+//     accent: "#f0a030", // Muted amber/orange
+//     accentLight: "#ffcf60",
+//     accentDark: "#c67100",
+//     text: "#263238",
+//     textLight: "#546e7a",
+//     background: "#f5f5f5",
+//     card: "#ffffff",
+//     border: "#e0e0e0",
+//     success: "#4caf50",
+//     warning: "#ff9800",
+//     error: "#f44336",
+//     info: "#2196f3",
+//   };
+
+//   // Navigation options with updated colors - no images, 6 options
+//   const navigationOptions = [
+//     {
+//       title: "ניהול ספקים",
+//       description: "צפייה וניהול של ספקים במערכת",
+//       icon: <BusinessIcon sx={{ fontSize: 40 }} />,
+//       color: colors.primary,
+//       path: "/suppliers",
+//       gradient: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
+//     },
+//     {
+//       title: "ניהול משתמשים",
+//       description: "ניהול הרשאות ומשתמשים בכל המוסדות",
+//       icon: <PeopleIcon sx={{ fontSize: 40 }} />,
+//       color: colors.secondary,
+//       path: "/users",
+//       gradient: `linear-gradient(135deg, ${colors.secondary}30 0%, ${colors.secondaryLight}30 100%)`,
+//     },
+//     {
+//       title: "ניהול קטגוריות",
+//       description: "הגדרת קטגוריות הוצאה למערכת כולה",
+//       icon: <CategoryIcon sx={{ fontSize: 40 }} />,
+//       color: colors.accent,
+//       path: "/categories",
+//       gradient: `linear-gradient(135deg, ${colors.accent}30 0%, ${colors.accentLight}30 100%)`,
+//     },
+//     {
+//       title: "דוחות מערכת",
+//       description: "צפייה בדוחות מרוכזים מכל המוסדות",
+//       icon: <AssessmentIcon sx={{ fontSize: 40 }} />,
+//       color: colors.primaryDark,
+//       path: "/reports",
+//       gradient: `linear-gradient(135deg, ${colors.primaryDark}30 0%, ${colors.primary}30 100%)`,
+//     },
+//     {
+//       title: "ניהול מוסדות",
+//       description: "צפייה וניהול של כל המוסדות במערכת",
+//       icon: <SchoolIcon sx={{ fontSize: 40 }} />,
+//       color: colors.secondaryDark,
+//       path: "/schools",
+//       gradient: `linear-gradient(135deg, ${colors.secondaryDark}30 0%, ${colors.secondary}30 100%)`,
+//     },
+//     {
+//       title: "ניהול תקציבים",
+//       description: "הקצאת תקציבים וניהול תקציבי המוסדות",
+//       icon: <LocalAtmIcon sx={{ fontSize: 40 }} />,
+//       color: colors.accentDark,
+//       path: "/budgets",
+//       gradient: `linear-gradient(135deg, ${colors.accentDark}30 0%, ${colors.accent}30 100%)`,
+//     },
+//   ];
+
+//   return (
+//     <PageContainer>
+//       <ContentContainer maxWidth="lg">
+//         {/* Welcome Section with gradient background */}
+//         <WelcomeSection>
+//           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
+//             <Avatar
+//               sx={{
+//                 background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+//                 width: 90,
+//                 height: 90,
+//                 mb: 3,
+//                 boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+//               }}
+//             >
+//               <DashboardIcon sx={{ fontSize: 55, color: "white" }} />
+//             </Avatar>
+//             <Typography
+//               variant="h3"
+//               sx={{
+//                 fontWeight: 800,
+//                 color: colors.text,
+//                 mb: 2,
+//                 textAlign: "center",
+//               }}
+//             >
+//               ברוך הבא למערכת ניהול המוסדות
+//             </Typography>
+//             <Typography
+//               variant="h6"
+//               sx={{
+//                 color: colors.textLight,
+//                 textAlign: "center",
+//                 fontWeight: 500,
+//                 maxWidth: 800,
+//                 mx: "auto",
+//                 mb: 4
+//               }}
+//             >
+//               {currUser?.name ? `${currUser.name}, ` : ""}
+//               כאן תוכל לנהל את כל המוסדות, התקציבים וההוצאות במערכת בצורה מרוכזת
+//             </Typography>
+            
+//             {/* Quick Actions - 2 buttons */}
+//             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center", mb: 4 }}>
+//               <ActionButton
+//                 variant="outlined"
+//                 startIcon={<BarChartIcon />}
+//                 sx={{
+//                   borderColor: colors.primary,
+//                   color: colors.primary,
+//                   "&:hover": {
+//                     borderColor: colors.primaryDark,
+//                     bgcolor: `${colors.primary}10`,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/schools")}
+//               >
+//                 לקבלת נתונים
+//               </ActionButton>
+//               <ActionButton
+//                 variant="contained"
+//                 startIcon={<ListAltIcon />}
+//                 sx={{
+//                   bgcolor: colors.accent,
+//                   color: "white",
+//                   "&:hover": {
+//                     bgcolor: colors.accentDark,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/expenitures")}
+//               >
+//                 לכל ההוצאות
+//               </ActionButton>
+//             </Box>
+//           </Box>
+//         </WelcomeSection>
+
+//         {/* Tabs Section with updated colors */}
+//         <Box sx={{ 
+//           borderBottom: 1, 
+//           borderColor: "divider", 
+//           mb: 3,
+//           borderRadius: "8px 8px 0 0",
+//           overflow: "hidden",
+//           boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+//         }}>
+//           <Tabs
+//             value={tabValue}
+//             onChange={handleTabChange}
+//             variant="fullWidth"
+//             textColor="primary"
+//             indicatorColor="primary"
+//             sx={{
+//               background: "#ffffff",
+//               "& .MuiTab-root": {
+//                 fontWeight: 700,
+//                 fontSize: "1rem",
+//                 color: colors.textLight,
+//                 py: 2,
+//                 "&.Mui-selected": {
+//                   color: colors.primary,
+//                 }
+//               },
+//               "& .MuiTabs-indicator": {
+//                 backgroundColor: colors.primary,
+//                 height: 3,
+//               }
+//             }}
+//           >
+//             <Tab label="ניהול מערכת" />
+//             <Tab label="סקירת מוסדות" />
+//             <Tab label="נתונים וסטטיסטיקות" />
+//           </Tabs>
+//         </Box>
+
+//         {/* Tab Panels with updated styling - no images in cards */}
+//         <TabPanel value={tabValue} index={0}>
+//           <Grid container spacing={3}>
+//             {navigationOptions.map((option, index) => (
+//               <Grid item xs={12} sm={6} md={4} key={index}>
+//                 <FeatureCard sx={{ 
+//                   boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+//                   border: `1px solid ${option.color}40`,
+//                   height: "100%"
+//                 }}>
+//                   <CardActionArea 
+//                     onClick={() => navigate(option.path)}
+//                     sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+//                     >
+//                       {/* Decorative header instead of image */}
+//                       <Box
+//                         sx={{
+//                           height: 80,
+//                           width: "100%",
+//                           background: option.gradient,
+//                           display: "flex",
+//                           justifyContent: "center",
+//                           alignItems: "center",
+//                           borderBottom: `1px solid ${option.color}30`,
+//                         }}
+//                       >
+//                         <Avatar
+//                           sx={{
+//                             bgcolor: option.color,
+//                             width: 60,
+//                             height: 60,
+//                             boxShadow: `0 4px 8px ${option.color}40`,
+//                           }}
+//                         >
+//                           {option.icon}
+//                         </Avatar>
+//                       </Box>
+//                       <CardContent sx={{ p: 3, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+//                         <Typography 
+//                           variant="h6" 
+//                           sx={{ 
+//                             fontWeight: 700, 
+//                             color: colors.text,
+//                             mb: 2,
+//                             textAlign: "center",
+//                             borderBottom: `2px solid ${option.color}40`,
+//                             pb: 1
+//                           }}
+//                         >
+//                           {option.title}
+//                         </Typography>
+//                         <Typography 
+//                           variant="body2" 
+//                           sx={{ 
+//                             color: colors.textLight,
+//                             textAlign: "center",
+//                             flexGrow: 1
+//                           }}
+//                         >
+//                           {option.description}
+//                         </Typography>
+//                         <Box 
+//                           sx={{ 
+//                             mt: 2, 
+//                             display: "flex", 
+//                             justifyContent: "center" 
+//                           }}
+//                         >
+//                           <Chip
+//                             label="לחץ לניהול"
+//                             size="small"
+//                             sx={{
+//                               bgcolor: `${option.color}15`,
+//                               color: option.color,
+//                               fontWeight: 600,
+//                               border: `1px solid ${option.color}40`,
+//                             }}
+//                           />
+//                         </Box>
+//                       </CardContent>
+//                     </CardActionArea>
+//                   </FeatureCard>
+//                 </Grid>
+//               ))}
+//             </Grid>
+//           </TabPanel>
+    
+//           <TabPanel value={tabValue} index={1}>
+//             <Box sx={{ mb: 4 }}>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   fontWeight: 700,
+//                   color: colors.text,
+//                   mb: 3,
+//                   borderBottom: `2px solid ${colors.primary}`,
+//                   pb: 1,
+//                   display: "inline-block"
+//                 }}
+//               >
+//                 מוסדות במערכת
+//               </Typography>
+              
+//               <Grid container spacing={3}>
+//                 {schools && schools.length > 0 ? (
+//                   schools.map((school, index) => (
+//                     <Grid item xs={12} sm={6} md={4} key={index}>
+//                       <SchoolCard sx={{ 
+//                         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+//                         border: `1px solid ${colors.primary}40`,
+//                       }}>
+//                         <CardActionArea 
+//                           onClick={() => navigate(`/school/${school.id}`)}
+//                           sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+//                         >
+//                           {/* Decorative header instead of image */}
+//                           <Box
+//                             sx={{
+//                               height: 80,
+//                               width: "100%",
+//                               background: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
+//                               display: "flex",
+//                               justifyContent: "center",
+//                               alignItems: "center",
+//                               borderBottom: `1px solid ${colors.primary}30`,
+//                             }}
+//                           >
+//                             <Avatar
+//                               sx={{
+//                                 bgcolor: colors.primary,
+//                                 width: 60,
+//                                 height: 60,
+//                                 boxShadow: `0 4px 8px ${colors.primary}40`,
+//                               }}
+//                             >
+//                               <SchoolIcon sx={{ fontSize: 35 }} />
+//                             </Avatar>
+//                           </Box>
+//                           <CardContent sx={{ p: 3 }}>
+//                             <Typography variant="h6" sx={{ fontWeight: 700, color: colors.text, mb: 1, textAlign: "center" }}>
+//                               {school.name}
+//                             </Typography>
+//                             <Typography variant="body2" sx={{ color: colors.textLight, mb: 2, textAlign: "center" }}>
+//                               {school.address || "כתובת לא זמינה"}
+//                             </Typography>
+//                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+//                               <Chip
+//                                 size="small"
+//                                 label={`${school.students || 0} תלמידים`}
+//                                 sx={{
+//                                   bgcolor: `${colors.info}15`,
+//                                   color: colors.info,
+//                                   fontWeight: 600,
+//                                 }}
+//                               />
+//                               <Chip
+//                                 size="small"
+//                                 label="צפייה בפרטים"
+//                                 sx={{
+//                                   bgcolor: `${colors.primary}15`,
+//                                   color: colors.primary,
+//                                   fontWeight: 600,
+//                                   border: `1px solid ${colors.primary}40`,
+//                                 }}
+//                               />
+//                             </Box>
+//                           </CardContent>
+//                         </CardActionArea>
+//                       </SchoolCard>
+//                     </Grid>
+//                   ))
+//                 ) : (
+//                   <Grid item xs={12}>
+//                     <Paper
+//                       elevation={0}
+//                       sx={{
+//                         p: 4,
+//                         borderRadius: 4,
+//                         textAlign: "center",
+//                         border: `1px dashed ${colors.border}`,
+//                         bgcolor: colors.card,
+//                       }}
+//                     >
+//                       <SchoolIcon sx={{ fontSize: 60, color: colors.textLight, mb: 2, opacity: 0.5 }} />
+//                       <Typography variant="h6" sx={{ fontWeight: 600, color: colors.text, mb: 1 }}>
+//                         אין מוסדות במערכת
+//                       </Typography>
+//                       <Typography variant="body2" sx={{ color: colors.textLight, mb: 3 }}>
+//                         התחל להוסיף מוסדות למערכת כדי לנהל את התקציבים שלהם
+//                       </Typography>
+//                       <ActionButton
+//                         variant="contained"
+//                         sx={{
+//                           bgcolor: colors.primary,
+//                           color: "white",
+//                           "&:hover": {
+//                             bgcolor: colors.primaryDark,
+//                           },
+//                         }}
+//                         onClick={() => navigate("/addSchool")}
+//                       >
+//                         הוסף מוסד חדש
+//                       </ActionButton>
+//                     </Paper>
+//                   </Grid>
+//                 )}
+//               </Grid>
+//             </Box>
+            
+//             {schools && schools.length > 0 && (
+//               <Box sx={{ mt: 4, textAlign: "center" }}>
+//                 <ActionButton
+//                   variant="contained"
+//                   sx={{
+//                     background: `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentDark} 100%)`,
+//                     color: "white",
+//                     "&:hover": {
+//                       background: `linear-gradient(135deg, ${colors.accentDark} 0%, ${colors.accent} 100%)`,
+//                     },
+//                   }}
+//                   onClick={() => navigate("/addSchool")}
+//                 >
+//                   הוסף מוסד חדש
+//                 </ActionButton>
+//               </Box>
+//             )}
+//           </TabPanel>
+    
+//           <TabPanel value={tabValue} index={2}>
+//             <Box sx={{ mb: 5 }}>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   fontWeight: 700,
+//                   color: colors.text,
+//                   mb: 3,
+//                   borderBottom: `2px solid ${colors.primary}`,
+//                   pb: 1,
+//                   display: "inline-block"
+//                 }}
+//               >
+//                 סיכום נתונים מערכתי
+//               </Typography>
+              
+//               <Grid container spacing={3}>
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primary}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.primary}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.primary}`,
+//                       }}
+//                     >
+//                       <SchoolIcon sx={{ color: colors.primary, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {schools?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       מוסדות
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+                
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.secondary}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.secondary}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.secondary}`,
+//                       }}
+//                     >
+//                       <BusinessIcon sx={{ color: colors.secondary, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {suppliers?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       ספקים
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+                
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.accent}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.accent}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.accent}`,
+//                       }}
+//                     >
+//                       <PeopleIcon sx={{ color: colors.accent, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {users?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       משתמשים
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+                
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primaryLight}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.primaryLight}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.primaryLight}`,
+//                       }}
+//                     >
+//                       <CategoryIcon sx={{ color: colors.primaryLight, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {categories?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       קטגוריות
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+//               </Grid>
+//             </Box>
+            
+//             {/* Charts Section with updated styling */}
+//             <Box sx={{ mt: 5 }}>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   fontWeight: 700,
+//                   color: colors.text,
+//                   mb: 3,
+//                   borderBottom: `2px solid ${colors.secondary}`,
+//                   pb: 1,
+//                   display: "inline-block"
+//                 }}
+//               >
+//                 גרפים וניתוח נתונים
+//               </Typography>
+              
+//               <Grid container spacing={3}>
+//                 <Grid item xs={12} md={6}>
+//                   <Paper
+//                     elevation={0}
+//                     sx={{
+//                       p: 3,
+//                       borderRadius: 4,
+//                       height: 300,
+//                       display: "flex",
+//                       alignItems: "center",
+//                       justifyContent: "center",
+//                       border: `1px solid ${colors.border}`,
+//                       bgcolor: colors.card,
+//                       borderLeft: `4px solid ${colors.primary}`,
+//                     }}
+//                   >
+//                     <Box sx={{ textAlign: "center" }}>
+//                       <BarChartIcon sx={{ fontSize: 60, color: colors.primary, mb: 2, opacity: 0.7 }} />
+//                       <Typography variant="h6" sx={{ fontWeight: 600, color: colors.textLight }}>
+//                         התפלגות תקציבים לפי מוסדות
+//                       </Typography>
+//                       <Typography variant="body2" sx={{ color: colors.textLight, mt: 1 }}>
+//                         אין נתונים להצגה כרגע
+//                       </Typography>
+//                     </Box>
+//                   </Paper>
+//                 </Grid>
+                
+//                 <Grid item xs={12} md={6}>
+//                   <Paper
+//                     elevation={0}
+//                     sx={{
+//                       p: 3,
+//                       borderRadius: 4,
+//                       height: 300,
+//                       display: "flex",
+//                       alignItems: "center",
+//                       justifyContent: "center",
+//                       border: `1px solid ${colors.border}`,
+//                       bgcolor: colors.card,
+//                       borderLeft: `4px solid ${colors.accent}`,
+//                     }}
+//                   >
+//                     <Box sx={{ textAlign: "center" }}>
+//                       <TrendingUpIcon sx={{ fontSize: 60, color: colors.accent, mb: 2, opacity: 0.7 }} />
+//                       <Typography variant="h6" sx={{ fontWeight: 600, color: colors.textLight }}>
+//                         מגמת הוצאות כללית
+//                       </Typography>
+//                       <Typography variant="body2" sx={{ color: colors.textLight, mt: 1 }}>
+//                         אין נתונים להצגה כרגע
+//                       </Typography>
+//                     </Box>
+//                   </Paper>
+//                 </Grid>
+//               </Grid>
+//             </Box>
+//           </TabPanel>
+    
+//           {/* Call to Action with updated styling */}
+//           <Box
+//             sx={{
+//               mt: 6,
+//               mb: 4,
+//               textAlign: "center",
+//               p: 4,
+//               borderRadius: 4,
+//               background: `linear-gradient(135deg, ${colors.accent}08 0%, ${colors.primary}08 100%)`,
+//               border: `1px dashed ${colors.accent}`,
+//               boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+//             }}
+//           >
+//             <Typography
+//               variant="h5"
+//               sx={{
+//                 fontWeight: 700,
+//                 color: colors.text,
+//                 mb: 2,
+//               }}
+//             >
+//               מוכנים לנהל את כל המוסדות במקום אחד?
+//             </Typography>
+//             <Typography
+//               variant="body1"
+//               sx={{
+//                 color: colors.textLight,
+//                 maxWidth: 700,
+//                 mx: "auto",
+//                 mb: 3,
+//               }}
+//             >
+//               המערכת מאפשרת לך לנהל את כל המוסדות, התקציבים וההוצאות בצורה יעילה ומרוכזת. התחל עכשיו לנהל את המערכת בצורה חכמה יותר.
+//             </Typography>
+//             <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+//               <ActionButton
+//                 variant="contained"
+//                 sx={{
+//                   background: `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentDark} 100%)`,
+//                   color: "white",
+//                   "&:hover": {
+//                     background: `linear-gradient(135deg, ${colors.accentDark} 0%, ${colors.accent} 100%)`,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/schools")}
+//               >
+//                 ניהול מוסדות
+//               </ActionButton>
+//               <ActionButton
+//                 variant="outlined"
+//                 sx={{
+//                   borderColor: colors.primary,
+//                   color: colors.primary,
+//                   "&:hover": {
+//                     borderColor: colors.primaryDark,
+//                     bgcolor: `${colors.primary}10`,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/reports")}
+//               >
+//                 צפייה בדוחות
+//               </ActionButton>
+//             </Box>
+//           </Box>
+          
+//           {/* Footer with updated styling */}
+//           <Box
+//             sx={{
+//               textAlign: "center",
+//               mt: 6,
+//               pt: 3,
+//               borderTop: `1px solid ${colors.border}`,
+//               color: colors.textLight
+//             }}
+//           >
+//             <Typography variant="body2" sx={{ fontWeight: 500 }}>
+//               מערכת ניהול מוסדות ותקציבים © {new Date().getFullYear()}
+//             </Typography>
+//           </Box>
+//         </ContentContainer>
+//       </PageContainer>
+//     );
+//   };
   
 
 
@@ -1672,3 +2721,856 @@ export const Home = () => {
 
 
 // }
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import './home.css';
+
+// import { allCategoriesThunk } from "../../Redux/Slices/Categories/getCategoriesThunk";
+// import { allSupplierThunk } from "../../Redux/Slices/Suplliers/getSupplierThunk";
+// import { allUsersThunk } from "../../Redux/Slices/Users/getUsersThunk";
+// import { allSchoolsThunk } from "../../Redux/Slices/Schools/getSchoolThunk";
+
+// import {
+//   Box,
+//   Container,
+//   Typography,
+//   Paper,
+//   Grid,
+//   Button,
+//   Avatar,
+//   useTheme,
+//   Card,
+//   CardContent,
+//   CardActionArea,
+//   Chip,
+//   Tabs,
+//   Tab,
+//   Divider,
+//   IconButton
+// } from "@mui/material";
+// import { styled } from "@mui/material/styles";
+// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+// import ListAltIcon from "@mui/icons-material/ListAlt";
+// import BusinessIcon from "@mui/icons-material/Business";
+// import CategoryIcon from "@mui/icons-material/Category";
+// import PeopleIcon from "@mui/icons-material/People";
+// import SchoolIcon from "@mui/icons-material/School";
+// import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+// import ReceiptIcon from "@mui/icons-material/Receipt";
+// import BarChartIcon from "@mui/icons-material/BarChart";
+// import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+// import DashboardIcon from "@mui/icons-material/Dashboard";
+// import SettingsIcon from "@mui/icons-material/Settings";
+// import NotificationsIcon from "@mui/icons-material/Notifications";
+// import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+// import AssessmentIcon from "@mui/icons-material/Assessment";
+// import BuildIcon from "@mui/icons-material/Build";
+
+// // Styled components with updated theme
+// const PageContainer = styled(Box)(({ theme }) => ({
+//   minHeight: "100vh",
+//   background: "#f8f9fa",
+//   paddingTop: theme.spacing(4),
+//   paddingBottom: theme.spacing(4),
+// }));
+
+// const ContentContainer = styled(Container)(({ theme }) => ({
+//   paddingTop: theme.spacing(2),
+//   paddingBottom: theme.spacing(4),
+// }));
+
+// const WelcomeSection = styled(Box)(({ theme }) => ({
+//   marginBottom: theme.spacing(4),
+//   textAlign: "center",
+//   padding: theme.spacing(4, 0),
+//   background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(240,245,255,0.5) 100%)",
+//   borderRadius: 16,
+// }));
+
+// const FeatureCard = styled(Card)(({ theme }) => ({
+//   height: "100%",
+//   display: "flex",
+//   flexDirection: "column",
+//   borderRadius: 16,
+//   overflow: "hidden",
+//   transition: "transform 0.3s ease, box-shadow 0.3s ease",
+//   border: "1px solid #e0e0e0",
+//   "&:hover": {
+//     transform: "translateY(-8px)",
+//     boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+//   },
+// }));
+
+// const StatsCard = styled(Paper)(({ theme }) => ({
+//   padding: theme.spacing(3),
+//   borderRadius: 16,
+//   background: "#fff",
+//   height: "100%",
+//   display: "flex",
+//   flexDirection: "column",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   border: "1px solid #e0e0e0",
+//   transition: "transform 0.3s ease",
+//   "&:hover": {
+//     transform: "translateY(-5px)",
+//     boxShadow: "0 8px 16px rgba(0,0,0,0.05)",
+//   },
+// }));
+
+// const ActionButton = styled(Button)(({ theme }) => ({
+//   borderRadius: 30,
+//   padding: "10px 24px",
+//   fontWeight: 700,
+//   textTransform: "none",
+//   fontSize: "1rem",
+//   boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+//   transition: "all 0.3s ease",
+//   "&:hover": {
+//     transform: "translateY(-2px)",
+//     boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
+//   },
+// }));
+
+// const SchoolCard = styled(Card)(({ theme }) => ({
+//   height: "100%",
+//   display: "flex",
+//   flexDirection: "column",
+//   borderRadius: 16,
+//   overflow: "hidden",
+//   transition: "all 0.3s ease",
+//   border: "1px solid #e0e0e0",
+//   "&:hover": {
+//     transform: "translateY(-5px)",
+//     boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+//   },
+// }));
+
+// const TabPanel = (props) => {
+//   const { children, value, index, ...other } = props;
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`simple-tabpanel-${index}`}
+//       aria-labelledby={`simple-tab-${index}`}
+//       {...other}
+//     >
+//       {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+//     </div>
+//   );
+// };
+
+// export const Home = () => {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   const theme = useTheme();
+//   const [tabValue, setTabValue] = useState(0);
+  
+//   const schools = useSelector(s => s.school?.allSchools || []);
+//   const categories = useSelector(s => s.category?.allCategories || []);
+//   const suppliers = useSelector(s => s.supplier?.allSuppliers || []);
+//   const users = useSelector(s => s.user?.allUsers || []);
+//   const currUser = useSelector(s => s.user?.currUser || {});
+
+//   const getData = async () => {
+//     await dispatch(allCategoriesThunk());
+//     await dispatch(allSupplierThunk());
+//     await dispatch(allUsersThunk());
+//     // Assuming you have a thunk for schools
+//     if (allSchoolsThunk) {
+//       await dispatch(allSchoolsThunk());
+//     }
+//   };
+
+//   useEffect(() => {
+//     getData();
+//   }, []);
+
+//   const handleTabChange = (event, newValue) => {
+//     setTabValue(newValue);
+//   };
+
+//   // Updated color palette with blue shades only
+//   const colors = {
+//     primary: "#1976d2", // Main blue
+//     primaryLight: "#42a5f5",
+//     primaryDark: "#1565c0",
+//     secondary: "#0d47a1", // Darker blue
+//     secondaryLight: "#5472d3",
+//     secondaryDark: "#002171",
+//     accent: "#2196f3", // Lighter blue
+//     accentLight: "#6ec6ff",
+//     accentDark: "#0069c0",
+//     text: "#263238",
+//     textLight: "#546e7a",
+//     background: "#f5f5f5",
+//     card: "#ffffff",
+//     border: "#e0e0e0",
+//     success: "#4caf50",
+//     warning: "#ff9800",
+//     error: "#f44336",
+//     info: "#2196f3",
+//   };
+
+//   // Navigation options with updated colors - no images, 6 options
+//   const navigationOptions = [
+//     {
+//       title: "ניהול ספקים",
+//       description: "צפייה וניהול של ספקים במערכת",
+//       icon: <BusinessIcon sx={{ fontSize: 40 }} />,
+//       color: colors.primary,
+//       path: "/suppliers",
+//       gradient: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
+//     },
+//     {
+//       title: "ניהול משתמשים",
+//       description: "ניהול הרשאות ומשתמשים בכל המוסדות",
+//       icon: <PeopleIcon sx={{ fontSize: 40 }} />,
+//       color: colors.secondary,
+//       path: "/users",
+//       gradient: `linear-gradient(135deg, ${colors.secondary}30 0%, ${colors.secondaryLight}30 100%)`,
+//     },
+//     {
+//       title: "ניהול קטגוריות",
+//       description: "הגדרת קטגוריות הוצאה למערכת כולה",
+//       icon: <CategoryIcon sx={{ fontSize: 40 }} />,
+//       color: colors.accent,
+//       path: "/categories",
+//       gradient: `linear-gradient(135deg, ${colors.accent}30 0%, ${colors.accentLight}30 100%)`,
+//     },
+//     {
+//       title: "דוחות מערכת",
+//       description: "צפייה בדוחות מרוכזים מכל המוסדות",
+//       icon: <AssessmentIcon sx={{ fontSize: 40 }} />,
+//       color: colors.primaryDark,
+//       path: "/reports",
+//       gradient: `linear-gradient(135deg, ${colors.primaryDark}30 0%, ${colors.primary}30 100%)`,
+//     },
+//     {
+//       title: "ניהול מוסדות",
+//       description: "צפייה וניהול של כל המוסדות במערכת",
+//       icon: <SchoolIcon sx={{ fontSize: 40 }} />,
+//       color: colors.secondaryDark,
+//       path: "/schools",
+//       gradient: `linear-gradient(135deg, ${colors.secondaryDark}30 0%, ${colors.secondary}30 100%)`,
+//     },
+//     {
+//       title: "ניהול תקציבים",
+//       description: "הקצאת תקציבים וניהול תקציבי המוסדות",
+//       icon: <LocalAtmIcon sx={{ fontSize: 40 }} />,
+//       color: colors.accentDark,
+//       path: "/budgets",
+//       gradient: `linear-gradient(135deg, ${colors.accentDark}30 0%, ${colors.accent}30 100%)`,
+//     },
+//   ];
+
+//   return (
+//     <PageContainer>
+//       <ContentContainer maxWidth="lg">
+//         {/* Welcome Section with gradient background */}
+//         <WelcomeSection>
+//           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
+//             <Avatar
+//               sx={{
+//                 background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.accent} 100%)`,
+//                 width: 90,
+//                 height: 90,
+//                 mb: 3,
+//                 boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+//               }}
+//             >
+//               <DashboardIcon sx={{ fontSize: 55, color: "white" }} />
+//             </Avatar>
+//             <Typography
+//               variant="h3"
+//               sx={{
+//                 fontWeight: 800,
+//                 color: colors.text,
+//                 mb: 2,
+//                 textAlign: "center",
+//               }}
+//             >
+//               ברוך הבא למערכת ניהול המוסדות
+//             </Typography>
+//             <Typography
+//               variant="h6"
+//               sx={{
+//                 color: colors.textLight,
+//                 textAlign: "center",
+//                 fontWeight: 500,
+//                 maxWidth: 800,
+//                 mx: "auto",
+//                 mb: 4
+//               }}
+//             >
+//               {currUser?.name ? `${currUser.name}, ` : ""}
+//               כאן תוכל לנהל את כל המוסדות, התקציבים וההוצאות במערכת בצורה מרוכזת
+//             </Typography>
+            
+//             {/* Quick Actions - 2 buttons */}
+//             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center", mb: 4 }}>
+//               <ActionButton
+//                 variant="outlined"
+//                 startIcon={<BarChartIcon />}
+//                 sx={{
+//                   borderColor: colors.primary,
+//                   color: colors.primary,
+//                   "&:hover": {
+//                     borderColor: colors.primaryDark,
+//                     bgcolor: `${colors.primary}10`,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/schools")}
+//               >
+//                 לקבלת נתונים
+//               </ActionButton>
+//               <ActionButton
+//                 variant="contained"
+//                 startIcon={<ListAltIcon />}
+//                 sx={{
+//                   bgcolor: colors.primary,
+//                   color: "white",
+//                   "&:hover": {
+//                     bgcolor: colors.primaryDark,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/expenitures")}
+//               >
+//                 לכל ההוצאות
+//               </ActionButton>
+//             </Box>
+//           </Box>
+//         </WelcomeSection>
+
+//         {/* Tabs Section with updated colors */}
+//         <Box sx={{ 
+//           borderBottom: 1, 
+//           borderColor: "divider", 
+//           mb: 3,
+//           borderRadius: "8px 8px 0 0",
+//           overflow: "hidden",
+//           boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+//         }}>
+//           <Tabs
+//             value={tabValue}
+//             onChange={handleTabChange}
+//             variant="fullWidth"
+//             textColor="primary"
+//             indicatorColor="primary"
+//             sx={{
+//               background: "#ffffff",
+//               "& .MuiTab-root": {
+//                 fontWeight: 700,
+//                 fontSize: "1rem",
+//                 color: colors.textLight,
+//                 py: 2,
+//                 "&.Mui-selected": {
+//                   color: colors.primary,
+//                 }
+//               },
+//               "& .MuiTabs-indicator": {
+//                 backgroundColor: colors.primary,
+//                 height: 3,
+//               }
+//             }}
+//           >
+//             <Tab label="ניהול מערכת" />
+//             <Tab label="סקירת מוסדות" />
+//             <Tab label="נתונים וסטטיסטיקות" />
+//           </Tabs>
+//         </Box>
+
+//         {/* Tab Panels with updated styling - no images in cards */}
+//         <TabPanel value={tabValue} index={0}>
+//           <Grid container spacing={3}>
+//             {navigationOptions.map((option, index) => (
+//               <Grid item xs={12} sm={6} md={4} key={index}>
+//                 <FeatureCard sx={{ 
+//                   boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+//                   border: `1px solid ${option.color}40`,
+//                   height: "100%"
+//                 }}>
+//                   <CardActionArea 
+//                     onClick={() => navigate(option.path)}
+//                     sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+//                     >
+//                       {/* Decorative header instead of image */}
+//                       <Box
+//                         sx={{
+//                           height: 80,
+//                           width: "100%",
+//                           background: option.gradient,
+//                           display: "flex",
+//                           justifyContent: "center",
+//                           alignItems: "center",
+//                           borderBottom: `1px solid ${option.color}30`,
+//                         }}
+//                       >
+//                         <Avatar
+//                           sx={{
+//                             bgcolor: option.color,
+//                             width: 60,
+//                             height: 60,
+//                             boxShadow: `0 4px 8px ${option.color}40`,
+//                           }}
+//                         >
+//                           {option.icon}
+//                         </Avatar>
+//                       </Box>
+//                       <CardContent sx={{ p: 3, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+//                         <Typography 
+//                           variant="h6" 
+//                           sx={{ 
+//                             fontWeight: 700, 
+//                             color: colors.text,
+//                             mb: 2,
+//                             textAlign: "center",
+//                             borderBottom: `2px solid ${option.color}40`,
+//                             pb: 1
+//                           }}
+//                         >
+//                           {option.title}
+//                         </Typography>
+//                         <Typography 
+//                           variant="body2" 
+//                           sx={{ 
+//                             color: colors.textLight,
+//                             textAlign: "center",
+//                             flexGrow: 1
+//                           }}
+//                         >
+//                           {option.description}
+//                         </Typography>
+//                         <Box 
+//                           sx={{ 
+//                             mt: 2, 
+//                             display: "flex", 
+//                             justifyContent: "center" 
+//                           }}
+//                         >
+//                           <Chip
+//                             label="לחץ לניהול"
+//                             size="small"
+//                             sx={{
+//                               bgcolor: `${option.color}15`,
+//                               color: option.color,
+//                               fontWeight: 600,
+//                               border: `1px solid ${option.color}40`,
+//                             }}
+//                           />
+//                         </Box>
+//                       </CardContent>
+//                     </CardActionArea>
+//                   </FeatureCard>
+//                 </Grid>
+//               ))}
+//             </Grid>
+//           </TabPanel>
+    
+//           <TabPanel value={tabValue} index={1}>
+//             <Box sx={{ mb: 4 }}>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   fontWeight: 700,
+//                   color: colors.text,
+//                   mb: 3,
+//                   borderBottom: `2px solid ${colors.primary}`,
+//                   pb: 1,
+//                   display: "inline-block"
+//                 }}
+//               >
+//                 מוסדות במערכת
+//               </Typography>
+              
+//               <Grid container spacing={3}>
+//                 {schools && schools.length > 0 ? (
+//                   schools.map((school, index) => (
+//                     <Grid item xs={12} sm={6} md={4} key={index}>
+//                       <SchoolCard sx={{ 
+//                         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+//                         border: `1px solid ${colors.primary}40`,
+//                       }}>
+//                         <CardActionArea 
+//                           onClick={() => navigate(`/school/${school.id}`)}
+//                           sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+//                         >
+//                           {/* Decorative header instead of image */}
+//                           <Box
+//                             sx={{
+//                               height: 80,
+//                               width: "100%",
+//                               background: `linear-gradient(135deg, ${colors.primary}30 0%, ${colors.primaryLight}30 100%)`,
+//                               display: "flex",
+//                               justifyContent: "center",
+//                               alignItems: "center",
+//                               borderBottom: `1px solid ${colors.primary}30`,
+//                             }}
+//                           >
+//                             <Avatar
+//                               sx={{
+//                                 bgcolor: colors.primary,
+//                                 width: 60,
+//                                 height: 60,
+//                                 boxShadow: `0 4px 8px ${colors.primary}40`,
+//                               }}
+//                             >
+//                               <SchoolIcon sx={{ fontSize: 35 }} />
+//                             </Avatar>
+//                           </Box>
+//                           <CardContent sx={{ p: 3 }}>
+//                             <Typography variant="h6" sx={{ fontWeight: 700, color: colors.text, mb: 1, textAlign: "center" }}>
+//                               {school.name}
+//                             </Typography>
+//                             <Typography variant="body2" sx={{ color: colors.textLight, mb: 2, textAlign: "center" }}>
+//                               {school.address || "כתובת לא זמינה"}
+//                             </Typography>
+//                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+//                               <Chip
+//                                 size="small"
+//                                 label={`${school.students || 0} תלמידים`}
+//                                 sx={{
+//                                   bgcolor: `${colors.info}15`,
+//                                   color: colors.info,
+//                                   fontWeight: 600,
+//                                 }}
+//                               />
+//                               <Chip
+//                                 size="small"
+//                                 label="צפייה בפרטים"
+//                                 sx={{
+//                                   bgcolor: `${colors.primary}15`,
+//                                   color: colors.primary,
+//                                   fontWeight: 600,
+//                                   border: `1px solid ${colors.primary}40`,
+//                                 }}
+//                               />
+//                             </Box>
+//                           </CardContent>
+//                         </CardActionArea>
+//                       </SchoolCard>
+//                     </Grid>
+//                   ))
+//                 ) : (
+//                   <Grid item xs={12}>
+//                     <Paper
+//                       elevation={0}
+//                       sx={{
+//                         p: 4,
+//                         borderRadius: 4,
+//                         textAlign: "center",
+//                         border: `1px dashed ${colors.border}`,
+//                         bgcolor: colors.card,
+//                       }}
+//                     >
+//                       <SchoolIcon sx={{ fontSize: 60, color: colors.textLight, mb: 2, opacity: 0.5 }} />
+//                       <Typography variant="h6" sx={{ fontWeight: 600, color: colors.text, mb: 1 }}>
+//                         אין מוסדות במערכת
+//                       </Typography>
+//                       <Typography variant="body2" sx={{ color: colors.textLight, mb: 3 }}>
+//                         התחל להוסיף מוסדות למערכת כדי לנהל את התקציבים שלהם
+//                       </Typography>
+//                       <ActionButton
+//                         variant="contained"
+//                         sx={{
+//                           bgcolor: colors.primary,
+//                           color: "white",
+//                           "&:hover": {
+//                             bgcolor: colors.primaryDark,
+//                           },
+//                         }}
+//                         onClick={() => navigate("/addSchool")}
+//                       >
+//                         הוסף מוסד חדש
+//                       </ActionButton>
+//                     </Paper>
+//                   </Grid>
+//                 )}
+//               </Grid>
+//             </Box>
+            
+//             {schools && schools.length > 0 && (
+//               <Box sx={{ mt: 4, textAlign: "center" }}>
+//                 <ActionButton
+//                   variant="contained"
+//                   sx={{
+//                     background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryLight} 100%)`,
+//                     color: "white",
+//                     "&:hover": {
+//                       background: `linear-gradient(135deg, ${colors.primaryLight} 0%, ${colors.primary} 100%)`,
+//                     },
+//                   }}
+//                   onClick={() => navigate("/addSchool")}
+//                 >
+//                   הוסף מוסד חדש
+//                 </ActionButton>
+//               </Box>
+//             )}
+//           </TabPanel>
+    
+//           <TabPanel value={tabValue} index={2}>
+//             <Box sx={{ mb: 5 }}>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   fontWeight: 700,
+//                   color: colors.text,
+//                   mb: 3,
+//                   borderBottom: `2px solid ${colors.primary}`,
+//                   pb: 1,
+//                   display: "inline-block"
+//                 }}
+//               >
+//                 סיכום נתונים מערכתי
+//               </Typography>
+              
+//               <Grid container spacing={3}>
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primary}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.primary}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.primary}`,
+//                       }}
+//                     >
+//                       <SchoolIcon sx={{ color: colors.primary, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {schools?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       מוסדות
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+                
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.secondary}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.secondary}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.secondary}`,
+//                       }}
+//                     >
+//                       <BusinessIcon sx={{ color: colors.secondary, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {suppliers?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       ספקים
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+                
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.accent}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.accent}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.accent}`,
+//                       }}
+//                     >
+//                       <PeopleIcon sx={{ color: colors.accent, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {users?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       משתמשים
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+                
+//                 <Grid item xs={12} sm={6} md={3}>
+//                   <StatsCard elevation={0} sx={{ borderTop: `3px solid ${colors.primaryLight}` }}>
+//                     <Avatar
+//                       sx={{
+//                         bgcolor: `${colors.primaryLight}15`,
+//                         width: 70,
+//                         height: 70,
+//                         mb: 2,
+//                         border: `2px solid ${colors.primaryLight}`,
+//                       }}
+//                     >
+//                       <CategoryIcon sx={{ color: colors.primaryLight, fontSize: 35 }} />
+//                     </Avatar>
+//                     <Typography variant="h3" sx={{ fontWeight: 700, color: colors.text, mb: 1 }}>
+//                       {categories?.length || 0}
+//                     </Typography>
+//                     <Typography variant="body1" sx={{ color: colors.textLight, fontWeight: 600 }}>
+//                       קטגוריות
+//                     </Typography>
+//                   </StatsCard>
+//                 </Grid>
+//               </Grid>
+//             </Box>
+            
+//             {/* Charts Section with updated styling */}
+//             <Box sx={{ mt: 5 }}>
+//               <Typography
+//                 variant="h5"
+//                 sx={{
+//                   fontWeight: 700,
+//                   color: colors.text,
+//                   mb: 3,
+//                   borderBottom: `2px solid ${colors.secondary}`,
+//                   pb: 1,
+//                   display: "inline-block"
+//                 }}
+//               >
+//                 גרפים וניתוח נתונים
+//               </Typography>
+              
+//               <Grid container spacing={3}>
+//                 <Grid item xs={12} md={6}>
+//                   <Paper
+//                     elevation={0}
+//                     sx={{
+//                       p: 3,
+//                       borderRadius: 4,
+//                       height: 300,
+//                       display: "flex",
+//                       alignItems: "center",
+//                       justifyContent: "center",
+//                       border: `1px solid ${colors.border}`,
+//                       bgcolor: colors.card,
+//                       borderLeft: `4px solid ${colors.primary}`,
+//                     }}
+//                   >
+//                     <Box sx={{ textAlign: "center" }}>
+//                       <BarChartIcon sx={{ fontSize: 60, color: colors.primary, mb: 2, opacity: 0.7 }} />
+//                       <Typography variant="h6" sx={{ fontWeight: 600, color: colors.textLight }}>
+//                         התפלגות תקציבים לפי מוסדות
+//                       </Typography>
+//                       <Typography variant="body2" sx={{ color: colors.textLight, mt: 1 }}>
+//                         אין נתונים להצגה כרגע
+//                       </Typography>
+//                     </Box>
+//                   </Paper>
+//                 </Grid>
+                
+//                 <Grid item xs={12} md={6}>
+//                   <Paper
+//                     elevation={0}
+//                     sx={{
+//                       p: 3,
+//                       borderRadius: 4,
+//                       height: 300,
+//                       display: "flex",
+//                       alignItems: "center",
+//                       justifyContent: "center",
+//                       border: `1px solid ${colors.border}`,
+//                       bgcolor: colors.card,
+//                       borderLeft: `4px solid ${colors.secondary}`,
+//                     }}
+//                   >
+//                     <Box sx={{ textAlign: "center" }}>
+//                       <TrendingUpIcon sx={{ fontSize: 60, color: colors.secondary, mb: 2, opacity: 0.7 }} />
+//                       <Typography variant="h6" sx={{ fontWeight: 600, color: colors.textLight }}>
+//                         מגמת הוצאות כללית
+//                       </Typography>
+//                       <Typography variant="body2" sx={{ color: colors.textLight, mt: 1 }}>
+//                         אין נתונים להצגה כרגע
+//                       </Typography>
+//                     </Box>
+//                   </Paper>
+//                 </Grid>
+//               </Grid>
+//             </Box>
+//           </TabPanel>
+    
+//           {/* Call to Action with updated styling */}
+//           <Box
+//             sx={{
+//               mt: 6,
+//               mb: 4,
+//               textAlign: "center",
+//               p: 4,
+//               borderRadius: 4,
+//               background: `linear-gradient(135deg, ${colors.primary}08 0%, ${colors.primaryLight}08 100%)`,
+//               border: `1px dashed ${colors.primary}`,
+//               boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+//             }}
+//           >
+//             <Typography
+//               variant="h5"
+//               sx={{
+//                 fontWeight: 700,
+//                 color: colors.text,
+//                 mb: 2,
+//               }}
+//             >
+//               מוכנים לנהל את כל המוסדות במקום אחד?
+//             </Typography>
+//             <Typography
+//               variant="body1"
+//               sx={{
+//                 color: colors.textLight,
+//                 maxWidth: 700,
+//                 mx: "auto",
+//                 mb: 3,
+//               }}
+//             >
+//               המערכת מאפשרת לך לנהל את כל המוסדות, התקציבים וההוצאות בצורה יעילה ומרוכזת. התחל עכשיו לנהל את המערכת בצורה חכמה יותר.
+//             </Typography>
+//             <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+//               <ActionButton
+//                 variant="contained"
+//                 sx={{
+//                   background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryLight} 100%)`,
+//                   color: "white",
+//                   "&:hover": {
+//                     background: `linear-gradient(135deg, ${colors.primaryLight} 0%, ${colors.primary} 100%)`,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/schools")}
+//               >
+//                 ניהול מוסדות
+//               </ActionButton>
+//               <ActionButton
+//                 variant="outlined"
+//                 sx={{
+//                   borderColor: colors.primary,
+//                   color: colors.primary,
+//                   "&:hover": {
+//                     borderColor: colors.primaryDark,
+//                     bgcolor: `${colors.primary}10`,
+//                   },
+//                 }}
+//                 onClick={() => navigate("/reports")}
+//               >
+//                 צפייה בדוחות
+//               </ActionButton>
+//             </Box>
+//           </Box>
+          
+//           {/* Footer with updated styling */}
+//           <Box
+//             sx={{
+//               textAlign: "center",
+//               mt: 6,
+//               pt: 3,
+//               borderTop: `1px solid ${colors.border}`,
+//               color: colors.textLight
+//             }}
+//           >
+//             <Typography variant="body2" sx={{ fontWeight: 500 }}>
+//               מערכת ניהול מוסדות ותקציבים © {new Date().getFullYear()}
+//             </Typography>
+//           </Box>
+//         </ContentContainer>
+//       </PageContainer>
+//     );
+//   };

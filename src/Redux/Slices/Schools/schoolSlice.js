@@ -2,6 +2,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {allSchoolsThunk, getDebtOfSchool, getExpendituresOfSchool, getSchoolBySsymbolThunk, getTotalSumOfSchool} from './getSchoolThunk'
 import { addSchoolThunk } from './schoolThunk';
+import { allDataThunk } from '../AllData/allDataThunk';
 
 const INITIAL_STATE = {
    allSchools : [],
@@ -22,9 +23,15 @@ export const schoolSlice = createSlice({
     extraReducers: (builder)=>{
 //מוסיף את התנק שהוא קריאת שרת וכך יכול למלא נתונים 
         builder.addCase(allSchoolsThunk.fulfilled, (state,action)=>{
-            console.log("gggg");
-            state.allSchools = action.payload
+          
+            state.allSchools = action.payload 
+             console.log("ssssssss ", state.schools);
         })
+        // builder.addCase(allDataThunk.fulfilled, (state,action)=>{
+          
+        //     state.allSchools = action.payload.schools 
+        //      console.log("ssssssss ", state.schools);
+        // })
 
         builder.addCase(getDebtOfSchool.fulfilled, (state,action)=>{
             console.log("ppp");

@@ -7,7 +7,7 @@ export const addSchoolThunk = createAsyncThunk(
       async(school) => {
 
       console.log(school);
-        const response = await fetch(`https://localhost:7222/api/School/create`,{
+        const response = await fetch(`https://localhost:7086/api/School/create`,{
         
             
         method:'POST',
