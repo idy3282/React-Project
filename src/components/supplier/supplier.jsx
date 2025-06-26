@@ -1,499 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
-// import { allSupplierThunk } from '../../Redux/Slices/Suplliers/getSupplierThunk';
-// import { addSuppThunk } from '../../Redux/Slices/Suplliers/suplliersThunk';
-// import {
-//   Box,
-//   Container,
-//   Typography,
-//   Paper,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableHead,
-//   TableRow,
-//   Button,
-//   TextField,
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   DialogTitle,
-//   IconButton,
-//   InputAdornment,
-//   Chip,
-//   Divider,
-//   Grid,
-//   Card,
-//   CardContent,
-//   TablePagination,
-//   Avatar,
-//   Tooltip,
-//   Alert,
-//   Snackbar,
-//   FormControl,
-//   InputLabel,
-//   Select,
-//   MenuItem,
-//   Collapse
-// } from '@mui/material';
-// import { styled } from '@mui/material/styles';
-// import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-// import SearchIcon from '@mui/icons-material/Search';
-// import BusinessIcon from '@mui/icons-material/Business';
-// import SortIcon from '@mui/icons-material/Sort';
-// import EditIcon from '@mui/icons-material/Edit';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-// import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-// import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-// import { AddSupplier } from './addSupplier';
-// import './supplier.css';
-
-// export const Supplier = () => {
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-  
-//   // מידע מהסטור
-//   const suppliers = useSelector(state => state.supplier?.allSuppliers || []);
-//   const currUser = useSelector(state => state.user?.currUser || {});
-  
-//   // סטייטים לניהול הדף
-//   const [openAddDialog, setOpenAddDialog] = useState(false);
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [sortField, setSortField] = useState('supplierName');
-//   const [sortDirection, setSortDirection] = useState('asc');
-//   const [page, setPage] = useState(0);
-//   const [rowsPerPage, setRowsPerPage] = useState(10);
-//   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-//   const [expandedRow, setExpandedRow] = useState(null);
-  
-//   // טעינת נתונים בעת טעינת הדף
-//   useEffect(() => {
-//     dispatch(allSupplierThunk());
-//   }, [dispatch]);
-  
-//   // פונקציות לניהול מיון
-//   const handleSort = (field) => {
-//     if (sortField === field) {
-//       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-//     } else {
-//       setSortField(field);
-//       setSortDirection('asc');
-//     }
-//   };
-  
-//   // פונקציות לניהול עמודים
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-  
-//   const handleChangeRowsPerPage = (event) => {
-//     setRowsPerPage(parseInt(event.target.value, 10));
-//     setPage(0);
-//   };
-  
-//   // פונקציות לניהול הוספת ספק
-//   const handleOpenAddDialog = () => {
-//     setOpenAddDialog(true);
-//   };
-  
-//   const handleCloseAddDialog = () => {
-//     setOpenAddDialog(false);
-//   };
-  
-//   // פונקציה לניהול פתיחת/סגירת פרטי חשבון
-//   const handleToggleRow = (id) => {
-//     setExpandedRow(expandedRow === id ? null : id);
-//   };
-  
-//   // סינון וסידור הספקים
-//   const filteredSuppliers = suppliers
-//     .filter(supplier => 
-//       // סינון לפי מוסד הנוכחי
-//       supplier.institutionId === currUser?.institutionId &&
-//       // סינון לפי חיפוש
-//       (supplier.supplierName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-//        supplier.licensedNum?.toString().includes(searchTerm) ||
-//        supplier.bankCode?.toString().includes(searchTerm) ||
-//        supplier.numOfBankBranch?.toString().includes(searchTerm) ||
-//        supplier.nameOfOwnerAccount?.toLowerCase().includes(searchTerm.toLowerCase()))
-//     )
-//     .sort((a, b) => {
-//       // מיון לפי השדה הנבחר
-//       const aValue = a[sortField] || '';
-//       const bValue = b[sortField] || '';
-      
-//       // טיפול במיון מספרים
-//       if (!isNaN(aValue) && !isNaN(bValue)) {
-//         return sortDirection === 'asc' 
-//           ? Number(aValue) - Number(bValue)
-//           : Number(bValue) - Number(aValue);
-//       }
-      
-//       // טיפול במיון מחרוזות
-//       if (sortDirection === 'asc') {
-//         return String(aValue).localeCompare(String(bValue), 'he');
-//       } else {
-//         return String(bValue).localeCompare(String(aValue), 'he');
-//       }
-//     });
-  
-//   // חישוב הספקים לתצוגה בעמוד הנוכחי
-//   const displayedSuppliers = filteredSuppliers
-//     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  
-//   return (
-//     <Paper className="supplier-page">
-//       <Container maxWidth="lg" className="supplier-container">
-//         {/* כותרת ופעולות */}
-//         <Paper className="supplier-header-paper">
-//           <Box className="supplier-header">
-//             <Typography variant="h5" className="supplier-title">
-//               ניהול ספקים
-//             </Typography>
-//             <Button 
-//               variant="contained" 
-//               className="add-supplier-button"
-//               startIcon={<AddCircleOutlineIcon />}
-//               onClick={handleOpenAddDialog}
-//             >
-//               הוספת ספק חדש
-//             </Button>
-//           </Box>
-//         </Paper>
-        
-//         {/* אזור חיפוש וסינון */}
-//         <Paper className="supplier-filters-paper">
-//           <Box className="supplier-filters">
-//             <TextField
-//               placeholder="חיפוש ספק..."
-//               variant="outlined"
-//               size="medium"
-//               value={searchTerm}
-//               onChange={(e) => setSearchTerm(e.target.value)}
-//               className="supplier-search"
-//               InputProps={{
-//                 startAdornment: (
-//                   <InputAdornment position="start">
-//                     <SearchIcon color="action" />
-//                   </InputAdornment>
-//                 ),
-//               }}
-//             />
-            
-//             <FormControl className="supplier-sort">
-//               <InputLabel id="sort-field-label">מיון לפי</InputLabel>
-//               <Select
-//                 labelId="sort-field-label"
-//                 value={sortField}
-//                 label="מיון לפי"
-//                 onChange={(e) => handleSort(e.target.value)}
-//                 endAdornment={
-//                   <InputAdornment position="end">
-//                     {sortDirection === 'asc' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />}
-//                   </InputAdornment>
-//                 }
-//               >
-//                 <MenuItem value="supplierName">שם ספק</MenuItem>
-//                 <MenuItem value="licensedNum">מספר עסק מורשה</MenuItem>
-//                 <MenuItem value="bankCode">קוד בנק</MenuItem>
-//               </Select>
-//             </FormControl>
-//           </Box>
-//         </Paper>
-        
-//         {/* סיכום נתונים */}
-//         <Paper className="supplier-summary-paper">
-//           <Box className="supplier-summary">
-//             <Box className="supplier-summary-info">
-//               <BusinessIcon className="supplier-summary-icon" />
-//               <Box>
-//                 <Typography variant="h6" className="supplier-summary-title">
-//                   סך הספקים במערכת
-//                 </Typography>
-//                 <Typography variant="body2" className="supplier-summary-subtitle">
-//                   מציג {filteredSuppliers.length} ספקים מתוך {suppliers.filter(s => s.institutionId === currUser?.institutionId).length} ספקים
-//                 </Typography>
-//               </Box>
-//             </Box>
-//             <Chip
-//               label={`${filteredSuppliers.length} ספקים`}
-//               className="supplier-summary-chip"
-//             />
-//           </Box>
-//         </Paper>
-        
-//         {/* טבלת ספקים */}
-//         {displayedSuppliers.length > 0 ? (
-//           <Paper className="supplier-table-paper">
-//             <TableContainer>
-//               <Table aria-label="טבלת ספקים">
-//                 <TableHead>
-//                   <TableRow>
-//                     <TableCell align="right" className="supplier-table-header">
-//                       <Box 
-//                         className="supplier-sort-header"
-//                         onClick={() => handleSort('licensedNum')}
-//                       >
-//                         מספר עסק מורשה
-//                         {sortField === 'licensedNum' && (
-//                           <Box component="span" className="supplier-sort-icon">
-//                             {sortDirection === 'asc' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />}
-//                           </Box>
-//                         )}
-//                       </Box>
-//                     </TableCell>
-//                     <TableCell align="right" className="supplier-table-header">
-//                       <Box 
-//                         className="supplier-sort-header"
-//                         onClick={() => handleSort('supplierName')}
-//                       >
-//                         שם ספק
-//                         {sortField === 'supplierName' && (
-//                           <Box component="span" className="supplier-sort-icon">
-//                             {sortDirection === 'asc' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />}
-//                           </Box>
-//                         )}
-//                       </Box>
-//                     </TableCell>
-//                     <TableCell align="right" className="supplier-table-header">
-//                       פרטי חשבון
-//                     </TableCell>
-//                   </TableRow>
-//                 </TableHead>
-//                 <TableBody>
-//                   {displayedSuppliers.map((supplier) => (
-//                     <React.Fragment key={supplier.licensedNum || supplier.id}>
-//                       <TableRow className="supplier-table-row">
-//                         <TableCell align="right">
-//                           {supplier.licensedNum || 'לא צוין'}
-//                         </TableCell>
-//                         <TableCell align="right">
-//                           <Box className="supplier-name-cell">
-//                             <Avatar className="supplier-avatar">
-//                               {supplier.supplierName?.charAt(0) || 'S'}
-//                             </Avatar>
-//                             <Typography className="supplier-name">
-//                               {supplier.supplierName}
-//                             </Typography>
-//                           </Box>
-//                         </TableCell>
-//                         <TableCell align="right">
-//                           <Box className="supplier-account-cell">
-//                             <Button
-//                               variant="text"
-//                               color="primary"
-//                               startIcon={expandedRow === supplier.licensedNum ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-//                               onClick={() => handleToggleRow(supplier.licensedNum)}
-//                               className="supplier-expand-button"
-//                             >
-//                               הצג פרטי חשבון
-//                             </Button>
-//                           </Box>
-//                         </TableCell>
-//                       </TableRow>
-//                       <TableRow>
-//                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-//                           <Collapse in={expandedRow === supplier.licensedNum} timeout="auto" unmountOnExit>
-//                             <Box className="supplier-details">
-//                               <Typography variant="h6" className="supplier-details-title">
-//                                 פרטי חשבון בנק
-//                               </Typography>
-//                               <Grid container spacing={2}>
-//                                 <Grid item xs={12} md={4}>
-//                                   <Box className="supplier-detail-item">
-//                                     <AccountBalanceIcon className="supplier-detail-icon" />
-//                                     <Typography variant="subtitle2" className="supplier-detail-label">
-//                                       קוד בנק:
-//                                     </Typography>
-//                                   </Box>
-//                                   <Typography variant="body1" className="supplier-detail-value">
-//                                     {supplier.bankCode || 'לא צוין'}
-//                                   </Typography>
-//                                 </Grid>
-//                                 <Grid item xs={12} md={4}>
-//                                   <Box className="supplier-detail-item">
-//                                     <AccountBalanceIcon className="supplier-detail-icon" />
-//                                     <Typography variant="subtitle2" className="supplier-detail-label">
-//                                       מספר סניף:
-//                                     </Typography>
-//                                   </Box>
-//                                   <Typography variant="body1" className="supplier-detail-value">
-//                                     {supplier.numOfBankBranch || 'לא צוין'}
-//                                   </Typography>
-//                                 </Grid>
-//                                 <Grid item xs={12} md={4}>
-//                                   <Box className="supplier-detail-item">
-//                                     <AccountBalanceIcon className="supplier-detail-icon" />
-//                                     <Typography variant="subtitle2" className="supplier-detail-label">
-//                                       שם בעל החשבון:
-//                                     </Typography>
-//                                   </Box>
-//                                   <Typography variant="body1" className="supplier-detail-value">
-//                                     {supplier.nameOfOwnerAccount || 'לא צוין'}
-//                                   </Typography>
-//                                 </Grid>
-//                               </Grid>
-//                             </Box>
-//                           </Collapse>
-//                         </TableCell>
-//                       </TableRow>
-//                     </React.Fragment>
-//                   ))}
-//                 </TableBody>
-//               </Table>
-//             </TableContainer>
-            
-//             <TablePagination
-//               component="div"
-//               count={filteredSuppliers.length}
-//               page={page}
-//               onPageChange={handleChangePage}
-//               rowsPerPage={rowsPerPage}
-//               onRowsPerPageChange={handleChangeRowsPerPage}
-//               labelRowsPerPage="שורות בעמוד:"
-//               labelDisplayedRows={({ from, to, count }) => `${from}-${to} מתוך ${count}`}
-//                 rowsPerPageOptions={[5, 10, 25, 50]}
-//                 className="supplier-pagination"
-//               />
-//             </Paper>
-//           ) : (
-//             <Paper className="supplier-empty-paper">
-//               <BusinessIcon className="supplier-empty-icon" />
-//               <Typography variant="h6" className="supplier-empty-title">
-//                 לא נמצאו ספקים
-//               </Typography>
-//               <Typography variant="body2" className="supplier-empty-subtitle">
-//                 {searchTerm ? 'לא נמצאו ספקים התואמים את החיפוש שלך' : 'עדיין לא הוספת ספקים למערכת'}
-//               </Typography>
-//               <Button
-//                 variant="contained"
-//                 startIcon={<AddCircleOutlineIcon />}
-//                 className="supplier-empty-button"
-//                 onClick={handleOpenAddDialog}
-//               >
-//                 הוספת ספק חדש
-//               </Button>
-//             </Paper>
-//           )}
-          
-//           {/* דיאלוג הוספת ספק */}
-//           <Dialog 
-//             open={openAddDialog} 
-//             onClose={handleCloseAddDialog}
-//             maxWidth="md"
-            
-            
-//             fullWidth
-//             className="supplier-add-dialog"
-//           >
-            
-//             <AddSupplier  setAddSupp={setOpenAddDialog}  />
-//           </Dialog>
-          
-//           {/* הודעת סנאקבר */}
-//           <Snackbar 
-//             open={snackbar.open} 
-//             autoHideDuration={6000} 
-//             onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-//             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-//           >
-//             <Alert 
-//               onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} 
-//               severity={snackbar.severity}
-//               className="supplier-snackbar"
-//             >
-//               {snackbar.message}
-//             </Alert>
-//           </Snackbar>
-//         </Container>
-//       </Paper>
-//     );
-//   };
-  
-
-
-
-
-
-
-// // import { useEffect } from 'react';
-// // import {useSelector,useDispatch} from 'react-redux'
-
-// // import * as React from 'react';
-// // import Table from '@mui/material/Table';
-// // import TableBody from '@mui/material/TableBody';
-// // import TableCell from '@mui/material/TableCell';
-// // import TableContainer from '@mui/material/TableContainer';
-// // import TableHead from '@mui/material/TableHead';
-// // import TableRow from '@mui/material/TableRow';
-// // import Paper from '@mui/material/Paper';
-// // import { allSupplierThunk } from '../../Redux/Slices/Suplliers/getSupplierThunk';
-// // import { Dialog } from '@mui/material';
-// // import { AddSupplier } from './addSupplier';
-// // export const Supplier = () =>{
-// // const schools = useSelector(s => s.supplier.allSuppliers)
-// // console.log("school  --",schools);
-// // const dispatch=useDispatch()
-// // const [addSupp,setAddSupp]=React.useState(false)
-// // const [flag,setFlag]=React.useState(false)
-
-// // const getData=async()=>{
-// //        await dispatch(allSupplierThunk())
-// //     }
-    
-// // useEffect(()=>{
-// //     getData()
-// // },[])
-
-// //     return <>
-
-
-// //    {
-    
-// //     // schools?.map((e)=>{
-// //     //     return <div key ={e} style={{color:"blue",width:"3080px",height:"850px"}}>
-// //     //         {e.schoolName}
-// //             <TableContainer component={Paper} sx={{width:"50%",height:"auto"}}>
-// //       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-// //         <TableHead>
-// //           <TableRow>
-// //             <TableCell>מספר עסק מורשה</TableCell>
-// //             <TableCell align="right">שם ספק</TableCell>
-// //             <TableCell align="right">פרטי בנק</TableCell>
-// //             {/* <TableCell align="right">Carbs&nbsp;(g)</TableCell> */}
-// //             {/* <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
-// //           </TableRow>
-// //         </TableHead>
-// //         <TableBody>
-// //           {schools.map((sc) => (
-// //             <TableRow
-// //               key={sc.licensedNum}
-// //               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-// //             >
-// //               <TableCell component="th" scope="row">
-// //                 {sc.licensedNum}
-// //               </TableCell>
-// //                <TableCell align="right">{sc.supplierName}</TableCell>
-// //               <TableCell align="right">{sc.bankCode}</TableCell>
-// //               {/* <TableCell align="right">{row.carbs}</TableCell>
-// //               <TableCell align="right">{row.protein}</TableCell> */}
-// //             </TableRow>
-// //           ))}
-// //         </TableBody>
-// //       </Table>
-// //     </TableContainer>}
- 
-// //        {  <button className='button' onClick={() => { setAddSupp(true); debugger; }}>להוספת ספק לרשימה</button>}
-          
-// //        {addSupp && <Dialog open><AddSupplier setAddSupp={setAddSupp}/></Dialog>}
- 
-// //     </>
-// // }
 
 
 
@@ -537,7 +41,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Collapse
+  Collapse,
+  colors
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -601,8 +106,9 @@ const SearchField = styled(TextField)(({ theme }) => ({
       borderColor: '#e0e0e0',
     },
     '&:hover fieldset': {
-      borderColor: theme.palette.primary.main,
+      borderColor: '#00796b',
     },
+    
     '&.Mui-focused fieldset': {
       borderColor: '#00796b',
     },
@@ -611,10 +117,10 @@ const SearchField = styled(TextField)(({ theme }) => ({
     color: '#00796b',
   },
   '& .MuiInputLabel-root': {
-    fontFamily: 'Rubik, sans-serif',
+    fontFamily: 'Ariel, sans-serif',
   },
   '& .MuiInputBase-input': {
-    fontFamily: 'Rubik, sans-serif',
+    fontFamily: 'Ariel, sans-serif',
   },
 }));
 
@@ -624,13 +130,13 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   overflow: "hidden",
   border: "1px solid #e0e0e0",
   '& .MuiTableCell-head': {
-    backgroundColor: '#f5f5f5',
-    fontWeight: 700,
+    backgroundColor: `${'#00796b'}15`,
+    fontWeight: 600,
     color: '#263238',
-    fontFamily: 'Rubik, sans-serif',
+    fontFamily: 'Ariel, sans-serif',
   },
   '& .MuiTableCell-body': {
-    fontFamily: 'Rubik, sans-serif',
+    fontFamily: 'Ariel, sans-serif',
   },
   '& .MuiTableRow-root': {
     '&:hover': {
@@ -674,7 +180,7 @@ export const Supplier = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [expandedRow, setExpandedRow] = useState(null);
+  const [expandedRow, setExpandedRow] = useState([]);
   
   // Fetch data on component mount
   useEffect(() => {
@@ -712,7 +218,20 @@ export const Supplier = () => {
   
   // Toggle row expansion
   const handleToggleRow = (id) => {
-    setExpandedRow(expandedRow === id ? null : id);
+    setExpandedRow(prev => {
+      if (Array.isArray(prev)) {
+        // אם השורה כבר פתוחה, סגור אותה
+        if (prev.includes(id)) {
+          return prev.filter(rowId => rowId !== id);
+        } else {
+          // אחרת, הוסף אותה לרשימת השורות הפתוחות
+          return [...prev, id];
+        }
+      } else {
+        // אם זה עדיין לא מערך, הפוך למערך
+        return prev === id ? [] : [id];
+      }
+    });
   };
   
   // Filter and sort suppliers
@@ -775,7 +294,7 @@ export const Supplier = () => {
                 sx={{
                   fontWeight: 800,
                   color: colors.text,
-                  fontFamily: 'Rubik, sans-serif',
+                 
                 }}
               >
                 ניהול ספקים
@@ -819,6 +338,7 @@ export const Supplier = () => {
                   placeholder="חיפוש ספק..."
                   variant="outlined"
                   value={searchTerm}
+
                   onChange={(e) => setSearchTerm(e.target.value)}
                   InputProps={{
                     startAdornment: (
@@ -848,7 +368,7 @@ export const Supplier = () => {
                       },
                     }}
                     endAdornment={
-                      <InputAdornment position="end">
+                      <InputAdornment position="end" >
                         {sortDirection === 'asc' ? 
                           <ArrowUpwardIcon fontSize="small" sx={{ color: colors.primary }} /> : 
                           <ArrowDownwardIcon fontSize="small" sx={{ color: colors.primary }} />
@@ -1014,7 +534,8 @@ export const Supplier = () => {
                                 bgcolor: `${colors.primary}10`,
                               }
                             }}
-                            startIcon={expandedRow === supplier.licensedNum ? 
+                            startIcon={ 
+                              Array.isArray(expandedRow) && expandedRow.includes(supplier.licensedNum) ? 
                               <KeyboardArrowUpIcon /> : 
                               <KeyboardArrowDownIcon />
                             }
@@ -1024,13 +545,16 @@ export const Supplier = () => {
                           </Button>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
-                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                          <Collapse in={expandedRow === supplier.licensedNum} timeout="auto" unmountOnExit>
+                      <TableRow >
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 ,paddingRight:'100px'}} colSpan={6}>
+                          <Collapse in={Array.isArray(expandedRow) && expandedRow.includes(supplier.licensedNum)} timeout="auto" unmountOnExit >
+                          
                             <Box sx={{ 
+                              width:'80%',
                               margin: 2, 
+                             
                               p: 3, 
-                              bgcolor: `${colors.primary}05`, 
+                              // bgcolor: `${colors.primary}05`, 
                               borderRadius: 2,
                               border: `1px dashed ${colors.primary}30`
                             }}>
@@ -1044,13 +568,14 @@ export const Supplier = () => {
                                   fontFamily: 'Rubik, sans-serif',
                                   display: 'flex',
                                   alignItems: 'center',
+                                  
                                   mb: 2
                                 }}
                               >
                                 <AccountBalanceIcon sx={{ mr: 1 }} />
                                 פרטי חשבון בנק
                               </Typography>
-                              <Grid container spacing={3}>
+                              <Grid container spacing={3} sx={{ marginRight: '80px' }}>
                                 <Grid item xs={12} md={4}>
                                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                     <Typography 
@@ -1061,18 +586,19 @@ export const Supplier = () => {
                                         fontFamily: 'Rubik, sans-serif'
                                       }}
                                     >
-                                      קוד בנק:
-                                    </Typography>
-                                  </Box>
-                                  <Typography 
+                                    קוד בנק:{supplier.bankCode || 'לא צוין'}
+                                      {/* <Typography 
                                     variant="body1"
                                     sx={{
                                       fontWeight: 500,
                                       fontFamily: 'Rubik, sans-serif'
                                     }}
                                   >
-                                    {supplier.bankCode || 'לא צוין'}
-                                  </Typography>
+                                    
+                                  </Typography> */}
+                                    </Typography>
+                                  </Box>
+                                 
                                 </Grid>
                                 <Grid item xs={12} md={4}>
                                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -1084,10 +610,8 @@ export const Supplier = () => {
                                         fontFamily: 'Rubik, sans-serif'
                                       }}
                                     >
-                                      מספר סניף:
-                                    </Typography>
-                                  </Box>
-                                  <Typography 
+                                      מספר סניף:{supplier.numOfBankBranch || 'לא צוין'}
+                                      {/* <Typography 
                                     variant="body1"
                                     sx={{
                                       fontWeight: 500,
@@ -1095,7 +619,10 @@ export const Supplier = () => {
                                     }}
                                   >
                                     {supplier.numOfBankBranch || 'לא צוין'}
-                                  </Typography>
+                                  </Typography> */}
+                                    </Typography>
+                                  </Box>
+                                  
                                 </Grid>
                                 <Grid item xs={12} md={4}>
                                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -1107,18 +634,19 @@ export const Supplier = () => {
                                         fontFamily: 'Rubik, sans-serif'
                                       }}
                                     >
-                                      שם בעל החשבון:
-                                    </Typography>
-                                  </Box>
-                                  <Typography 
+                                      שם בעל החשבון:{supplier.nameOfOwnerAccount || 'לא צוין'}
+                                      {/* <Typography 
                                     variant="body1"
                                     sx={{
                                       fontWeight: 500,
                                       fontFamily: 'Rubik, sans-serif'
                                     }}
                                   >
-                                    {supplier.nameOfOwnerAccount || 'לא צוין'}
-                                  </Typography>
+                                    
+                                  </Typography> */}
+                                    </Typography>
+                                  </Box>
+                                  
                                 </Grid>
                               </Grid>
                             </Box>

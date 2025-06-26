@@ -43,7 +43,6 @@ export const userSlice = createSlice({
         })
         builder.addCase(getUserById.fulfilled, (state,action)=>{
             // state.checkUser = action.payload
-             
             // if(action.status==204){
             // state.currUser ='not' 
 

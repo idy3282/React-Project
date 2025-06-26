@@ -4,11 +4,11 @@ import { categorySlice } from './Slices/Categories/categorySlice';
 import { expenditureSlice} from './Slices/Expenditures/expenditureSlice'
 import { supplierSlice } from './Slices/Suplliers/supplierSlice';
 import { userSlice } from './Slices/Users/userSlice';
-import { allDataSlice } from './Slices/AllData/allDataSlice';
+import { paymentsSlice } from './Slices/Payments/paymentsSlice';
 
 
 const reducers = combineSlices(schoolSlice,categorySlice,expenditureSlice,supplierSlice,
-                                userSlice,allDataSlice);
+                                userSlice,paymentsSlice);
 
 export const STORE = configureStore({
     reducer:reducers

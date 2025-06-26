@@ -325,7 +325,7 @@ export const AddExpenditure = () => {
                 sx={{
                   fontWeight: 800,
                   color: colors.text,
-                  fontFamily: 'Rubik, sans-serif',
+
                 }}
               >
                 הוספת הוצאה חדשה

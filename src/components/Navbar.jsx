@@ -139,7 +139,7 @@ export const Navbar = () => {
     {
       title: 'דף הבית',
       icon: <DashboardIcon />,
-      path: '/work',
+      path: currUser.schoolSymbol == 0 ? '/home' : '/work',
       color: colors.primary,
     },
     {
@@ -149,7 +149,7 @@ export const Navbar = () => {
       color: colors.primaryLight,
     },
     {
-      title: 'רשימת הוצאות',
+      title: 'הוצאות',
       icon: <ListAltIcon />,
       path: '/expenitures',
       color: colors.primaryDark,

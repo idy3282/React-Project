@@ -547,10 +547,54 @@ export const LogIn = () => {
     event.preventDefault();
   };
   
+  // const checkUser = async () => {
+  //   // Validate inputs
+  //   debugger;
+  //   if (!name.trim() || !id.trim()) {
+  //     setMsg(true);
+  //     return;
+  //   }
+    
+  //   try {
+  //     setLoading(true);
+  //     setMsg(false);
+      
+  //     const u = await dispatch(getUserById(id));
+
+
+  //     if(u.payload.userName === name  && u.payload != undefined) {
+  //       if (u.payload.schoolSymbol == 0) {
+  //         navigate('home');
+  //       } else if (u.payload.schoolSymbol != 0) {
+  //         navigate('/work');
+  //       }
+        
+        
+  //     }
+  //      else {
+  //         u.payload = undefined;
+  //         setMsg(true);}
+  //     // if ((u.userName === name) || u.payload != undefined && u.payload.id > 0) {
+  //     //   if (u.payload.schoolSymbol == 0) {
+  //     //     navigate('home');
+  //     //   } else if (u.payload.schoolSymbol != 0) {
+  //     //     navigate('/work');
+  //     //   }
+  //     // } else {
+  //     //   u.payload = undefined;
+  //     //   setMsg(true);
+  //     // }
+      
+  //     setId("");
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     setMsg(true);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const checkUser = async () => {
-    // Validate inputs
-    debugger;
-    if (!name.trim() || !id.trim()) {
+    if (!name.trim() || !id.trim() || !(/^\d+$/.test(id))) {
       setMsg(true);
       return;
     }
@@ -559,35 +603,41 @@ export const LogIn = () => {
       setLoading(true);
       setMsg(false);
       
-      const u = await dispatch(getUserById(parseInt(id)));
-
-
-      if(u.payload.userName === name  && u.payload != undefined) {
-        if (u.payload.schoolSymbol == 0) {
+      console.log("לפני קריאה לשרת, id:", id);
+      const response = await dispatch(getUserById(id));
+      console.log("תשובה מהשרת:", response);
+      
+      // בדיקה אם התשובה קיימת בכלל
+      if (!response) {
+        console.error("לא התקבלה תשובה מהשרת");
+        setMsg(true);
+        return;
+      }
+      
+      // בדיקה אם יש payload
+      if (!response.payload) {
+        console.error("אין payload בתשובה");
+        setMsg(true);
+        return;
+      }
+      
+      console.log("Payload:", response.payload);
+      
+      // בדיקת שם המשתמש
+      if (response.payload.userName === name) {
+        if (response.payload.schoolSymbol === 0) {
           navigate('home');
-        } else if (u.payload.schoolSymbol != 0) {
+        } else if (response.payload.schoolSymbol !== 0) {
           navigate('/work');
         }
-        
-        
+      } else {
+        console.error("שם המשתמש לא תואם");
+        setMsg(true);
       }
-       else {
-          u.payload = undefined;
-          setMsg(true);}
-      // if ((u.userName === name) || u.payload != undefined && u.payload.id > 0) {
-      //   if (u.payload.schoolSymbol == 0) {
-      //     navigate('home');
-      //   } else if (u.payload.schoolSymbol != 0) {
-      //     navigate('/work');
-      //   }
-      // } else {
-      //   u.payload = undefined;
-      //   setMsg(true);
-      // }
       
       setId("");
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("שגיאת התחברות:", error);
       setMsg(true);
     } finally {
       setLoading(false);
@@ -601,6 +651,7 @@ export const LogIn = () => {
   };
   
   return (
+    
     <LoginContainer maxWidth="xl" sx={{direction: 'rtl'}}>
       <Zoom in={mounted} timeout={800}>
         <LoginCard elevation={0}>
@@ -698,7 +749,7 @@ export const LogIn = () => {
                   fullWidth
                   onClick={checkUser}
                   disabled={loading}
-                  startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <LoginIcon />}
+                  startIcon={loading ? <CircularProgress size={20} color="inherit" sx={{marginLeft:"3px"}}/> : <LoginIcon />}
                 >
                   {loading ? "מתחבר..." : "התחבר"}
                 </LoginButton>

@@ -1,872 +1,186 @@
-/* עיצוב כללי לדף המוסדות */
-.schools-page {
-    background-color: #f8f9fa;
-    min-height: 100vh;
-    padding: 20px;
-    direction: rtl;
-    font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* SchoolExpensesManager.css */
+
+/* RTL Support */
+html[dir="rtl"] .MuiTableCell-root {
+  text-align: right;
+}
+
+/* General Styles */
+.MuiTableCell-root {
+  font-family: 'Rubik', sans-serif;
+}
+
+.MuiTypography-root {
+  font-family: 'Rubik', sans-serif;
+}
+
+.MuiButton-root {
+  font-family: 'Rubik', sans-serif;
+}
+
+.MuiChip-root {
+  font-family: 'Rubik', sans-serif;
+}
+
+/* Header Icon Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
   }
-  
-  .schools-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  50% {
+    transform: translateY(-10px);
   }
-  
-  /* כותרת הדף */
-  .schools-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+  100% {
+    transform: translateY(0px);
   }
-  
-  .schools-title-section {
-    display: flex;
-    align-items: center;
+}
+
+.header-icon {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Refresh Icon Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .schools-icon {
-    font-size: 32px;
-    color: #0288d1;
-    margin-left: 12px;
+  100% {
+    transform: rotate(360deg);
   }
-  
-  .schools-title {
-    font-weight: 700;
-    color: #0288d1;
-  }
-  
-  .schools-actions {
-    display: flex;
-    gap: 12px;
-  }
-  
-  .schools-refresh-button {
-    color: #0288d1;
-    border: 1px solid rgba(2, 136, 209, 0.2);
-    border-radius: 50%;
+}
+
+/* Payment Cell Styling */
+.payment-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.partial-payment-chip {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.partial-payment-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+}
+
+.full-payment-chip {
+  transition: all 0.2s ease;
+}
+
+.full-payment-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.payment-button {
+  transition: all 0.2s ease;
+}
+
+.payment-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Table Row Hover Effect */
+.MuiTableRow-root.MuiTableRow-hover:hover {
+  background-color: rgba(0, 121, 107, 0.08) !important;
+  transition: background-color 0.2s ease;
+}
+
+/* School Chip Animation */
+.MuiChip-root {
+  transition: all 0.2s ease;
+}
+
+.MuiChip-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Hover Effects */
+.MuiCard-root {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Custom Scrollbar for Webkit Browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Cancel and Check Icons */
+.cancel-icon {
+  color: #d32f2f;
+}
+
+.check-icon {
+  color: #4caf50;
+}
+
+/* Button Hover Effects */
+.MuiButton-contained {
+  transition: all 0.3s ease;
+}
+
+.MuiButton-contained:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 121, 107, 0.3);
+}
+
+.MuiButton-outlined {
+  transition: all 0.3s ease;
+}
+
+.MuiButton-outlined:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 121, 107, 0.1);
+}
+
+/* Table Container */
+.MuiTableContainer-root {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .MuiTableCell-root {
     padding: 8px;
   }
   
-  .schools-add-button {
-    background-color: #0288d1;
-    color: white;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-weight: 600;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+  .MuiTypography-h4 {
+    font-size: 1.5rem;
   }
   
-  .schools-add-button:hover {
-    background-color: #0277bd;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  .MuiTypography-h6 {
+    font-size: 1.1rem;
   }
-  
-  /* אזור טעינה ושגיאות */
-  .schools-loading {
-    display: flex;
-    justify-content: center;
-    padding: 40px;
-  }
-  
-  .schools-error {
-    margin: 20px 0;
-  }
-  
-  /* אזור סינון */
-  .schools-filter-section {
-    padding: 20px;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    background-color: #f5f7fa;
-    border: 1px solid #e0e0e0;
-  }
-  
-  .schools-filter-title {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    color: #263238;
-    font-weight: 600;
-  }
-  
-  .schools-filter-icon {
-    margin-left: 8px;
-    color: #0288d1;
-  }
-  
-  .schools-autocomplete {
-    position: relative;
-  }
-  
-  .schools-tag {
-    background-color: #0288d1;
-    color: white;
-    border-radius: 16px;
-    padding: 4px 8px;
-    margin: 4px;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-  }
-  
-  .schools-tag-delete {
-    color: white;
-    margin-right: 4px;
-    padding: 2px;
-  }
-  
-  .schools-search-input {
-    padding: 8px;
-    font-size: 16px;
-  }
-  
-  .schools-options-list {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-  }
-  
-  .schools-option-item {
-    padding: 10px 16px;
-    cursor: pointer;
-  }
-  
-  .schools-option-item:hover {
-    background-color: #f1f8fe;
-  }
-  
-  /* אזור פעולות */
-  .schools-actions-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  
-  .schools-action-button {
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-weight: 600;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-  }
-  
-  .schools-action-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  .debt-button {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .debt-button:hover {
-    background-color: #d32f2f;
-  }
-  
-  .expenditures-button {
-    background-color: #0288d1;
-    color: white;
-  }
-  
-  .expenditures-button:hover {
-    background-color: #0277bd;
-  }
-  
-  .export-button {
-    border: 1px solid #4caf50;
-    color: #4caf50;
-  }
-  
-  .export-button:hover {
-    background-color: rgba(76, 175, 80, 0.1);
-  }
-  
-  /* אזור תוצאות */
-  .schools-results-section {
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  
-  .schools-tabs {
-    background-color: #f5f7fa;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .schools-tab {
-    font-weight: 600;
-    color: #546e7a;
-  }
-  
-  /* סיכום */
-  .schools-summary-card {
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .schools-summary-title {
-    margin-bottom: 16px;
-    color: #263238;
-    font-weight: 600;
-  }
-  
-  .schools-summary-grid {
-    margin-top: 16px;
-  }
-  
-  .schools-summary-item {
-    padding: 16px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .schools-summary-value {
-    font-weight: 700;
-    margin-top: 8px;
-  }
-  
-  .debt-summary {
-    background-color: #ffebee;
-    color: #d32f2f;
-  }
-  
-  .expenditures-summary {
-    background-color: #e3f2fd;
-    color: #0277bd;
-  }
-  
-  .budget-summary {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .balance-summary {
-    background-color: #ede7f6;
-    color: #512da8;
-  }
-  
-  /* פירוט מוסדות */
-  .schools-details-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .schools-detail-card {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
-  
-  .schools-detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    background-color: #e3f2fd;
-    cursor: pointer;
-  }
-  
-  .schools-detail-name {
-    font-weight: 600;
-    color: #0277bd;
-  }
-  
-  .schools-detail-symbol {
-    color: #546e7a;
-  }
-  
-  .schools-detail-budget {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #0277bd;
-  }
-  
-  .schools-detail-content {
-    padding: 16px;
-  }
-  
-  .schools-detail-summary {
-    padding: 16px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .debt-detail {
-    background-color: #ffebee;
-    color: #d32f2f;
-  }
-  
-  .expenditures-detail {
-    background-color: #e3f2fd;
-    color: #0277bd;
-  }
-  
-  .schools-detail-expenditures {
-    margin-top: 16px;
-  }
-  
-  .schools-detail-expenditures-title {
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #263238;
-  }
-  
-  .schools-detail-table-container {
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-  }
-  
-  .schools-detail-table {
-    width: 100%;
-  }
-  
-  .schools-detail-row:hover {
-    background-color: #f5f7fa;
-  }
-  
-  /* טבלת הוצאות */
-  .schools-expenditures-section {
-    padding: 16px;
-  }
-  
-  .schools-expenditures-filters {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  
-  .schools-expenditures-search {
-    flex: 1;
-    min-width: 250px;
-  }
-  
-  .schools-expenditures-filter {
-    min-width: 200px;
-  }
-  
-  .schools-expenditures-summary {
-    background-color: #f5f7fa;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-  }
-  
-  .schools-expenditures-summary-title {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    font-weight: 600;
-    color: #263238;
-  }
-  
-  .schools-expenditures-summary-icon {
-    margin-left: 8px;
-    color: #0288d1;
-  }
-  
-  .schools-expenditures-summary-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-  
-  .schools-expenditures-summary-item {
-    flex: 1;
-    min-width: 150px;
-    background-color: white;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    text-align: center;
-  }
-  
-  .schools-expenditures-table-container {
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 16px;
-  }
-  
-  .schools-expenditures-table {
-    width: 100%;
-  }
-  
-  .schools-table-header-cell {
-    background-color: #f5f7fa;
-    font-weight: 600;
-    color: #263238;
-  }
-  
-  .schools-expenditures-row:hover {
-    background-color: #f1f8fe;
-  }
-  
-  .schools-expenditures-pagination {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  /* צ'יפים */
-  .school-chip {
-    background-color: #e3f2fd;
-    color: #0277bd;
-    font-weight: 500;
-  }
-  
-  .status-chip {
-    font-weight: 500;
-  }
-  
-  .status-chip.approved {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .status-chip.pending {
-    background-color: #fff8e1;
-    color: #f57f17;
-  }
-  
-  /* מצב ריק */
-  .schools-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 0;
-    text-align: center;
-  }
-  
-  .schools-empty-icon {
-    font-size: 64px;
-    color: #b0bec5;
-    margin-bottom: 16px;
-  }
-  
-  .schools-empty-title {
-    color: #546e7a;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  
-  .schools-empty-subtitle {
-    color: #78909c;
-    max-width: 400px;
-  }
-  
-  /* דיאלוג הוספת מוסד */
-  .schools-add-dialog {
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  
-  .schools-add-dialog-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background-color: #f5f7fa;
-  }
-  
-  .schools-add-dialog-content {
-    padding: 24px;
-  }
-  
-  /* התאמה למסכים קטנים */
-  @media (max-width: 768px) {
-    .schools-container {
-      padding: 16px;
-    }
-    
-    .schools-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-    }
-    
-    .schools-actions {
-      width: 100%;
-      justify-content: space-between;
-    }
-    
-    .schools-expenditures-filters {
-      flex-direction: column;
-    }
-    
-    .schools-expenditures-summary-items {
-      flex-direction: column;
-      gap: 12px;
-    }
-    
-    .schools-detail-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    
-    .schools-detail-budget {
-      width: 100%;
-      justify-content: space-between;
-    }
-    
-    .schools-expenditures-table-container {
-      overflow-x: auto;
-    }
-  }
-  
-  /* אנימציות */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  .schools-detail-content,
-  .schools-expenditures-section,
-  .schools-summary-card {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  /* עיצוב גלילה */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #b0bec5;
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #90a4ae;
-  }
-
-
-  /* ========================== */
-  /* עיצוב כללי */
-.schools-container {
-    padding: 20px;
-    direction: rtl;
-    font-family: 'Rubik', 'Segoe UI', sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* כותרת */
-  .schools-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .schools-title {
-    display: flex;
-    align-items: center;
-    font-weight: 700;
-    color: #0288d1;
-  }
-  
-  .schools-icon {
-    margin-left: 10px;
-    font-size: 32px;
-  }
-  
-  .schools-actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .add-school-button {
-    background-color: #0288d1;
-    color: white;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .refresh-button {
-    color: #0288d1;
-  }
-  
-  /* טעינה ושגיאות */
-  .loading-container {
-    display: flex;
-    justify-content: center;
-    padding: 40px;
-  }
-  
-  .error-alert {
-    margin-bottom: 20px;
-  }
-  
-  /* אזור סינון */
-  .filter-paper {
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  
-  .filter-title {
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-  
-  .autocomplete-root {
-    position: relative;
-  }
-  
-  .school-tag {
-    background-color: #0288d1;
-    color: white;
-    display: flex;
-    align-items: center;
-    border-radius: 16px;
-    padding: 4px 10px;
-    margin: 2px;
-  }
-  
-  .deleteIcon {
-    cursor: pointer;
-    margin-right: 5px;
-  }
-  
-  .options-list {
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-  }
-  
-  /* כפתורי פעולה */
-  .action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .action-button {
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-weight: 600;
-  }
-  
-  /* כרטיס סיכום */
-  .summary-card {
-    margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .summary-item {
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    background-color: #f5f5f5;
-  }
-  
-  .debt-item {
-    background-color: #ffebee;
-    color: #d32f2f;
-  }
-  
-  .budget-item {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .balance-item {
-    background-color: #e3f2fd;
-    color: #0277bd;
-  }
-  
-  .divider {
-    margin: 20px 0;
-  }
-  
-  /* פירוט מוסדות */
-  .schools-details-title {
-    margin: 15px 0;
-    font-weight: 600;
-  }
-  
-  .school-detail-card {
-    margin-bottom: 10px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .school-detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: #f5f5f5;
-    cursor: pointer;
-  }
-  
-  .school-detail-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .school-detail-content {
-    padding: 16px;
-  }
-  
-  /* הוצאות */
-  .expenditures-container {
-    margin-top: 20px;
-  }
-  
-  .expenditures-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .search-field {
-    width: 300px;
-  }
-  
-  .expenditures-summary {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .expenditures-summary .summary-item {
-    flex: 1;
-    padding: 10px;
-  }
-  
-  .table-container {
-    margin-bottom: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .table-row:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .school-name-chip {
-    background-color: #e3f2fd;
-    color: #0277bd;
-  }
-  
-  .status-chip.approved {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .status-chip.pending {
-    background-color: #fff8e1;
-    color: #f57f17;
-  }
-  
-  .no-data {
-    padding: 20px;
-    color: #757575;
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  /* מצב ריק */
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 0;
-    text-align: center;
-  }
-  
-  .empty-icon {
-    font-size: 60px;
-    color: #bdbdbd;
-    margin-bottom: 15px;
-  }
-  
-  /* דיאלוג הוספת מוסד */
-  .add-school-dialog {
-    border-radius: 8px;
-  }
-  
-  .dialog-title-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .dialog-content {
-    padding-top: 10px;
-  }
-  
-  /* התאמה למסכים קטנים */
-  @media (max-width: 768px) {
-    .schools-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
-    }
-    
-    .schools-actions {
-      width: 100%;
-      justify-content: space-between;
-    }
-    
-    .expenditures-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    
-    .search-field {
-      width: 100%;
-    }
-    
-    .expenditures-summary {
-      flex-direction: column;
-    }
-    
-    .school-detail-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    
-    .school-detail-actions {
-      width: 100%;
-      justify-content: space-between;
-    }
-  }
-  
-  
-  
-  
+}

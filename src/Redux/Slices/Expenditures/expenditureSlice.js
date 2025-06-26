@@ -2,7 +2,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import { allExpendituresThunk, getExpenditureByIdThunk } from './getExpendituresThunk';
 import { addExpThunk } from './add';
-import { allDataThunk } from '../AllData/allDataThunk';
+
 
 
 const INITIAL_STATE = {

@@ -1,3205 +1,1670 @@
-// import * as React from 'react';
-// import Box from '@mui/material/Box';
-// import Collapse from '@mui/material/Collapse';
-// import IconButton from '@mui/material/IconButton';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TableRow from '@mui/material/TableRow';
-// import Typography from '@mui/material/Typography';
-// import Paper from '@mui/material/Paper';
-// import InputLabel from '@mui/material/InputLabel';
-// import MenuItem from '@mui/material/MenuItem';
-// import FormControl from '@mui/material/FormControl';
-// import Select from '@mui/material/Select';
-// import PropTypes from 'prop-types';
-// import useAutocomplete from '@mui/material/useAutocomplete';
-// // import CheckIcon from '@mui/icons-material/Check';
-// // import CloseIcon from '@mui/icons-material/Close';
-// import { styled } from '@mui/material/styles';
-// import { autocompleteClasses } from '@mui/material/Autocomplete';
-// // import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// // import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-// import { allSchoolsThunk } from '../../Redux/Slices/Schools/getSchoolThunk';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { useState } from 'react';
-// import { getDebtOfSchool } from '../../Redux/Slices/Schools/getSchoolThunk';
-// import { getTotalSumOfSchool } from '../../Redux/Slices/Schools/getSchoolThunk';
-// import { Button } from '@mui/material';
-// import { AddSchool } from './addSchool';
 
-// // export const S = (prop) => {
-// //   const { school } = prop;
-// //   const [open, setOpen] = React.useState(false);
-  
 
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 
-// //   //const exp = useSelector(s => s.school.exp)
-
-
-// //   console.log("school  --", school);
-
-
- 
-
-// //   return (
-// //     <React.Fragment>
-// //       <TableRow sx={{ '& > *': { borderBottom: 'unset' }, height: "auto" }}>
-// //         <TableCell>
-// //           <IconButton
-// //             aria-label="expand row"
-// //             size="small"
-// //             // show data
-// //             onClick={() => { setOpen(!open) }}
-// //           >
-// //             {/* {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}🔹
-// //           </IconButton>
-// //         </TableCell>
-// //         <TableCell component="th" scope="row"></TableCell>
-// //         <TableCell align="right">{school.schoolSymbol}</TableCell>
-// //         <TableCell align="right">{school.schoolName}</TableCell>
-// //         <TableCell align="right">{school.budget}</TableCell>
-// //         {/* <TableCell align="right">{schools.protein}</TableCell> */}
-// //       </TableRow>
-// //       <TableRow>
-// //         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-// //           <Collapse in={open} timeout="auto" unmountOnExit>
-// //             {/* טבלה שנפתחת בלחיצה */}
-// //             <Box sx={{ margin: 1 }}>
-// //               <Typography variant="h6" gutterBottom component="div">
-// //                 הוצאות בית ספר
-// //               </Typography>
-
-// //               <Table size="small" aria-label="purchases">
-// //                 <TableHead>
-// //                   <TableRow>
-// //                     <TableCell>תאריך הזמנה </TableCell>
-// //                     <TableCell>סכום הוצאה</TableCell>
-// //                     <TableCell>קטגוריה</TableCell>
-// //                     <TableCell align="right">בית ספר</TableCell>
-// //                     <TableCell align="right">שם  מבצע ההזמנה</TableCell>
-// //                     <TableCell align="right">קוד ספק</TableCell>
-// //                     <TableCell>האם אושר?</TableCell>
-
-
-// //                   </TableRow>
-// //                 </TableHead>
-// //                 <TableBody>
-// //                   {school.expenditures.map((exp) => (
-// //                     <TableRow >
-// //                       <TableCell> {exp.date}</TableCell>
-// //                       <TableCell component="th" scope="row">
-// //                         {exp.expenditureSum}
-// //                       </TableCell>
-
-
-// //                       <TableCell> {exp.categorId}</TableCell>
-// //                       <TableCell> {exp.schoolSymbol}</TableCell>
-// //                       <TableCell> {exp.ordererName}</TableCell>
-// //                       <TableCell>{exp?.supplierNum}</TableCell>
-// //                       <TableCell align="right">{exp?.isAccepted}</TableCell>
-// //                       {/* <TableCell align="right">
-// //                         {Math.round(historyRow.amount * exp.price * 100) / 100}
-// //                       </TableCell> */}
-// //                     </TableRow>
-// //                   ))}
-// //                 </TableBody>
-// //               </Table>
-// //             </Box>
-// //           </Collapse>
-// //         </TableCell>
-// //       </TableRow>
-// //     </React.Fragment>
-// //   );
-// // }
-
-// // ==================
-
-
-
-
-// export  function CollapsibleTable() {
-
-  
-//   const schools = useSelector(s => s.school.allSchools)
-//   const dispatch = useDispatch()
-
-//   const getSchoolDebt = async (name) => {
-//     debugger
-//     await dispatch(getDebtOfSchool(name))
-//   }
-
-//   const getSchoolTotalSum = async (name) => {
-//     debugger
-//     await dispatch(getTotalSumOfSchool(name))
-//   }
-
-  
-
-//   const getData = async () => {
-//     await dispatch(allSchoolsThunk())
-//   }
-//   React.useEffect(() => {
-//     getData()
-//   }, [])
-//   return <>
-//     {/* <TableContainer component={Paper}>
-//       <Table aria-label="collapsible table" sx={{ width: '40%' }}>
-//         <TableHead >
-//           <TableRow style={{ color: 'rgba(29, 77, 132, 0.987)', border: "1px blue solid" }}>
-
-//             <TableCell sx={{ width: '200px' }} >שם מוסד</TableCell>
-//             <TableCell sx={{ width: '500px' }} >סמל מוסד</TableCell>
-//             <TableCell sx={{ width: '500px' }}>תקציב כולל</TableCell>
-           
-//           </TableRow>
-//         </TableHead>
-//         <TableBody>
-          
-//           {schools.map((row) => (
-            
-//             <S school={row} />)
-//           )}
-//         </TableBody>
-//       </Table>
-//     </TableContainer> */}
-
-
-
-//     {/* {showInput &&
-//   <div>
-//     <Input value={name} onChange={(n) => setName(n.target.value)} placeholder='שם מוסד' />
-//     <button onClick={() => getSchoolDebt(name)}> לאישור</button>
-   
-//   </div>} */}
-//     {/*  */}
-//     {/* 
-// {showInput2 &&
-//   <div>
-//     <Input value={name} onChange={(n) => setName(n.target.value)} placeholder='שם מוסד' />
-//     <button onClick={() => getSchoolTotalSum(name)}> לאישור</button>
-    
-//   </div>} */}
-
-
-//     {
-//       // <Box sx={{ minWidth: 120 }}>
-//       //   <FormControl fullWidth>
-//       //     <InputLabel id="demo-simple-select-label">סמל מוסד</InputLabel>
-//       //     <Select
-//       //       labelId="demo-simple-select-label"
-//       //       id="demo-simple-select"
-//       //       value={name}
-//       //       onChange={(n) => setName(n.target.value)}>
-//       //       {schools?.map((s, index) => {
-//       //         return <MenuItem value={schools[index].schoolName}>{s.schoolName}</MenuItem>
-//       //       })}
-
-//       //     </Select>
-//       //   </FormControl>
-//       // </Box> 
-    
-//       // <CustomizedHook/>
-//       <CustomizedHook school={schools}/>
-//     }
-
-//     {/* {name &&<div>
-//       <button onClick={() => { debugger; setShowInput(true)}}>לקבלת חוב</button> 
-//       <button onClick={() => { debugger; setShowInput2(true) }}>לקבלת הוצאות מוסד</button></div>
-//     } */}
-
-//   </>
-// }
-
-
-
-
-
-
-
-
-
-
-
-// // ===============================================
-
-
-
-// //אופציות לבחירה
-// const Root = styled('div')(({ theme }) => ({
-//   color: 'rgba(0,0,0,0.85)',
-//   fontSize: '14px',
-//   ...theme.applyStyles('dark', {
-//     color: 'rgba(255,255,255,0.65)',
-//   }),
-// }));
-// // input
-// const Label = styled('label')`
-//   padding: 0 0 4px;
-//   line-height: 1.5;
-//   display: block;
-// `;
-// //input
-// const InputWrapper = styled('div')(({ theme }) => ({
-//   width: '300px',
-//   border: '1px solid #d9d9d9',
-//   backgroundColor: '#fff',
-//   borderRadius: '4px',
-//   padding: '1px',
-//   display: 'flex',
-//   flexWrap: 'wrap',
-//   ...theme.applyStyles('dark', {
-//     borderColor: '#434343',
-//     backgroundColor: '#141414',
-//   }),
-//   '&:hover': {
-//     borderColor: '#40a9ff',
-//     ...theme.applyStyles('dark', {
-//       borderColor: '#177ddc',
-//     }),
-//   },
-//   '&.focused': {
-//     borderColor: '#40a9ff',
-//     boxShadow: '0 0 0 2px rgb(24 144 255 / 0.2)',
-//     ...theme.applyStyles('dark', {
-//       borderColor: '#177ddc',
-//     }),
-//   },
-//   '& input': {
-//     backgroundColor: '#fff',
-//     color: 'rgba(0,0,0,.85)',
-//     height: '30px',
-//     boxSizing: 'border-box',
-//     padding: '4px 6px',
-//     width: '0',
-//     minWidth: '30px',
-//     flexGrow: 1,
-//     border: 0,
-//     margin: 0,
-//     outline: 0,
-//     ...theme.applyStyles('dark', {
-//       color: 'rgba(255,255,255,0.65)',
-//       backgroundColor: '#141414',
-//     }),
-//   },
-// }));
-
-// function Tag(props) {
-//   const { label, onDelete, ...other } = props;
-//   return (
-//     <div {...other}>
-//       <span>{label}</span>
-//       {/* <CloseIcon onClick={onDelete} /> */}
-//       <span onClick={onDelete} style={{ cursor: 'pointer', marginLeft: '8px' }}>❌</span>
-//     </div>
-//   );
-// }
-
-// Tag.propTypes = {
-//   label: PropTypes.string.isRequired,
-//   onDelete: PropTypes.func.isRequired,
-// };
-
-// const StyledTag = styled(Tag)(({ theme }) => ({
-//   display: 'flex',
-//   alignItems: 'center',
-//   height: '24px',
-//   margin: '2px',
-//   lineHeight: '22px',
-//   backgroundColor: '#fafafa',
-//   border: `1px solid #e8e8e8`,
-//   borderRadius: '2px',
-//   boxSizing: 'content-box',
-//   padding: '0 4px 0 10px',
-//   outline: 0,
-//   overflow: 'hidden',
-//   ...theme.applyStyles('dark', {
-//     backgroundColor: 'rgba(255,255,255,0.08)',
-//     borderColor: '#303030',
-//   }),
-//   '&:focus': {
-//     borderColor: '#40a9ff',
-//     backgroundColor: '#e6f7ff',
-//     ...theme.applyStyles('dark', {
-//       backgroundColor: '#003b57',
-//       borderColor: '#177ddc',
-//     }),
-//   },
-//   '& span': {
-//     overflow: 'hidden',
-//     whiteSpace: 'nowrap',
-//     textOverflow: 'ellipsis',
-//   },
-//   '& span:last-child': {
-//     overflow: 'visible',
-//     cursor: 'pointer',
-//     padding: '0 4px',
-//   },
-// }));
-
-// const Listbox = styled('ul')(({ theme }) => ({
-//   width: '300px',
-//   margin: '2px 0 0',
-//   padding: 0,
-//   position: 'absolute',
-//   listStyle: 'none',
-//   backgroundColor: '#fff',
-//   overflow: 'auto',
-//   maxHeight: '250px',
-//   borderRadius: '4px',
-//   boxShadow: '0 2px 8px rgb(0 0 0 / 0.15)',
-//   zIndex: 1,
-//   ...theme.applyStyles('dark', {
-//     backgroundColor: '#141414',
-//   }),
-//   '& li': {
-//     padding: '5px 12px',
-//     display: 'flex',
-//     '& span': {
-//       flexGrow: 1,
-//     },
-//     '& svg': {
-//       color: 'transparent',
-//     },
-//   },
-//   "& li[aria-selected='true']": {
-//     backgroundColor: '#fafafa',
-//     fontWeight: 600,
-//     ...theme.applyStyles('dark', {
-//       backgroundColor: '#2b2b2b',
-//     }),
-//     '& svg': {
-//       color: '#1890ff',
-//     },
-//   },
-//   [`& li.${autocompleteClasses.focused}`]: {
-//     backgroundColor: '#e6f7ff',
-//     cursor: 'pointer',
-//     ...theme.applyStyles('dark', {
-//       backgroundColor: '#003b57',
-//     }),
-//     '& svg': {
-//       color: 'currentColor',
-//     },
-//   },
-// }));
-
-// // ================
-
-// // ====================
-
-// //  export const CustomizedHook=(props) =>{
-// //   const {school} = props;
-// //   const [name, setName] = useState(false);
-// //   const [showInput, setShowInput] = useState(false);
-// //   const [showInput2, setShowInput2] = useState(false);
-// //   const [totalDebt, setTotalDebt] = React.useState(0);
-
-  
-// // // const getTotalDebt =()=>{
-// // //   value.map(s=>{ s.expenditures.map(e=> setTotalDebt(totalDebt+e.remainToPay))})
-// // //  }
-// //  const getTotalDebt = () => {
-// //   let total = 0;
-// //   value.forEach(s => {
-// //     s.expenditures.forEach(e => {
-// //       total += e.remainToPay;
-// //     });
-// //   });
-// //   setTotalDebt(total);
-// // }
-// //   const {
-// //     getRootProps,
-// //     getInputLabelProps,
-// //     getInputProps,
-// //     getTagProps,
-// //     getListboxProps,
-// //     getOptionProps,
-// //     groupedOptions,
-// //     value,
-// //     focused,
-// //     setAnchorEl,
-// //   } = useAutocomplete({
-// //     id: 'customized-hook-demo',
-// //     // defaultValue: undefined,
-// //     multiple: true,
-// //     options: school,
-// //     getOptionLabel: (option) => option?.schoolName,
-// //   });
-    
-
-// //   return (
-// //     <Root>
-// //       <div {...getRootProps()}>
-// //         <Label {...getInputLabelProps()}>Customized hook</Label>
-// //         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-// //           {/*המוסדות הנבחרים  */}
-// //           {value.map((option, index) => {
-// //             console.log(value);
-// //             console.log(option.schoolName+"❤❤");
-// //             const { key, ...tagProps } = getTagProps({ index });
-// //             index>=0?setName(true):setName(false);
-// //             return <StyledTag key={key} {...tagProps} label={option?.schoolName} />;
-            
-// //           })}
-// //           <input {...getInputProps()}/>
-// //         </InputWrapper>
-// //       </div>
-// //       {groupedOptions.length > 0 ? (
-// //         <Listbox {...getListboxProps()}>
-// //           {groupedOptions.map((option, index) => {
-// //             const { key, ...optionProps } = getOptionProps({ option, index });
-// //             return (
-// //               <li key={key} {...optionProps}>
-// //                 <span>{option.schoolName}</span>
-// //                 {/* <CheckIcon fontSize="small" /> */}
-// //               </li>
-// //             );
-// //           })}
-// //         </Listbox>
-// //       ) : null}
-// //       {name &&<div>
-// //       <button onClick={() => { debugger; setShowInput(true)}}>לקבלת חוב</button> 
-// //       <button onClick={() => { debugger; setShowInput2(true) }}>לקבלת הוצאות מוסד</button></div>
-// //     }
-// //     {/* {name && <div style={{ marginTop: '16px', display: 'flex' }}>
-// //   <StyledButton primary onClick={() => { setShowInput(true) }}>לקבלת חוב</StyledButton>
-// //   <StyledButton onClick={() => { setShowInput2(true) }}>לקבלת הוצאות מוסד</StyledButton>
-// // </div>} */}
-// //     </Root>
-// //   );
-// // }
-// export const CustomizedHook = (props) => {
-//   const { school } = props;
-//   const [name, setName] = useState(false);
-//   const [showInput, setShowInput] = useState(false);
-//   const [showInput2, setShowInput2] = useState(false);
-//   const [totalDebt, setTotalDebt] = React.useState(0);
-
-//   const {
-//     getRootProps,
-//     getInputLabelProps,
-//     getInputProps,
-//     getTagProps,
-//     getListboxProps,
-//     getOptionProps,
-//     groupedOptions,
-//     value,
-//     focused,
-//     setAnchorEl,
-//   } = useAutocomplete({
-//     id: 'customized-hook-demo',
-//     multiple: true,
-//     options: school || [],
-//     getOptionLabel: (option) => option?.schoolName || '',
-//   });
-  
-//   // Use useEffect to update the name state when value changes
-//   React.useEffect(() => {
-//     setName(value.length > 0);
-//   }, [value]);
-
-//   const getTotalDebt = () => {
-//     let total = 0;
-//     value.forEach(s => {
-//       if (s.expenditures) {
-//         s.expenditures.forEach(e => {
-//           total += e.remainToPay || 0;
-//         });
-//       }
-//     });
-//     setTotalDebt(total);
-//   }
-
-//   return (
-//     <Root>
-     
-     
-
-
-     
-//       <div {...getRootProps()}>
-//         <Label {...getInputLabelProps()}>בחר מוסד</Label>
-//         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-//           {value.map((option, index) => {
-//             const tagProps = getTagProps({ index });
-//             return (
-//               <StyledTag 
-//                 key={`tag-${index}`} 
-//                 {...tagProps} 
-//                 label={option?.schoolName || ''} 
-//                 onDelete={tagProps.onDelete}
-//               />
-//             );
-//           })}
-//           <input {...getInputProps()} />
-//         </InputWrapper>
-//       </div>
-//       {groupedOptions.length > 0 ? (
-//         <Listbox {...getListboxProps()}>
-//           {groupedOptions.map((option, index) => (
-//             <li {...getOptionProps({ option, index })} key={`option-${index}`}>
-//               <span>{option.schoolName}</span>
-//             </li>
-//           ))}
-//         </Listbox>
-//       ) : null}
-      
-//       {name && (
-//         <div style={{ marginTop: '16px' }}>
-//           <button onClick={() => { setShowInput(true); }}>לקבלת חוב</button> 
-//           <button onClick={() => { setShowInput2(true); }}>לקבלת הוצאות מוסד</button>
-//           <button onClick={getTotalDebt}>חשב סך חובות</button>
-//           {totalDebt > 0 && <div>סך החובות: {totalDebt}</div>}
-//         </div>
-//       )}
-//     </Root>
-//   );
-// }
-
-
-
-
-
-
-// import * as React from 'react';
-// import { useState, useEffect } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import {
-//   Box, Paper, Typography, Chip, Button, Divider, 
-//   Card, CardContent, Grid, IconButton, Tooltip,
-//   Dialog, DialogTitle, DialogContent, DialogActions,
-//   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-//   Collapse, CircularProgress, Alert, Tabs, Tab
-// } from '@mui/material';
-// import { styled } from '@mui/material/styles';
-// import useAutocomplete from '@mui/material/useAutocomplete';
-// import { autocompleteClasses } from '@mui/material/Autocomplete';
-
-// // Icons
-// import SchoolIcon from '@mui/icons-material/School';
-// import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-// import ReceiptIcon from '@mui/icons-material/Receipt';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-// import AddIcon from '@mui/icons-material/Add';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import DownloadIcon from '@mui/icons-material/Download';
-// import FilterAltIcon from '@mui/icons-material/FilterAlt';
-// import RefreshIcon from '@mui/icons-material/Refresh';
-
-// // Redux actions
-// import { 
-//   allSchoolsThunk, 
-//   getDebtOfSchool, 
-//   getTotalSumOfSchool 
-// } from '../../Redux/Slices/Schools/getSchoolThunk';
-// import { AddSchool } from './addSchool';
-
-// // Styled components
-// const Root = styled('div')(({ theme }) => ({
-//   padding: theme.spacing(3),
-//   backgroundColor: '#f5f7fa',
-//   borderRadius: theme.shape.borderRadius,
-//   minHeight: '85vh',
-//   direction: 'rtl'
-// }));
-
-// const StyledPaper = styled(Paper)(({ theme }) => ({
-//   padding: theme.spacing(3),
-//   borderRadius: theme.shape.borderRadius * 2,
-//   boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-//   backgroundColor: '#fff',
-//   overflow: 'hidden'
-// }));
-
-// const Header = styled(Box)(({ theme }) => ({
-//   display: 'flex',
-//   justifyContent: 'space-between',
-//   alignItems: 'center',
-//   marginBottom: theme.spacing(3)
-// }));
-
-// const ActionButton = styled(Button)(({ theme }) => ({
-//   margin: theme.spacing(0.5),
-//   borderRadius: theme.shape.borderRadius * 1.5,
-//   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-//   transition: 'all 0.2s',
-//   '&:hover': {
-//     transform: 'translateY(-2px)',
-//     boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-//   }
-// }));
-
-// const SchoolChip = styled(Chip)(({ theme }) => ({
-//   margin: theme.spacing(0.5),
-//   padding: theme.spacing(1, 0.5),
-//   fontWeight: 500,
-//   backgroundColor: theme.palette.primary.light,
-//   color: theme.palette.primary.contrastText,
-//   '&:hover': {
-//     backgroundColor: theme.palette.primary.main,
-//   }
-// }));
-
-// const ResultCard = styled(Card)(({ theme }) => ({
-//   marginTop: theme.spacing(2),
-//   borderRadius: theme.shape.borderRadius * 1.5,
-//   boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-//   overflow: 'hidden',
-//   transition: 'all 0.3s',
-//   '&:hover': {
-//     boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
-//   }
-// }));
-
-// const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-//   borderRadius: theme.shape.borderRadius,
-//   maxHeight: '400px',
-//   '& .MuiTableCell-head': {
-//     backgroundColor: theme.palette.primary.light,
-//     color: theme.palette.primary.contrastText,
-//     fontWeight: 'bold'
-//   }
-// }));
-
-// // Input components for autocomplete
-// const InputWrapper = styled('div')(({ theme }) => ({
-//   width: '100%',
-//   border: `1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'}`,
-//   backgroundColor: theme.palette.mode === 'dark' ? '#141414' : '#fff',
-//   borderRadius: theme.shape.borderRadius * 1.5,
-//   padding: theme.spacing(1),
-//   display: 'flex',
-//   flexWrap: 'wrap',
-//   gap: theme.spacing(0.5),
-//   '&:hover': {
-//     borderColor: theme.palette.primary.main,
-//   },
-//   '&.focused': {
-//     borderColor: theme.palette.primary.main,
-//     boxShadow: `0 0 0 2px ${theme.palette.primary.light}`,
-//   },
-//   '& input': {
-//     backgroundColor: 'transparent',
-//     color: theme.palette.text.primary,
-//     height: '30px',
-//     boxSizing: 'border-box',
-//     padding: theme.spacing(0.5, 1),
-//     width: '0',
-//     minWidth: '30px',
-//     flexGrow: 1,
-//     border: 0,
-//     margin: 0,
-//     outline: 0,
-//   },
-// }));
-
-// const StyledTag = styled(Box)(({ theme }) => ({
-//   display: 'flex',
-//   alignItems: 'center',
-//   height: '32px',
-//   margin: theme.spacing(0.25),
-//   lineHeight: '22px',
-//   backgroundColor: theme.palette.primary.light,
-//   color: theme.palette.primary.contrastText,
-//   borderRadius: theme.shape.borderRadius,
-//   padding: theme.spacing(0.5, 1),
-//   '& .deleteIcon': {
-//     marginLeft: theme.spacing(0.5),
-//     cursor: 'pointer',
-//     '&:hover': {
-//       color: theme.palette.error.light,
-//     }
-//   }
-// }));
-
-// const Listbox = styled('ul')(({ theme }) => ({
-//   width: '100%',
-//   margin: theme.spacing(0.5, 0, 0),
-//   padding: 0,
-//   position: 'absolute',
-//   listStyle: 'none',
-//   backgroundColor: theme.palette.background.paper,
-//   overflow: 'auto',
-//   maxHeight: '250px',
-//   borderRadius: theme.shape.borderRadius,
-//   boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-//   zIndex: 1,
-//   '& li': {
-//     padding: theme.spacing(1, 2),
-//     '&:hover': {
-//       backgroundColor: theme.palette.action.hover,
-//     }
-//   },
-//   [`& li.${autocompleteClasses.focused}`]: {
-//     backgroundColor: theme.palette.action.selected,
-//     cursor: 'pointer',
-//   },
-// }));
-
-// // Tab panel component
-// function TabPanel(props) {
-//   const { children, value, index, ...other } = props;
-
-//   return (
-//     <div
-//       role="tabpanel"
-//       hidden={value !== index}
-//       id={`school-tabpanel-${index}`}
-//       aria-labelledby={`school-tab-${index}`}
-//       {...other}
-//     >
-//       {value === index && (
-//         <Box sx={{ p: 3 }}>
-//           {children}
-//         </Box>
-//       )}
-//     </div>
-//   );
-// }
-
-// // Main component
-// export const School = () => {
-//   const dispatch = useDispatch();
-//   const schools = useSelector(s => s.school.allSchools);
-//   const loading = useSelector(s => s.school.loading);
-//   const error = useSelector(s => s.school.error);
-  
-//   // States
-//   const [selectedSchools, setSelectedSchools] = useState([]);
-//   const [showDebtResults, setShowDebtResults] = useState(false);
-//   const [showExpenditureResults, setShowExpenditureResults] = useState(false);
-//   const [totalDebt, setTotalDebt] = useState(0);
-//   const [expenditures, setExpenditures] = useState([]);
-//   const [addSchoolDialog, setAddSchoolDialog] = useState(false);
-//   const [tabValue, setTabValue] = useState(0);
-//   const [expandedSchool, setExpandedSchool] = useState(null);
-
-//   // Fetch schools on component mount
-//   useEffect(() => {
-//     dispatch(allSchoolsThunk());
-//   }, [dispatch]);
-
-//   // Autocomplete hook
-//   const {
-//     getRootProps,
-//     getInputLabelProps,
-//     getInputProps,
-//     getListboxProps,
-//     getOptionProps,
-//     groupedOptions,
-//     value,
-//     focused,
-//     setAnchorEl,
-//   } = useAutocomplete({
-//     id: 'schools-autocomplete',
-//     multiple: true,
-//     options: schools || [],
-//     getOptionLabel: (option) => option?.schoolName || '',
-//     onChange: (_, newValue) => {
-//       setSelectedSchools(newValue);
-//       // Reset results when selection changes
-//       setShowDebtResults(false);
-//       setShowExpenditureResults(false);
-//     }
-//   });
-
-//   // Calculate total debt for selected schools
-//   const calculateTotalDebt = () => {
-//     let total = 0;
-//     selectedSchools.forEach(school => {
-//       if (school.expenditures) {
-//         school.expenditures.forEach(exp => {
-//           total += exp.remainToPay || 0;
-//         });
-//       }
-//     });
-//     setTotalDebt(total);
-//     setShowDebtResults(true);
-//     setShowExpenditureResults(false);
-//   };
-
-//   // Get expenditures for selected schools
-//   const getExpenditures = async () => {
-//     const allExpenditures = [];
-    
-//     for (const school of selectedSchools) {
-//       try {
-//         // Assuming getTotalSumOfSchool returns expenditure data
-//         const result = await dispatch(getTotalSumOfSchool(school.schoolName)).unwrap();
-//         if (result && Array.isArray(result)) {
-//           allExpenditures.push(...result);
-//         } else if (school.expenditures) {
-//           allExpenditures.push(...school.expenditures);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching expenditures:", error);
-//       }
-//     }
-    
-//     setExpenditures(allExpenditures);
-//     setShowExpenditureResults(true);
-//     setShowDebtResults(false);
-//   };
-
-//   // Handle tab change
-//   const handleTabChange = (event, newValue) => {
-//     setTabValue(newValue);
-//   };
-
-//   // Format currency
-//   const formatCurrency = (amount) => {
-//     return new Intl.NumberFormat('he-IL', { 
-//       style: 'currency', 
-//       currency: 'ILS',
-//       minimumFractionDigits: 0,
-//       maximumFractionDigits: 0
-//     }).format(amount);
-//   };
-
-//   // Toggle school details expansion
-//   const toggleSchoolExpansion = (schoolSymbol) => {
-//     if (expandedSchool === schoolSymbol) {
-//       setExpandedSchool(null);
-//     } else {
-//       setExpandedSchool(schoolSymbol);
-//     }
-//   };
-
-//   // Export to Excel (placeholder function)
-//   const exportToExcel = () => {
-//     alert('פונקציונליות ייצוא לאקסל תתווסף בהמשך');
-//     // Implementation would go here
-//   };
-
-//   // Refresh data
-//   const refreshData = () => {
-//     dispatch(allSchoolsThunk());
-//     setShowDebtResults(false);
-//     setShowExpenditureResults(false);
-//   };
-
-//   return (
-//     <Root>
-//       <StyledPaper>
-//         <Header>
-//           <Typography variant="h4" component="h1" fontWeight="bold" color="primary">
-//             <SchoolIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-//             ניהול מוסדות חינוך
-//           </Typography>
-          
-//           <Box>
-//             <Tooltip title="רענן נתונים">
-//               <IconButton onClick={refreshData} color="primary">
-//                 <RefreshIcon />
-//               </IconButton>
-//             </Tooltip>
-//             <Tooltip title="הוסף מוסד חדש">
-//               <ActionButton 
-//                 variant="contained" 
-//                 color="primary" 
-//                 startIcon={<AddIcon />}
-//                 onClick={() => setAddSchoolDialog(true)}
-//               >
-//                 הוסף מוסד
-//               </ActionButton>
-//             </Tooltip>
-//           </Box>
-//         </Header>
-
-//         {loading && (
-//           <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-//             <CircularProgress />
-//           </Box>
-//         )}
-
-//         {error && (
-//           <Alert severity="error" sx={{ mb: 3 }}>
-//             {error}
-//           </Alert>
-//         )}
-
-//         {!loading && !error && (
-//           <>
-//             <Box sx={{ mb: 3 }}>
-//               <Typography variant="h6" gutterBottom fontWeight="medium">
-//                 <FilterAltIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-//                 בחר מוסדות לסינון
-//               </Typography>
-              
-//               <Box {...getRootProps()} sx={{ position: 'relative' }}>
-//                 <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-//                   {selectedSchools.map((school, index) => (
-//                     <StyledTag key={`${school.schoolSymbol}-${index}`}>
-//                       {school.schoolName}
-//                       <DeleteIcon 
-//                         className="deleteIcon" 
-//                         fontSize="small" 
-//                         onClick={() => {
-//                           const newSelected = [...selectedSchools];
-//                           newSelected.splice(index, 1);
-//                           setSelectedSchools(newSelected);
-//                         }} 
-//                       />
-//                     </StyledTag>
-//                   ))}
-//                   <input {...getInputProps()} placeholder="חפש מוסד..." />
-//                 </InputWrapper>
-                
-//                 {groupedOptions.length > 0 && (
-//                   <Listbox {...getListboxProps()}>
-//                     {groupedOptions.map((option, index) => (
-//                       <li {...getOptionProps({ option, index })} key={option.schoolSymbol || index}>
-//                         {option.schoolName} ({option.schoolSymbol})
-//                       </li>
-//                     ))}
-//                   </Listbox>
-//                 )}
-//               </Box>
-//             </Box>
-
-//             {selectedSchools.length > 0 && (
-//               <>
-//                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-//                 <ActionButton 
-//                     variant="contained" 
-//                     color="secondary" 
-//                     startIcon={<MoneyOffIcon />}
-//                     onClick={calculateTotalDebt}
-//                   >
-//                     חשב סך חובות
-//                   </ActionButton>
-                  
-//                   <ActionButton 
-//                     variant="contained" 
-//                     color="info" 
-//                     startIcon={<ReceiptIcon />}
-//                     onClick={getExpenditures}
-//                   >
-//                     הצג הוצאות
-//                   </ActionButton>
-                  
-//                   <ActionButton 
-//                     variant="outlined" 
-//                     color="success" 
-//                     startIcon={<DownloadIcon />}
-//                     onClick={exportToExcel}
-//                   >
-//                     ייצא לאקסל
-//                   </ActionButton>
-//                 </Box>
-
-//                 <Divider sx={{ mb: 3 }} />
-
-//                 {/* Results Section */}
-//                 {(showDebtResults || showExpenditureResults) && (
-//                   <Box sx={{ mt: 2 }}>
-//                     <Tabs 
-//                       value={tabValue} 
-//                       onChange={handleTabChange}
-//                       variant="fullWidth"
-//                       sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
-//                     >
-//                       <Tab label="סיכום" value={0} />
-//                       <Tab label="פירוט מוסדות" value={1} />
-//                       {showExpenditureResults && <Tab label="טבלת הוצאות" value={2} />}
-//                     </Tabs>
-
-//                     {/* Tab 1: Summary */}
-//                     <TabPanel value={tabValue} index={0}>
-//                       <ResultCard>
-//                         <CardContent>
-//                           <Typography variant="h6" gutterBottom color="textSecondary">
-//                             סיכום נתונים עבור {selectedSchools.length} מוסדות נבחרים
-//                           </Typography>
-                          
-//                           <Grid container spacing={3} sx={{ mt: 1 }}>
-//                             {showDebtResults && (
-//                               <Grid item xs={12} md={6}>
-//                                 <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'error.light', color: 'error.contrastText' }}>
-//                                   <Typography variant="subtitle1">סך החובות</Typography>
-//                                   <Typography variant="h4" fontWeight="bold">
-//                                     {formatCurrency(totalDebt)}
-//                                   </Typography>
-//                                 </Paper>
-//                               </Grid>
-//                             )}
-                            
-//                             {showExpenditureResults && (
-//                               <Grid item xs={12} md={6}>
-//                                 <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'info.light', color: 'info.contrastText' }}>
-//                                   <Typography variant="subtitle1">סך ההוצאות</Typography>
-//                                   <Typography variant="h4" fontWeight="bold">
-//                                     {formatCurrency(expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0))}
-//                                   </Typography>
-//                                 </Paper>
-//                               </Grid>
-//                             )}
-                            
-//                             <Grid item xs={12} md={6}>
-//                               <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'primary.light', color: 'primary.contrastText' }}>
-//                                 <Typography variant="subtitle1">תקציב כולל</Typography>
-//                                 <Typography variant="h4" fontWeight="bold">
-//                                   {formatCurrency(selectedSchools.reduce((sum, school) => sum + (school.budget || 0), 0))}
-//                                 </Typography>
-//                               </Paper>
-//                             </Grid>
-                            
-//                             <Grid item xs={12} md={6}>
-//                               <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'success.light', color: 'success.contrastText' }}>
-//                                 <Typography variant="subtitle1">יתרה</Typography>
-//                                 <Typography variant="h4" fontWeight="bold">
-//                                   {formatCurrency(
-//                                     selectedSchools.reduce((sum, school) => sum + (school.budget || 0), 0) - 
-//                                     (showExpenditureResults ? 
-//                                       expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0) : 
-//                                       totalDebt)
-//                                   )}
-//                                 </Typography>
-//                               </Paper>
-//                             </Grid>
-//                           </Grid>
-//                         </CardContent>
-//                       </ResultCard>
-//                     </TabPanel>
-
-//                     {/* Tab 2: Schools Details */}
-//                     <TabPanel value={tabValue} index={1}>
-//                       <Box>
-//                         {selectedSchools.map((school) => (
-//                           <ResultCard key={school.schoolSymbol} sx={{ mb: 2 }}>
-//                             <CardContent sx={{ p: 0 }}>
-//                               <Box 
-//                                 sx={{ 
-//                                   p: 2, 
-//                                   display: 'flex', 
-//                                   justifyContent: 'space-between',
-//                                   alignItems: 'center',
-//                                   cursor: 'pointer',
-//                                   bgcolor: 'primary.light',
-//                                   color: 'primary.contrastText'
-//                                 }}
-//                                 onClick={() => toggleSchoolExpansion(school.schoolSymbol)}
-//                               >
-//                                 <Box>
-//                                   <Typography variant="h6">
-//                                     {school.schoolName}
-//                                   </Typography>
-//                                   <Typography variant="body2">
-//                                     סמל מוסד: {school.schoolSymbol}
-//                                   </Typography>
-//                                 </Box>
-//                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-//                                   <Typography variant="h6" sx={{ mr: 2 }}>
-//                                     תקציב: {formatCurrency(school.budget || 0)}
-//                                   </Typography>
-//                                   {expandedSchool === school.schoolSymbol ? 
-//                                     <ExpandLessIcon /> : <ExpandMoreIcon />}
-//                                 </Box>
-//                               </Box>
-                              
-//                               <Collapse in={expandedSchool === school.schoolSymbol}>
-//                                 <Box sx={{ p: 2 }}>
-//                                   <Grid container spacing={2}>
-//                                     <Grid item xs={12} md={6}>
-//                                       <Paper sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText' }}>
-//                                         <Typography variant="subtitle2">סך החובות</Typography>
-//                                         <Typography variant="h5">
-//                                           {formatCurrency(
-//                                             (school.expenditures || []).reduce(
-//                                               (sum, exp) => sum + (exp.remainToPay || 0), 0
-//                                             )
-//                                           )}
-//                                         </Typography>
-//                                       </Paper>
-//                                     </Grid>
-//                                     <Grid item xs={12} md={6}>
-//                                       <Paper sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText' }}>
-//                                         <Typography variant="subtitle2">סך ההוצאות</Typography>
-//                                         <Typography variant="h5">
-//                                           {formatCurrency(
-//                                             (school.expenditures || []).reduce(
-//                                               (sum, exp) => sum + (exp.expenditureSum || 0), 0
-//                                             )
-//                                           )}
-//                                         </Typography>
-//                                       </Paper>
-//                                     </Grid>
-//                                   </Grid>
-                                  
-//                                   {(school.expenditures?.length > 0) && (
-//                                     <Box sx={{ mt: 2 }}>
-//                                       <Typography variant="subtitle1" gutterBottom>
-//                                         פירוט הוצאות אחרונות
-//                                       </Typography>
-//                                       <StyledTableContainer component={Paper}>
-//                                         <Table size="small">
-//                                           <TableHead>
-//                                             <TableRow>
-//                                               <TableCell>תאריך</TableCell>
-//                                               <TableCell>סכום</TableCell>
-//                                               <TableCell>קטגוריה</TableCell>
-//                                               <TableCell>שם המזמין</TableCell>
-//                                               <TableCell>סטטוס</TableCell>
-//                                             </TableRow>
-//                                           </TableHead>
-//                                           <TableBody>
-//                                             {(school.expenditures || [])
-//                                               .slice(0, 5) // Show only last 5 expenditures
-//                                               .map((exp, index) => (
-//                                                 <TableRow key={index}>
-//                                                   <TableCell>{exp.date}</TableCell>
-//                                                   <TableCell>{formatCurrency(exp.expenditureSum || 0)}</TableCell>
-//                                                   <TableCell>{exp.categorId}</TableCell>
-//                                                   <TableCell>{exp.ordererName}</TableCell>
-//                                                   <TableCell>
-//                                                     <Chip 
-//                                                       label={exp.isAccepted ? "אושר" : "ממתין לאישור"} 
-//                                                       color={exp.isAccepted ? "success" : "warning"}
-//                                                       size="small"
-//                                                     />
-//                                                   </TableCell>
-//                                                 </TableRow>
-//                                               ))}
-//                                           </TableBody>
-//                                         </Table>
-//                                       </StyledTableContainer>
-//                                     </Box>
-//                                   )}
-//                                 </Box>
-//                               </Collapse>
-//                             </CardContent>
-//                           </ResultCard>
-//                         ))}
-//                       </Box>
-//                     </TabPanel>
-
-//                     {/* Tab 3: Expenditures Table */}
-//                     <TabPanel value={tabValue} index={2}>
-//                       {showExpenditureResults && (
-//                         <StyledTableContainer component={Paper}>
-//                           <Table stickyHeader>
-//                             <TableHead>
-//                               <TableRow>
-//                                 <TableCell>תאריך הזמנה</TableCell>
-//                                 <TableCell>סכום הוצאה</TableCell>
-//                                 <TableCell>יתרה לתשלום</TableCell>
-//                                 <TableCell>קטגוריה</TableCell>
-//                                 <TableCell>בית ספר</TableCell>
-//                                 <TableCell>שם מבצע ההזמנה</TableCell>
-//                                 <TableCell>קוד ספק</TableCell>
-//                                 <TableCell>סטטוס</TableCell>
-//                               </TableRow>
-//                             </TableHead>
-//                             <TableBody>
-//                               {expenditures.map((exp, index) => (
-//                                 <TableRow key={index} hover>
-//                                   <TableCell>{exp.date}</TableCell>
-//                                   <TableCell>{formatCurrency(exp.expenditureSum || 0)}</TableCell>
-//                                   <TableCell>{formatCurrency(exp.remainToPay || 0)}</TableCell>
-//                                   <TableCell>{exp.categorId}</TableCell>
-//                                   <TableCell>{exp.schoolSymbol}</TableCell>
-//                                   <TableCell>{exp.ordererName}</TableCell>
-//                                   <TableCell>{exp.supplierNum}</TableCell>
-//                                   <TableCell>
-//                                     <Chip 
-//                                       label={exp.isAccepted ? "אושר" : "ממתין לאישור"} 
-//                                       color={exp.isAccepted ? "success" : "warning"}
-//                                       size="small"
-//                                     />
-//                                   </TableCell>
-//                                 </TableRow>
-//                               ))}
-//                             </TableBody>
-//                           </Table>
-//                         </StyledTableContainer>
-//                       )}
-//                     </TabPanel>
-//                   </Box>
-//                 )}
-//               </>
-//             )}
-
-//             {selectedSchools.length === 0 && !loading && (
-//               <Box sx={{ textAlign: 'center', py: 4 }}>
-//                 <Typography variant="h6" color="textSecondary" gutterBottom>
-//                   לא נבחרו מוסדות
-//                 </Typography>
-//                 <Typography variant="body2" color="textSecondary">
-//                   בחר מוסד אחד או יותר מהרשימה למעלה כדי להציג נתונים
-//                 </Typography>
-//               </Box>
-//             )}
-//           </>
-//         )}
-//       </StyledPaper>
-
-//       {/* Add School Dialog */}
-//       <Dialog 
-//         open={addSchoolDialog} 
-//         onClick={() => setAddSchoolDialog(false)}
-//         maxWidth="md"
-//         PaperProps={{
-//           sx: { borderRadius: 2 }
-//         }}
-//       >
-//         <DialogTitle>
-//           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-//             <Typography variant="h6">הוספת מוסד חדש</Typography>
-//             <IconButton onClick={() => setAddSchoolDialog(false)}>
-//               <DeleteIcon />
-//             </IconButton>
-//           </Box>
-//         </DialogTitle>
-//         <DialogContent dividers>
-//           <AddSchool onSuccess={() => {
-//             setAddSchoolDialog(false);
-//             refreshData();
-//           }} />
-//         </DialogContent>
-//       </Dialog>
-//     </Root>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ============================================
-// import * as React from 'react';
-// import { useState, useEffect } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import {
-//   Box, Paper, Typography, Button, Divider, 
-//   Card, CardContent, Grid, IconButton, Tooltip,
-//   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-//   TablePagination, TableSortLabel, Chip, TextField, InputAdornment,
-//   Collapse, CircularProgress, Alert, Tabs, Tab, Dialog
-// } from '@mui/material';
-// import useAutocomplete from '@mui/material/useAutocomplete';
-// import { styled } from '@mui/material/styles';
-// import { autocompleteClasses } from '@mui/material/Autocomplete';
-
-// // Icons
-// import SchoolIcon from '@mui/icons-material/School';
-// import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-// import ReceiptIcon from '@mui/icons-material/Receipt';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-// import SearchIcon from '@mui/icons-material/Search';
-// import FilterListIcon from '@mui/icons-material/FilterList';
-// import SummarizeIcon from '@mui/icons-material/Summarize';
-// import DownloadIcon from '@mui/icons-material/Download';
-// import RefreshIcon from '@mui/icons-material/Refresh';
-
-// // Redux actions
-// import { 
-//   allSchoolsThunk, 
-//   getDebtOfSchool, 
-//   getTotalSumOfSchool 
-// } from '../../Redux/Slices/Schools/getSchoolThunk';
-// import { AddSchool } from './addSchool';
-
-// // CSS
-// import './school.css';
-
-// // Input components for autocomplete
-// const InputWrapper = styled('div')(({ theme }) => ({
-//   width: '100%',
-//   border: `1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'}`,
-//   backgroundColor: theme.palette.mode === 'dark' ? '#141414' : '#fff',
-//   borderRadius: theme.shape.borderRadius * 1.5,
-//   padding: theme.spacing(1),
-//   display: 'flex',
-//   flexWrap: 'wrap',
-//   gap: theme.spacing(0.5),
-//   '&:hover': {
-//     borderColor: theme.palette.primary.main,
-//   },
-//   '&.focused': {
-//     borderColor: theme.palette.primary.main,
-//     boxShadow: `0 0 0 2px ${theme.palette.primary.light}`,
-//   },
-//   '& input': {
-//     backgroundColor: 'transparent',
-//     color: theme.palette.text.primary,
-//     height: '30px',
-//     boxSizing: 'border-box',
-//     padding: theme.spacing(0.5, 1),
-//     width: '0',
-//     minWidth: '30px',
-//     flexGrow: 1,
-//     border: 0,
-//     margin: 0,
-//     outline: 0,
-//   },
-// }));
-
-// const StyledTag = styled(Box)(({ theme }) => ({
-//   display: 'flex',
-//   alignItems: 'center',
-//   height: '32px',
-//   margin: theme.spacing(0.25),
-//   lineHeight: '22px',
-//   backgroundColor: theme.palette.primary.light,
-//   color: theme.palette.primary.contrastText,
-//   borderRadius: theme.shape.borderRadius,
-//   padding: theme.spacing(0.5, 1),
-//   '& .deleteIcon': {
-//     marginLeft: theme.spacing(0.5),
-//     cursor: 'pointer',
-//     '&:hover': {
-//       color: theme.palette.error.light,
-//     }
-//   }
-// }));
-
-// const Listbox = styled('ul')(({ theme }) => ({
-//   width: '100%',
-//   margin: theme.spacing(0.5, 0, 0),
-//   padding: 0,
-//   position: 'absolute',
-//   listStyle: 'none',
-//   backgroundColor: theme.palette.background.paper,
-//   overflow: 'auto',
-//   maxHeight: '250px',
-//   borderRadius: theme.shape.borderRadius,
-//   boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-//   zIndex: 1,
-//   '& li': {
-//     padding: theme.spacing(1, 2),
-//     '&:hover': {
-//       backgroundColor: theme.palette.action.hover,
-//     }
-//   },
-//   [`& li.${autocompleteClasses.focused}`]: {
-//     backgroundColor: theme.palette.action.selected,
-//     cursor: 'pointer',
-//   },
-// }));
-
-// // Tab panel component
-// function TabPanel(props) {
-//   const { children, value, index, ...other } = props;
-
-//   return (
-//     <div
-//       role="tabpanel"
-//       hidden={value !== index}
-//       id={`school-tabpanel-${index}`}
-//       aria-labelledby={`school-tab-${index}`}
-//       {...other}
-//     >
-//       {value === index && (
-//         <Box sx={{ p: 3 }}>
-//           {children}
-//         </Box>
-//       )}
-//     </div>
-//   );
-// }
-
-// // Main component
-// export const School = () => {
-//   const dispatch = useDispatch();
-//   const schools = useSelector(s => s.school.allSchools);
-//   const loading = useSelector(s => s.school.loading);
-//   const error = useSelector(s => s.school.error);
-  
-//   // States
-//   const [selectedSchools, setSelectedSchools] = useState([]);
-//   const [showDebtResults, setShowDebtResults] = useState(false);
-//   const [showExpenditureResults, setShowExpenditureResults] = useState(false);
-//   const [totalDebt, setTotalDebt] = useState(0);
-//   const [expenditures, setExpenditures] = useState([]);
-//   const [allExpenditures, setAllExpenditures] = useState([]);
-//   const [addSchoolDialog, setAddSchoolDialog] = useState(false);
-//   const [tabValue, setTabValue] = useState(0);
-//   const [expandedSchool, setExpandedSchool] = useState(null);
-//   const [page, setPage] = useState(0);
-//   const [rowsPerPage, setRowsPerPage] = useState(10);
-//   const [orderBy, setOrderBy] = useState('date');
-//   const [order, setOrder] = useState('desc');
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [filterCategory, setFilterCategory] = useState('');
-
-//   // Fetch schools on component mount
-//   useEffect(() => {
-//     dispatch(allSchoolsThunk());
-//   }, [dispatch]);
-
-//   // Autocomplete hook
-//   const {
-//     getRootProps,
-//     getInputLabelProps,
-//     getInputProps,
-//     getListboxProps,
-//     getOptionProps,
-//     groupedOptions,
-//     value,
-//     focused,
-//     setAnchorEl,
-//   } = useAutocomplete({
-//     id: 'schools-autocomplete',
-//     multiple: true,
-//     options: schools || [],
-//     getOptionLabel: (option) => option?.schoolName || '',
-//     onChange: (_, newValue) => {
-//       setSelectedSchools(newValue);
-//       // Reset results when selection changes
-//       setShowDebtResults(false);
-//       setShowExpenditureResults(false);
-//     }
-//   });
-
-//   // Calculate total debt for selected schools
-//   const calculateTotalDebt = () => {
-//     let total = 0;
-//     selectedSchools.forEach(school => {
-//       if (school.expenditures) {
-//         school.expenditures.forEach(exp => {
-//           total += exp.remainToPay || 0;
-//         });
-//       }
-//     });
-//     setTotalDebt(total);
-//     setShowDebtResults(true);
-//     setShowExpenditureResults(false);
-//   };
-
-//   // Get expenditures for selected schools
-//   const getExpenditures = async () => {
-//     const expendituresArray = [];
-    
-//     for (const school of selectedSchools) {
-//       try {
-//         // Assuming getTotalSumOfSchool returns expenditure data
-//         const result = await dispatch(getTotalSumOfSchool(school.schoolName)).unwrap();
-//         if (result && Array.isArray(result)) {
-//           // Add school name to each expenditure
-//           const schoolExpenditures = result.map(exp => ({
-//             ...exp,
-//             schoolName: school.schoolName
-//           }));
-//           expendituresArray.push(...schoolExpenditures);
-//         } else if (school.expenditures) {
-//           const schoolExpenditures = school.expenditures.map(exp => ({
-//             ...exp,
-//             schoolName: school.schoolName
-//           }));
-//           expendituresArray.push(...schoolExpenditures);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching expenditures:", error);
-//       }
-//     }
-    
-//     setAllExpenditures(expendituresArray);
-//     setExpenditures(expendituresArray);
-//     setShowExpenditureResults(true);
-//     setShowDebtResults(false);
-//   };
-
-//   // Handle tab change
-//   const handleTabChange = (event, newValue) => {
-//     setTabValue(newValue);
-//   };
-
-//   // Format currency
-//   const formatCurrency = (amount) => {
-//     return new Intl.NumberFormat('he-IL', { 
-//       style: 'currency', 
-//       currency: 'ILS',
-//       minimumFractionDigits: 0,
-//       maximumFractionDigits: 0
-//     }).format(amount);
-//   };
-
-//   // Toggle school details expansion
-//   const toggleSchoolExpansion = (schoolSymbol) => {
-//     if (expandedSchool === schoolSymbol) {
-//       setExpandedSchool(null);
-//     } else {
-//       setExpandedSchool(schoolSymbol);
-//     }
-//   };
-
-//   // Export to Excel (placeholder function)
-//   const exportToExcel = () => {
-//     alert('פונקציונליות ייצוא לאקסל תתווסף בהמשך');
-//     // Implementation would go here
-//   };
-
-//   // Refresh data
-//   const refreshData = () => {
-//     dispatch(allSchoolsThunk());
-//     setShowDebtResults(false);
-//     setShowExpenditureResults(false);
-//   };
-
-//   // Handle sort
-//   const handleRequestSort = (property) => {
-//     const isAsc = orderBy === property && order === 'asc';
-//     setOrder(isAsc ? 'desc' : 'asc');
-//     setOrderBy(property);
-//   };
-
-//   // Handle pagination
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-
-//   const handleChangeRowsPerPage = (event) => {
-//     setRowsPerPage(parseInt(event.target.value, 10));
-//     setPage(0);
-//   };
-
-//   // Filter expenditures
-//   useEffect(() => {
-//     if (allExpenditures.length > 0) {
-//       let filtered = [...allExpenditures];
-      
-//       // Apply search term filter
-//       if (searchTerm) {
-//         filtered = filtered.filter(exp => 
-//           (exp.schoolName && exp.schoolName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-//           (exp.ordererName && exp.ordererName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-//           (exp.categorId && exp.categorId.toString().includes(searchTerm)) ||
-//           (exp.supplierNum && exp.supplierNum.toString().includes(searchTerm))
-//         );
-//       }
-      
-//       // Apply category filter
-//       if (filterCategory) {
-//         filtered = filtered.filter(exp => 
-//           exp.categorId === filterCategory
-//         );
-//       }
-      
-//       setExpenditures(filtered);
-//     }
-//   }, [searchTerm, filterCategory, allExpenditures]);
-
-//   // Get unique categories
-//   const uniqueCategories = React.useMemo(() => {
-//     if (!allExpenditures.length) return [];
-    
-//     const categories = new Set();
-//     allExpenditures.forEach(exp => {
-//       if (exp.categorId) {
-//         categories.add(exp.categorId);
-//       }
-//     });
-    
-//     return Array.from(categories);
-//   }, [allExpenditures]);
-
-//   // Sort function
-//   const sortedExpenditures = React.useMemo(() => {
-//     if (!expenditures.length) return [];
-    
-//     return [...expenditures].sort((a, b) => {
-//       const aValue = a[orderBy] || '';
-//       const bValue = b[orderBy] || '';
-      
-//       if (order === 'asc') {
-//         if (typeof aValue === 'number' && typeof bValue === 'number') {
-//           return aValue - bValue;
-//         }
-//         return String(aValue).localeCompare(String(bValue));
-//       } else {
-//         if (typeof aValue === 'number' && typeof bValue === 'number') {
-//           return bValue - aValue;
-//         }
-//         return String(bValue).localeCompare(String(aValue));
-//       }
-//     });
-//   }, [expenditures, order, orderBy]);
-
-//   // Paginated data
-//   const paginatedExpenditures = sortedExpenditures.slice(
-//     page * rowsPerPage,
-//     page * rowsPerPage + rowsPerPage
-//   );
-
-//   return (
-//     <div className="schools-page">
-//       <div className="schools-container">
-//         <div className="schools-header">
-//           <div className="schools-title-section">
-//             <SchoolIcon className="schools-icon" />
-//             <Typography variant="h4" className="schools-title">
-//               ניהול מוסדות חינוך
-//             </Typography>
-//           </div>
-          
-//           <div className="schools-actions">
-//             <Tooltip title="רענן נתונים">
-//               <IconButton onClick={refreshData} className="schools-refresh-button">
-//                 <RefreshIcon />
-//               </IconButton>
-//             </Tooltip>
-//             <Button 
-//               variant="contained" 
-//               className="schools-add-button"
-//               startIcon={<SchoolIcon />}
-//               onClick={() => setAddSchoolDialog(true)}
-//             >
-//               הוסף מוסד
-//             </Button>
-//           </div>
-//         </div>
-
-//         {loading && (
-//           <div className="schools-loading">
-//             <CircularProgress />
-//           </div>
-//         )}
-
-//         {error && (
-//           <Alert severity="error" className="schools-error">
-//             {error}
-//           </Alert>
-//         )}
-
-//         {!loading && !error && (
-//           <>
-//             <Paper className="schools-filter-section">
-//               <Typography variant="h6" className="schools-filter-title">
-//                 <FilterListIcon className="schools-filter-icon" />
-//                 בחר מוסדות לסינון
-//               </Typography>
-              
-//               <div {...getRootProps()} className="schools-autocomplete">
-//                 <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-//                 {selectedSchools.map((school, index) => (
-//                     <StyledTag key={`${school.schoolSymbol}-${index}`} className="schools-tag">
-//                       {school.schoolName}
-//                       <IconButton 
-//                         size="small" 
-//                         className="schools-tag-delete"
-//                         onClick={() => {
-//                           const newSelected = [...selectedSchools];
-//                           newSelected.splice(index, 1);
-//                           setSelectedSchools(newSelected);
-//                         }}
-//                       >
-//                         <ExpandLessIcon fontSize="small" />
-//                       </IconButton>
-//                     </StyledTag>
-//                   ))}
-//                   <input {...getInputProps()} placeholder="חפש מוסד..." className="schools-search-input" />
-//                 </InputWrapper>
-                
-//                 {groupedOptions.length > 0 && (
-//                   <Listbox {...getListboxProps()} className="schools-options-list">
-//                     {groupedOptions.map((option, index) => (
-//                       <li {...getOptionProps({ option, index })} key={option.schoolSymbol || index} className="schools-option-item">
-//                         {option.schoolName} ({option.schoolSymbol})
-//                       </li>
-//                     ))}
-//                   </Listbox>
-//                 )}
-//               </div>
-//             </Paper>
-
-//             {selectedSchools.length > 0 && (
-//               <div className="schools-actions-section">
-//                 <Button 
-//                   variant="contained" 
-//                   color="secondary" 
-//                   startIcon={<MoneyOffIcon />}
-//                   onClick={calculateTotalDebt}
-//                   className="schools-action-button debt-button"
-//                 >
-//                   חשב סך חובות
-//                 </Button>
-                
-//                 <Button 
-//                   variant="contained" 
-//                   color="primary" 
-//                   startIcon={<ReceiptIcon />}
-//                   onClick={getExpenditures}
-//                   className="schools-action-button expenditures-button"
-//                 >
-//                   הצג הוצאות
-//                 </Button>
-                
-//                 <Button 
-//                   variant="outlined" 
-//                   color="success" 
-//                   startIcon={<DownloadIcon />}
-//                   onClick={exportToExcel}
-//                   className="schools-action-button export-button"
-//                 >
-//                   ייצא לאקסל
-//                 </Button>
-//               </div>
-//             )}
-
-//             {/* Results Section */}
-//             {(showDebtResults || showExpenditureResults) && (
-//               <Paper className="schools-results-section">
-//                 <Tabs 
-//                   value={tabValue} 
-//                   onChange={handleTabChange}
-//                   variant="fullWidth"
-//                   className="schools-tabs"
-//                 >
-//                   <Tab label="סיכום" value={0} className="schools-tab" />
-//                   <Tab label="פירוט מוסדות" value={1} className="schools-tab" />
-//                   {showExpenditureResults && <Tab label="טבלת הוצאות" value={2} className="schools-tab" />}
-//                 </Tabs>
-
-//                 {/* Tab 1: Summary */}
-//                 <TabPanel value={tabValue} index={0}>
-//                   <Card className="schools-summary-card">
-//                     <CardContent>
-//                       <Typography variant="h6" className="schools-summary-title">
-//                         סיכום נתונים עבור {selectedSchools.length} מוסדות נבחרים
-//                       </Typography>
-                      
-//                       <Grid container spacing={3} className="schools-summary-grid">
-//                         {showDebtResults && (
-//                           <Grid item xs={12} md={6}>
-//                             <Paper className="schools-summary-item debt-summary">
-//                               <Typography variant="subtitle1">סך החובות</Typography>
-//                               <Typography variant="h4" className="schools-summary-value">
-//                                 {formatCurrency(totalDebt)}
-//                               </Typography>
-//                             </Paper>
-//                           </Grid>
-//                         )}
-                        
-//                         {showExpenditureResults && (
-//                           <Grid item xs={12} md={6}>
-//                             <Paper className="schools-summary-item expenditures-summary">
-//                               <Typography variant="subtitle1">סך ההוצאות</Typography>
-//                               <Typography variant="h4" className="schools-summary-value">
-//                                 {formatCurrency(expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0))}
-//                               </Typography>
-//                             </Paper>
-//                           </Grid>
-//                         )}
-                        
-//                         <Grid item xs={12} md={6}>
-//                           <Paper className="schools-summary-item budget-summary">
-//                             <Typography variant="subtitle1">תקציב כולל</Typography>
-//                             <Typography variant="h4" className="schools-summary-value">
-//                               {formatCurrency(selectedSchools.reduce((sum, school) => sum + (school.budget || 0), 0))}
-//                             </Typography>
-//                           </Paper>
-//                         </Grid>
-                        
-//                         <Grid item xs={12} md={6}>
-//                           <Paper className="schools-summary-item balance-summary">
-//                             <Typography variant="subtitle1">יתרה</Typography>
-//                             <Typography variant="h4" className="schools-summary-value">
-//                               {formatCurrency(
-//                                 selectedSchools.reduce((sum, school) => sum + (school.budget || 0), 0) - 
-//                                 (showExpenditureResults ? 
-//                                   expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0) : 
-//                                   totalDebt)
-//                               )}
-//                             </Typography>
-//                           </Paper>
-//                         </Grid>
-//                       </Grid>
-//                     </CardContent>
-//                   </Card>
-//                 </TabPanel>
-
-//                 {/* Tab 2: Schools Details */}
-//                 <TabPanel value={tabValue} index={1}>
-//                   <div className="schools-details-list">
-//                     {selectedSchools.map((school) => (
-//                       <Card key={school.schoolSymbol} className="schools-detail-card">
-//                         <div 
-//                           className="schools-detail-header"
-//                           onClick={() => toggleSchoolExpansion(school.schoolSymbol)}
-//                         >
-//                           <div>
-//                             <Typography variant="h6" className="schools-detail-name">
-//                               {school.schoolName}
-//                             </Typography>
-//                             <Typography variant="body2" className="schools-detail-symbol">
-//                               סמל מוסד: {school.schoolSymbol}
-//                             </Typography>
-//                           </div>
-//                           <div className="schools-detail-budget">
-//                             <Typography variant="h6">
-//                               תקציב: {formatCurrency(school.budget || 0)}
-//                             </Typography>
-//                             {expandedSchool === school.schoolSymbol ? 
-//                               <ExpandLessIcon /> : <ExpandMoreIcon />}
-//                           </div>
-//                         </div>
-                        
-//                         <Collapse in={expandedSchool === school.schoolSymbol}>
-//                           <div className="schools-detail-content">
-//                             <Grid container spacing={2}>
-//                               <Grid item xs={12} md={6}>
-//                                 <Paper className="schools-detail-summary debt-detail">
-//                                   <Typography variant="subtitle2">סך החובות</Typography>
-//                                   <Typography variant="h5">
-//                                     {formatCurrency(
-//                                       (school.expenditures || []).reduce(
-//                                         (sum, exp) => sum + (exp.remainToPay || 0), 0
-//                                       )
-//                                     )}
-//                                   </Typography>
-//                                 </Paper>
-//                               </Grid>
-//                               <Grid item xs={12} md={6}>
-//                                 <Paper className="schools-detail-summary expenditures-detail">
-//                                   <Typography variant="subtitle2">סך ההוצאות</Typography>
-//                                   <Typography variant="h5">
-//                                     {formatCurrency(
-//                                       (school.expenditures || []).reduce(
-//                                         (sum, exp) => sum + (exp.expenditureSum || 0), 0
-//                                       )
-//                                     )}
-//                                   </Typography>
-//                                 </Paper>
-//                               </Grid>
-//                             </Grid>
-                            
-//                             {(school.expenditures?.length > 0) && (
-//                               <div className="schools-detail-expenditures">
-//                                 <Typography variant="subtitle1" className="schools-detail-expenditures-title">
-//                                   פירוט הוצאות אחרונות
-//                                 </Typography>
-//                                 <TableContainer className="schools-detail-table-container">
-//                                   <Table size="small" className="schools-detail-table">
-//                                     <TableHead>
-//                                       <TableRow>
-//                                         <TableCell>תאריך</TableCell>
-//                                         <TableCell>סכום</TableCell>
-//                                         <TableCell>קטגוריה</TableCell>
-//                                         <TableCell>שם המזמין</TableCell>
-//                                         <TableCell>סטטוס</TableCell>
-//                                       </TableRow>
-//                                     </TableHead>
-//                                     <TableBody>
-//                                       {(school.expenditures || [])
-//                                         .slice(0, 5) // Show only last 5 expenditures
-//                                         .map((exp, index) => (
-//                                           <TableRow key={index} className="schools-detail-row">
-//                                             <TableCell>{exp.date}</TableCell>
-//                                             <TableCell>{formatCurrency(exp.expenditureSum || 0)}</TableCell>
-//                                             <TableCell>{exp.categorId}</TableCell>
-//                                             <TableCell>{exp.ordererName}</TableCell>
-//                                             <TableCell>
-//                                               <Chip 
-//                                                 label={exp.isAccepted ? "אושר" : "ממתין לאישור"} 
-//                                                 color={exp.isAccepted ? "success" : "warning"}
-//                                                 size="small"
-//                                                 className={`status-chip ${exp.isAccepted ? 'approved' : 'pending'}`}
-//                                               />
-//                                             </TableCell>
-//                                           </TableRow>
-//                                         ))}
-//                                     </TableBody>
-//                                   </Table>
-//                                 </TableContainer>
-//                               </div>
-//                             )}
-//                           </div>
-//                         </Collapse>
-//                       </Card>
-//                     ))}
-//                   </div>
-//                 </TabPanel>
-
-//                 {/* Tab 3: Expenditures Table */}
-//                 <TabPanel value={tabValue} index={2}>
-//                   {showExpenditureResults && (
-//                     <div className="schools-expenditures-section">
-//                       <div className="schools-expenditures-filters">
-//                         <TextField
-//                           placeholder="חיפוש..."
-//                           variant="outlined"
-//                           value={searchTerm}
-//                           onChange={(e) => setSearchTerm(e.target.value)}
-//                           className="schools-expenditures-search"
-//                           InputProps={{
-//                             startAdornment: (
-//                               <InputAdornment position="start">
-//                                 <SearchIcon />
-//                               </InputAdornment>
-//                             ),
-//                           }}
-//                         />
-                        
-//                         <TextField
-//                           select
-//                           label="סינון לפי קטגוריה"
-//                           value={filterCategory}
-//                           onChange={(e) => setFilterCategory(e.target.value)}
-//                           className="schools-expenditures-filter"
-//                           variant="outlined"
-//                         >
-//                           <option value="">הכל</option>
-//                           {uniqueCategories.map((category) => (
-//                             <option key={category} value={category}>
-//                               {category}
-//                             </option>
-//                           ))}
-//                         </TextField>
-//                       </div>
-                      
-//                       <div className="schools-expenditures-summary">
-//                         <Typography variant="h6" className="schools-expenditures-summary-title">
-//                           <SummarizeIcon className="schools-expenditures-summary-icon" />
-//                           סיכום הוצאות
-//                         </Typography>
-//                         <div className="schools-expenditures-summary-items">
-//                           <div className="schools-expenditures-summary-item">
-//                             <Typography variant="body2">סך הכל הוצאות:</Typography>
-//                             <Typography variant="h6">
-//                               {formatCurrency(expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0))}
-//                             </Typography>
-//                           </div>
-//                           <div className="schools-expenditures-summary-item">
-//                             <Typography variant="body2">מספר הוצאות:</Typography>
-//                             <Typography variant="h6">{expenditures.length}</Typography>
-//                           </div>
-//                           <div className="schools-expenditures-summary-item">
-//                             <Typography variant="body2">הוצאה ממוצעת:</Typography>
-//                             <Typography variant="h6">
-//                               {formatCurrency(
-//                                 expenditures.length > 0 
-//                                   ? expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0) / expenditures.length 
-//                                   : 0
-//                               )}
-//                             </Typography>
-//                           </div>
-//                         </div>
-//                       </div>
-                      
-//                       <TableContainer className="schools-expenditures-table-container">
-//                         <Table stickyHeader className="schools-expenditures-table">
-//                           <TableHead>
-//                             <TableRow>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'date'}
-//                                   direction={orderBy === 'date' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('date')}
-//                                 >
-//                                   תאריך הזמנה
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'expenditureSum'}
-//                                   direction={orderBy === 'expenditureSum' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('expenditureSum')}
-//                                 >
-//                                   סכום הוצאה
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'remainToPay'}
-//                                   direction={orderBy === 'remainToPay' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('remainToPay')}
-//                                 >
-//                                   יתרה לתשלום
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'categorId'}
-//                                   direction={orderBy === 'categorId' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('categorId')}
-//                                 >
-//                                   קטגוריה
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'schoolName'}
-//                                   direction={orderBy === 'schoolName' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('schoolName')}
-//                                 >
-//                                   בית ספר
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'ordererName'}
-//                                   direction={orderBy === 'ordererName' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('ordererName')}
-//                                 >
-//                                   שם מבצע ההזמנה
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">
-//                                 <TableSortLabel
-//                                   active={orderBy === 'supplierNum'}
-//                                   direction={orderBy === 'supplierNum' ? order : 'asc'}
-//                                   onClick={() => handleRequestSort('supplierNum')}
-//                                 >
-//                                   קוד ספק
-//                                 </TableSortLabel>
-//                               </TableCell>
-//                               <TableCell className="schools-table-header-cell">סטטוס</TableCell>
-//                             </TableRow>
-//                           </TableHead>
-//                           <TableBody>
-//                             {paginatedExpenditures.map((exp, index) => (
-//                               <TableRow key={index} className="schools-expenditures-row">
-//                                 <TableCell>{exp.date}</TableCell>
-//                                 <TableCell>{formatCurrency(exp.expenditureSum || 0)}</TableCell>
-//                                 <TableCell>{formatCurrency(exp.remainToPay || 0)}</TableCell>
-//                                 <TableCell>{exp.categorId}</TableCell>
-//                                 <TableCell>
-//                                   <Chip 
-//                                     label={exp.schoolName || exp.schoolSymbol} 
-//                                     className="school-chip"
-//                                     size="small"
-//                                   />
-//                                 </TableCell>
-//                                 <TableCell>{exp.ordererName}</TableCell>
-//                                 <TableCell>{exp.supplierNum}</TableCell>
-//                                 <TableCell>
-//                                   <Chip 
-//                                     label={exp.isAccepted ? "אושר" : "ממתין לאישור"} 
-//                                     color={exp.isAccepted ? "success" : "warning"}
-//                                     size="small"
-//                                     className={`status-chip ${exp.isAccepted ? 'approved' : 'pending'}`}
-//                                   />
-//                                 </TableCell>
-//                               </TableRow>
-//                             ))}
-//                           </TableBody>
-//                         </Table>
-//                       </TableContainer>
-                      
-//                       <TablePagination
-//                         component="div"
-//                         count={expenditures.length}
-//                         page={page}
-//                         onPageChange={handleChangePage}
-//                         rowsPerPage={rowsPerPage}
-//                         onRowsPerPageChange={handleChangeRowsPerPage}
-//                         labelRowsPerPage="שורות בעמוד:"
-//                         labelDisplayedRows={({ from, to, count }) => `${from}-${to} מתוך ${count}`}
-//                         rowsPerPageOptions={[5, 10, 25, 50]}
-//                         className="schools-expenditures-pagination"
-//                       />
-//                     </div>
-//                   )}
-//                 </TabPanel>
-//               </Paper>
-//             )}
-
-//             {selectedSchools.length === 0 && !loading && (
-//               <div className="schools-empty-state">
-//                 <SchoolIcon className="schools-empty-icon" />
-//                 <Typography variant="h6" className="schools-empty-title">
-//                   לא נבחרו מוסדות
-//                 </Typography>
-//                 <Typography variant="body2" className="schools-empty-subtitle">
-//                   בחר מוסד אחד או יותר מהרשימה למעלה כדי להציג נתונים
-//                 </Typography>
-//               </div>
-//             )}
-//           </>
-//         )}
-//       </div>
-
-//       {/* Add School Dialog */}
-//       <Dialog
-//         open={addSchoolDialog} 
-//         onClose={() => setAddSchoolDialog(false)}
-//         maxWidth="md"
-//         fullWidth
-//         className="schools-add-dialog"
-//       >
-//         <div className="schools-add-dialog-header">
-//           <Typography variant="h6">הוספת מוסד חדש</Typography>
-//           <IconButton onClick={() => setAddSchoolDialog(false)}>
-//             <ExpandLessIcon />
-//           </IconButton>
-//         </div>
-//         <Divider />
-//         <div className="schools-add-dialog-content">
-//           <AddSchool onSuccess={() => {
-//             setAddSchoolDialog(false);
-//             refreshData();
-//           }} />
-//         </div>
-//       </Dialog>
-//     </div>
-//   );
-// };
- 
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box, Paper, Typography, Chip, Button, Divider, 
-  Card, CardContent, Grid, IconButton, Tooltip,
-  Dialog, DialogTitle, DialogContent, DialogActions,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Collapse, CircularProgress, Alert, Tabs, Tab, TextField,
-  Checkbox, FormControlLabel, InputAdornment, TablePagination, TableSortLabel
+  Box,
+  Paper,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Chip,
+  Button,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Autocomplete,
+  CircularProgress,
+  Divider,
+  Alert,
+  Fade,
+  Zoom,
+  Grow,
+  Collapse,
+  Switch,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Avatar,
 } from '@mui/material';
+
 import { styled } from '@mui/material/styles';
-import useAutocomplete from '@mui/material/useAutocomplete';
-import { autocompleteClasses } from '@mui/material/Autocomplete';
 
 // Icons
 import SchoolIcon from '@mui/icons-material/School';
-import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DownloadIcon from '@mui/icons-material/Download';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
-import PaymentIcon from '@mui/icons-material/Payment';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
+import CategoryIcon from '@mui/icons-material/Category';
+import BusinessIcon from '@mui/icons-material/Business';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import PaymentIcon from '@mui/icons-material/Payment';
+import WarningIcon from '@mui/icons-material/Warning';
+import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import SortIcon from '@mui/icons-material/Sort';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { allSchoolsThunk } from '../../Redux/Slices/Schools/getSchoolThunk';
+import { allExpendituresThunk } from '../../Redux/Slices/Expenditures/getExpendituresThunk';
+import { allCategoriesThunk } from '../../Redux/Slices/Categories/getCategoriesThunk';
+import { updatePaymentsThunk }  from '../../Redux/Slices/Payments/updateThunk';
+import { clearPaymentStatus } from '../../Redux/Slices/Payments/paymentsSlice';
+import { getDebtOfSchool } from '../../Redux/Slices/Schools/getSchoolThunk';
 
-// Redux actions
-import { 
-  allSchoolsThunk, 
-  getDebtOfSchool, 
-  getTotalSumOfSchool 
-} from '../../Redux/Slices/Schools/getSchoolThunk';
-import { AddSchool } from './addSchool';
+import './school.css';
 
 // Styled components
-const Root = styled('div')(({ theme }) => ({
-  padding: theme.spacing(3),
-  backgroundColor: '#f5f7fa',
-  borderRadius: theme.shape.borderRadius,
-  minHeight: '85vh',
-  direction: 'rtl'
-}));
-
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-  backgroundColor: '#fff',
-  overflow: 'hidden'
+  direction: 'rtl',
+  height: '90vh',
+  width: '90%',
+  overflow: 'hidden',
+  borderRadius: '16px',
+  // boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+  margin: '0 auto',
+  padding: '24px',
+  // backgroundColor: '#ffffff',
 }));
 
-const Header = styled(Box)(({ theme }) => ({
+const HeaderBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginBottom: theme.spacing(3)
+  marginBottom: '24px',
 }));
 
-const ActionButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  borderRadius: theme.shape.borderRadius * 1.5,
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  transition: 'all 0.2s',
+const HeaderWithIcon = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+}));
+
+const HeaderIcon = styled(SchoolIcon)(({ theme }) => ({
+  fontSize: '40px',
+  color: '#00796b',
+  backgroundColor: 'rgba(0, 121, 107, 0.1)',
+  padding: '8px',
+  borderRadius: '50%',
+}));
+
+const ActionButton = styled(Button)(({ theme, variant }) => ({
+  borderRadius: '30px',
+  padding: '8px 16px',
+  textTransform: 'none',
+  fontWeight: 600,
+  boxShadow: variant === 'contained' ? '0 4px 12px rgba(0, 121, 107, 0.2)' : 'none',
+  transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'translateY(-2px)',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-  }
-}));
-
-const SchoolChip = styled(Chip)(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  padding: theme.spacing(1, 0.5),
-  fontWeight: 500,
-  backgroundColor: theme.palette.primary.light,
-  color: theme.palette.primary.contrastText,
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-  }
-}));
-
-const ResultCard = styled(Card)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius * 1.5,
-  boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-  overflow: 'hidden',
-  transition: 'all 0.3s',
-  '&:hover': {
-    boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
-  }
+    boxShadow: variant === 'contained'
+      ? '0 6px 16px rgba(0, 121, 107, 0.3)'
+      : '0 4px 12px rgba(0, 121, 107, 0.1)',
+  },
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
-  maxHeight: '400px',
-  '& .MuiTableCell-head': {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
-    fontWeight: 'bold'
-  }
+  maxHeight: '440px',
+  borderRadius: '16px',
+  '&::-webkit-scrollbar': {
+    width: '8px',
+    height: '8px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f1f1',
+    borderRadius: '10px',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#c1c1c1',
+    borderRadius: '10px',
+    '&:hover': {
+      background: '#a8a8a8',
+    },
+  },
 }));
 
-// Input components for autocomplete
-const InputWrapper = styled('div')(({ theme }) => ({
-  width: '100%',
-  border: `1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'}`,
-  backgroundColor: theme.palette.mode === 'dark' ? '#141414' : '#fff',
-  borderRadius: theme.shape.borderRadius * 1.5,
-  padding: theme.spacing(1),
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: theme.spacing(0.5),
+const StyledTableCell = styled(TableCell)(({ theme, header }) => ({
+  padding: header ? '16px' : '12px 16px',
+  fontSize: header ? '0.875rem' : '0.875rem',
+  fontWeight: header ? 700 : 400,
+  backgroundColor: header ? '#00796b' : 'inherit',
+  color: header ? 'white' : 'inherit',
+  whiteSpace: 'nowrap',
+}));
+
+const SchoolChip = styled(Chip)(({ theme }) => ({
+
+  fontWeight: 100,
+  margin: '4px',
+  borderRadius: '16px',
+  backgroundColor: '#f5f5f5',
+  boxShadow: '0 2px 5px rgba(0,0,0,0.08)',
+  transition: 'all 0.2s ease',
   '&:hover': {
-    borderColor: theme.palette.primary.main,
-  },
-  '&.focused': {
-    borderColor: theme.palette.primary.main,
-    boxShadow: `0 0 0 2px ${theme.palette.primary.light}`,
-  },
-  '& input': {
-    backgroundColor: 'transparent',
-    color: theme.palette.text.primary,
-    height: '30px',
-    boxSizing: 'border-box',
-    padding: theme.spacing(0.5, 1),
-    width: '0',
-    minWidth: '30px',
-    flexGrow: 1,
-    border: 0,
-    margin: 0,
-    outline: 0,
+    boxShadow: '0 4px 8px rgba(0,0,0,0.12)',
+    transform: 'translateY(-2px)',
   },
 }));
 
-const StyledTag = styled(Box)(({ theme }) => ({
+const SummaryCard = styled(Card)(({ theme }) => ({
+  borderRadius: '16px',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+  overflow: 'hidden',
+  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+  },
+}));
+
+const StatBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  height: '32px',
-  margin: theme.spacing(0.25),
-  lineHeight: '22px',
-  backgroundColor: theme.palette.primary.light,
-  color: theme.palette.primary.contrastText,
-  borderRadius: theme.shape.borderRadius,
-  padding: theme.spacing(0.5, 1),
-  cursor: 'pointer',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-  }
 }));
 
-const Listbox = styled('ul')(({ theme }) => ({
-  width: '100%',
-  margin: theme.spacing(0.5, 0, 0),
-  padding: 0,
-  position: 'absolute',
-  listStyle: 'none',
-  backgroundColor: theme.palette.background.paper,
-  overflow: 'auto',
-  maxHeight: '250px',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-  zIndex: 1,
-  '& li': {
-    padding: theme.spacing(1, 2),
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    }
+const StatIconBox = styled(Box)(({ theme }) => ({
+  width: '48px',
+  height: '48px',
+  borderRadius: '50%',
+  backgroundColor: 'rgba(0, 121, 107, 0.1)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: '16px',
+}));
+
+const PaymentInput = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px',
+    '&.Mui-focused': {
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#00796b',
+        borderWidth: '2px',
+      },
+    },
   },
-  [`& li.${autocompleteClasses.focused}`]: {
-    backgroundColor: theme.palette.action.selected,
-    cursor: 'pointer',
+  '& .MuiInputLabel-root.Mui-focused': {
+    color: '#00796b',
   },
 }));
 
-// Tab panel component
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`school-tabpanel-${index}`}
-      aria-labelledby={`school-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-// Main component
 export const School = () => {
   const dispatch = useDispatch();
-  const schools = useSelector(s => s.school.allSchools);
-  const loading = useSelector(s => s.school.loading);
-  const error = useSelector(s => s.school.error);
-  const expenditure = useSelector(s => s.expenditure.allExpenditures);
-  // States
+  const navigate = useNavigate();
+
+  // State variables
   const [selectedSchools, setSelectedSchools] = useState([]);
-  const [showDebtResults, setShowDebtResults] = useState(false);
-  const [showExpenditureResults, setShowExpenditureResults] = useState(false);
-  const [totalDebt, setTotalDebt] = useState(0);
-  const [expenditures, setExpenditures] = useState([]);
-  const [addSchoolDialog, setAddSchoolDialog] = useState(false);
-  const [tabValue, setTabValue] = useState(0);
-  const [expandedSchool, setExpandedSchool] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [availableSchools, setAvailableSchools] = useState([]);
+  const [filteredExpenditures, setFilteredExpenditures] = useState([]);
+  const [updatedPayments, setUpdatedPayments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [orderBy, setOrderBy] = useState('date');
-  const [order, setOrder] = useState('desc');
-  
-  // Payment states
-  const [paymentSelections, setPaymentSelections] = useState({});
+  const [paymentStatus, setPaymentStatus] = useState({});
   const [paymentAmounts, setPaymentAmounts] = useState({});
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [selectedExpenditure, setSelectedExpenditure] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [schoolDialogOpen, setSchoolDialogOpen] = useState(false);
+  const [schoolSearchQuery, setSchoolSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [debtData, setDebtData] = useState({
+    totalDebt: 0,
+    debtBySupplier: {}
+  });
+  const [showDebtDialog, setShowDebtDialog] = useState(false);
 
-  // Fetch schools on component mount
+  // Redux selectors
+  const currUser = useSelector(u => u.user.currUser);
+  const allSchools = useSelector(s => s.school.allSchools || []);
+  const allExpenditures = useSelector(e => e.expenditure.allExpenditures || []);
+  const categories = useSelector(e => e.category.allCategories || []);
+  const paymentsLoading = useSelector(state => state.payments.loading);
+  const paymentsError = useSelector(state => state.payments.error);
+  const paymentsSuccess = useSelector(state => state.payments.success);
+  const updatedCount = useSelector(state => state.payments.updatedCount);
+  // Table columns definition
+  const columns = [
+    { id: 'קוד הוצאה', label: 'id', minWidth: 80, align: 'center', sortable: true },
+    {
+      id: 'סמל מוסד',
+      label: 'schoolSymbol',
+      minWidth: 100,
+      align: 'center',
+      sortable: true,
+
+    },
+    {
+      id: 'סכום הוצאה',
+      label: 'expenditureSum',
+      minWidth: 120,
+      align: 'right',
+      sortable: true,
+      format: (value) => value.toLocaleString('he-IL', { style: 'currency', currency: 'ILS' }),
+    },
+    {
+      id: 'קטגוריה',
+      label: 'categoryName',
+      minWidth: 120,
+      align: 'right',
+      sortable: true,
+
+    },
+    {
+      id: 'שם ספק',
+      label: 'supplierName',
+      minWidth: 150,
+      align: 'right',
+      sortable: true,
+      renderCell: (value) => (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <BusinessIcon sx={{ mr: 1, fontSize: '0.875rem', color: '#00796b' }} />
+          {value}
+        </Box>
+      )
+    },
+    {
+      id: 'שם המזמין',
+      label: 'ordererName',
+      minWidth: 120,
+      align: 'right',
+      sortable: true,
+    },
+    {
+      id: 'תאריך',
+      label: 'date',
+      minWidth: 100,
+      align: 'center',
+      sortable: true,
+      renderCell: (value) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <DateRangeIcon sx={{ mr: 1, fontSize: '0.875rem', color: '#00796b' }} />
+          {formatDate(value)}
+        </Box>
+      )
+    },
+    {
+      id: 'תשלום',
+      label: 'payment',
+      minWidth: 150,
+      align: 'center',
+      renderCell: (row) => (
+        <Box className="payment-cell">
+          {paymentStatus[row.id] ? (
+            <Box className="payment-info">
+              {paymentAmounts[row.id] && paymentAmounts[row.id] < row.expenditureSum ? (
+                <Tooltip title={`שולם ${paymentAmounts[row.id].toLocaleString('he-IL')} ₪ מתוך ${row.expenditureSum.toLocaleString('he-IL')} ₪`}>
+                  <Chip
+                    icon={<WarningIcon />}
+                    label="תשלום חלקי"
+                    size="small"
+                    color="warning"
+                    onClick={() => handlePaymentClick(row)}
+                    className="partial-payment-chip"
+                  />
+                </Tooltip>
+              ) : (
+                <Tooltip title="שולם במלואו">
+                  <Chip
+                    icon={<CheckCircleIcon />}
+                    label="שולם"
+                    size="small"
+                    color="success"
+                    className="full-payment-chip"
+                  />
+                </Tooltip>
+              )}
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Checkbox
+                checked={false}
+                onChange={() => handleFullPaymentChange(row)}
+                size="small"
+                sx={{
+                  color: '#00796b',
+                  '&.Mui-checked': {
+                    color: '#00796b',
+                  }
+                }}
+              />
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                onClick={() => handlePaymentClick(row)}
+                sx={{
+                  borderRadius: '8px',
+                  minWidth: 'auto',
+                  padding: '3px 8px',
+                  borderColor: '#00796b',
+                  color: '#00796b',
+                  '&:hover': {
+                    borderColor: '#00695c',
+                    backgroundColor: 'rgba(0, 121, 107, 0.04)',
+                  }
+                }}
+              >
+                חלקי
+              </Button>
+            </Box>
+          )}
+        </Box>
+      )
+    },
+  ];
+
+  // Helper functions
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('he-IL');
+  };
+
+  const getCategoryColor = (categoryName) => {
+    const colors = [
+      '#00796b', // teal
+      '#0288d1', // blue
+      '#7b1fa2', // purple
+      '#c2185b', // pink
+      '#d32f2f', // red
+      '#f57c00', // orange
+      '#689f38', // green
+      '#5d4037', // brown
+    ];
+
+    if (!categoryName) return colors[0];
+
+    // Generate consistent color based on category name
+    let hash = 0;
+    for (let i = 0; i < categoryName.length; i++) {
+      hash = categoryName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  const getSchoolColor = (schoolSymbol) => {
+    const colors = [
+      '#00796b', // teal
+      '#0288d1', // blue
+      '#7b1fa2', // purple
+      '#c2185b', // pink
+      '#d32f2f', // red
+      '#f57c00', // orange
+      '#689f38', // green
+      '#5d4037', // brown
+      '#455a64', // blue grey
+      '#5e35b1', // deep purple
+      '#e53935', // red
+      '#43a047', // green
+      '#fb8c00', // orange
+      '#00acc1', // cyan
+    ];
+
+    if (!schoolSymbol) return colors[0];
+
+    // Use school symbol to generate consistent color
+    return colors[schoolSymbol % colors.length];
+  };
+
+  const getSchoolNameBySymbol = (symbol) => {
+    const school = allSchools.find(s => s.schoolSymbol === symbol);
+    return school ? school.schoolName : `מוסד ${symbol}`;
+  };
+
+  // Data fetching
+  const fetchData = async () => {
+    setLoading(true);
+    setRefreshing(true);
+
+    try {
+      // Fetch all schools
+      await dispatch(allSchoolsThunk());
+
+      // Fetch all expenditures
+      await dispatch(allExpendituresThunk());
+
+      // Fetch all categories
+      await dispatch(allCategoriesThunk());
+    } catch (error) {
+      console.error("שגיאה בטעינת נתונים:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  // Initialize data on component mount
   useEffect(() => {
-    dispatch(allSchoolsThunk());
+    fetchData();
   }, [dispatch]);
 
-  // Autocomplete hook
-  const {
-    getRootProps,
-    getInputLabelProps,
-    getInputProps,
-    getListboxProps,
-    getOptionProps,
-    groupedOptions,
-    value,
-    focused,
-    setAnchorEl,
-  } = useAutocomplete({
-    id: 'schools-autocomplete',
-    multiple: true,
-    options: schools || [],
-    getOptionLabel: (option) => option?.schoolName || '',
-    value: selectedSchools,
-    onChange: (_, newValue) => {
-      setSelectedSchools(newValue);
-      // Reset results when selection changes
-      setShowDebtResults(false);
-      setShowExpenditureResults(false);
+  // Update available schools when allSchools changes
+  useEffect(() => {
+    if (allSchools && allSchools.length > 0) {
+      // Filter out school with symbol 0 (manager)
+      const schools = allSchools.filter(school => school.schoolSymbol !== 0);
+      setAvailableSchools(schools);
     }
-  });
+  }, [allSchools]);
 
-  // Toggle school selection
-  const toggleSchoolSelection = (school) => {
-    const isSelected = selectedSchools.some(s => s.schoolSymbol === school.schoolSymbol);
-    
-    if (isSelected) {
-      setSelectedSchools(selectedSchools.filter(s => s.schoolSymbol !== school.schoolSymbol));
+  // Update filtered expenditures when selected schools or all expenditures change
+  useEffect(() => {
+    if (selectedSchools.length > 0 && allExpenditures && allExpenditures.length > 0) {
+      const selectedSymbols = selectedSchools.map(school => school.schoolSymbol);
+
+      // Filter expenditures by selected school symbols
+      const filtered = allExpenditures.filter(exp =>
+        selectedSymbols.includes(exp.schoolSymbol)
+      );
+
+      setFilteredExpenditures(filtered);
+
+      // Initialize payment status and amounts
+      const initialPaymentStatus = {};
+      const initialPaymentAmounts = {};
+
+      filtered.forEach(exp => {
+        initialPaymentStatus[exp.id] = false;
+        initialPaymentAmounts[exp.id] = exp.expenditureSum;
+      });
+
+      setPaymentStatus(initialPaymentStatus);
+      setPaymentAmounts(initialPaymentAmounts);
     } else {
+      setFilteredExpenditures([]);
+    }
+  }, [selectedSchools, allExpenditures]);
+
+  // Fetch debt data for selected schools
+  const fetchDebtData = async () => {
+    if (selectedSchools.length === 0) return;
+
+    setLoading(true);
+
+    try {
+      let totalDebt = 0;
+      const debtBySupplier = {};
+
+      // Fetch debt for each selected school
+      for (const school of selectedSchools) {
+        const response = await dispatch(getDebtOfSchool(school.schoolName));
+
+        if (response.payload) {
+          // Add to total debt
+          totalDebt += parseFloat(response.payload);
+
+          // Group debt by supplier
+          const schoolExpenditures = allExpenditures.filter(
+            exp => exp.schoolSymbol === school.schoolSymbol
+          );
+
+          schoolExpenditures.forEach(exp => {
+            if (!paymentStatus[exp.id] ||
+              (paymentStatus[exp.id] && paymentAmounts[exp.id] < exp.expenditureSum)) {
+
+              const unpaidAmount = paymentStatus[exp.id]
+                ? exp.expenditureSum - paymentAmounts[exp.id]
+                : exp.expenditureSum;
+
+              if (debtBySupplier[exp.supplierName]) {
+                debtBySupplier[exp.supplierName] += unpaidAmount;
+              } else {
+                debtBySupplier[exp.supplierName] = unpaidAmount;
+              }
+            }
+          });
+        }
+      }
+
+      setDebtData({
+        totalDebt,
+        debtBySupplier
+      });
+
+      setShowDebtDialog(true);
+    } catch (error) {
+      console.error("שגיאה בטעינת נתוני חוב:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Event handlers
+  const handleSchoolDialogOpen = () => {
+    setSchoolDialogOpen(true);
+  };
+
+  const handleSchoolDialogClose = () => {
+    setSchoolDialogOpen(false);
+    setSchoolSearchQuery('');
+  };
+
+  const handleSchoolSelect = (school) => {
+    if (!selectedSchools.some(s => s.schoolSymbol === school.schoolSymbol)) {
       setSelectedSchools([...selectedSchools, school]);
     }
-    
-    // Reset results when selection changes
-    setShowDebtResults(false);
-    setShowExpenditureResults(false);
   };
 
-  // Calculate total debt for selected schools
-  const calculateTotalDebt = () => {
-    let total = 0;
-    selectedSchools.forEach(school => {
-      if (school.expenditures) {
-        school.expenditures.forEach(exp => {
-          total += exp.remainToPay || 0;
-        });
-      }
-    });
-    setTotalDebt(total);
-    setShowDebtResults(true);
-    setShowExpenditureResults(false);
+  const handleRemoveSchool = (schoolToRemove) => {
+    setSelectedSchools(selectedSchools.filter(
+      school => school.schoolSymbol !== schoolToRemove.schoolSymbol
+    ));
   };
 
-  // Get expenditures for selected schools
-  const getExpenditures = async () => {
-    const allExpenditures = [];
-    
-    for (const school of selectedSchools) {
-      try {
-        // Assuming getTotalSumOfSchool returns expenditure data
-        const result = await dispatch(getTotalSumOfSchool(school.schoolName)).unwrap();
-        if (result && Array.isArray(result)) {
-          // Add school name to each expenditure
-          const schoolExpenditures = result.map(exp => ({
-            ...exp,
-            schoolName: school.schoolName,
-            schoolSymbol: school.schoolSymbol
-          }));
-          allExpenditures.push(...schoolExpenditures);
-        } else if (school.expenditures) {
-          // Add school name to each expenditure
-          const schoolExpenditures = school.expenditures.map(exp => ({
-            ...exp,
-            schoolName: school.schoolName,
-            schoolSymbol: school.schoolSymbol
-          }));
-          allExpenditures.push(...schoolExpenditures);
-        }
-      } catch (error) {
-        console.error("Error fetching expenditures:", error);
-      }
-    }
-    
-    // Initialize payment states
-    const initialPaymentSelections = {};
-    const initialPaymentAmounts = {};
-    
-    allExpenditures.forEach((exp, index) => {
-      const id = `${exp.schoolSymbol}-${exp.id || index}`;
-      initialPaymentSelections[id] = false;
-      initialPaymentAmounts[id] = exp.remainToPay || 0;
-    });
-    
-    setPaymentSelections(initialPaymentSelections);
-    setPaymentAmounts(initialPaymentAmounts);
-    setExpenditures(allExpenditures);
-    setShowExpenditureResults(true);
-    setShowDebtResults(false);
-    setTabValue(2); // Switch to expenditures tab
-  };
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
 
-  // Handle tab change
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
-  // Format currency
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('he-IL', { 
-      style: 'currency', 
-      currency: 'ILS',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
-
-  // Toggle school details expansion
-  const toggleSchoolExpansion = (schoolSymbol) => {
-    if (expandedSchool === schoolSymbol) {
-      setExpandedSchool(null);
-    } else {
-      setExpandedSchool(schoolSymbol);
-    }
-  };
-
-  // Handle payment selection change
-  const handlePaymentSelectionChange = (id) => {
-    setPaymentSelections({
-      ...paymentSelections,
-      [id]: !paymentSelections[id]
-    });
-  };
-
-  // Handle payment amount change
-  const handlePaymentAmountChange = (id, value) => {
-    setPaymentAmounts({
-      ...paymentAmounts,
-      [id]: value
-    });
-  };
-
-  // Process payments
-  const processPayments = () => {
-    // Here you would implement the actual payment processing
-    // For now, we'll just show an alert with the selected payments
-    const selectedPayments = Object.keys(paymentSelections)
-      .filter(id => paymentSelections[id])
-      .map(id => {
-        const [schoolSymbol, expId] = id.split('-');
-        const expenditure = expenditures.find(exp => 
-          exp.schoolSymbol === schoolSymbol && (exp.id === expId || exp.id === parseInt(expId))
+    if (!event.target.value) {
+      // Reset to all filtered expenditures
+      if (selectedSchools.length > 0 && allExpenditures && allExpenditures.length > 0) {
+        const selectedSymbols = selectedSchools.map(school => school.schoolSymbol);
+        const filtered = allExpenditures.filter(exp =>
+          selectedSymbols.includes(exp.schoolSymbol)
         );
-        
-        return {
-          id,
-          schoolName: expenditure?.schoolName,
-          amount: paymentAmounts[id]
-        };
-      });
-    
-    alert(`נבחרו ${selectedPayments.length} תשלומים לביצוע בסך כולל של ${
-      formatCurrency(selectedPayments.reduce((sum, payment) => sum + Number(payment.amount), 0))
-    }`);
-    
-    // Reset selections after processing
-    const resetSelections = {};
-    Object.keys(paymentSelections).forEach(id => {
-      resetSelections[id] = false;
-    });
-    setPaymentSelections(resetSelections);
+        setFilteredExpenditures(filtered);
+      }
+      return;
+    }
+
+    // Filter based on search query
+    const query = event.target.value.toLowerCase();
+
+    if (selectedSchools.length > 0 && allExpenditures && allExpenditures.length > 0) {
+      const selectedSymbols = selectedSchools.map(school => school.schoolSymbol);
+
+      const filtered = allExpenditures.filter(exp =>
+        selectedSymbols.includes(exp.schoolSymbol) && (
+          exp.supplierName?.toLowerCase().includes(query) ||
+          exp.categoryName?.toLowerCase().includes(query) ||
+          exp.ordererName?.toLowerCase().includes(query) ||
+          exp.expenditureSum?.toString().includes(query) ||
+          exp.id?.toString().includes(query)
+        )
+      );
+
+      setFilteredExpenditures(filtered);
+    }
   };
 
-  // Handle sort
-  const handleRequestSort = (property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+  const handleClearSearch = () => {
+    setSearchQuery('');
+
+    // Reset to all filtered expenditures
+    if (selectedSchools.length > 0 && allExpenditures && allExpenditures.length > 0) {
+      const selectedSymbols = selectedSchools.map(school => school.schoolSymbol);
+      const filtered = allExpenditures.filter(exp =>
+        selectedSymbols.includes(exp.schoolSymbol)
+      );
+      setFilteredExpenditures(filtered);
+    }
   };
 
-  // Handle pagination
+  const handleRefresh = async () => {
+    await fetchData();
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
-  // Filter and sort expenditures
-  const filteredExpenditures = React.useMemo(() => {
-    if (!expenditures.length) return [];
-    
-    // First filter
-    let filtered = [...expenditures];
-    if (searchTerm) {
-      filtered = filtered.filter(exp => 
-        (exp.schoolName && exp.schoolName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (exp.ordererName && exp.ordererName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (exp.categorId && exp.categorId.toString().includes(searchTerm)) ||
-        (exp.supplierNum && exp.supplierNum.toString().includes(searchTerm))
-      );
-    }
-    
-    // Then sort
-    return filtered.sort((a, b) => {
-      const aValue = a[orderBy] || '';
-      const bValue = b[orderBy] || '';
-      
-      if (order === 'asc') {
-        if (typeof aValue === 'number' && typeof bValue === 'number') {
-          return aValue - bValue;
-        }
-        return String(aValue).localeCompare(String(bValue));
+  const handleFullPaymentChange = (row) => {
+    setPaymentStatus(prev => ({
+      ...prev,
+      [row.id]: true
+    }));
+
+    setPaymentAmounts(prev => ({
+      ...prev,
+      [row.id]: row.expenditureSum
+    }));
+
+    setUpdatedPayments(prev => {
+      const existingIndex = prev.findIndex(payment => payment.expenditureId === row.id);
+      const updatedPayment = {
+        expenditureId: row.id,
+        paidAmount: row.expenditureSum
+      };
+
+      if (existingIndex >= 0) {
+        // עדכן תשלום קיים
+        const newArray = [...prev];
+        newArray[existingIndex] = updatedPayment;
+        return newArray;
       } else {
-        if (typeof aValue === 'number' && typeof bValue === 'number') {
-          return bValue - aValue;
-        }
-        return String(bValue).localeCompare(String(aValue));
+        // הוסף תשלום חדש
+        return [...prev, updatedPayment];
       }
     });
-  }, [expenditures, searchTerm, orderBy, order]);
+  };
 
-  // Paginated data
-  const paginatedExpenditures = filteredExpenditures.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+  const handlePaymentClick = (expenditure) => {
+    setSelectedExpenditure(expenditure);
+    setPaymentAmount(paymentAmounts[expenditure.id] || expenditure.expenditureSum.toString());
+    setPaymentDialogOpen(true);
+  };
+
+  const handlePaymentDialogClose = () => {
+    setPaymentDialogOpen(false);
+    setSelectedExpenditure(null);
+    setPaymentAmount('');
+  };
+
+  const handlePaymentAmountChange = (event) => {
+    const value = event.target.value;
+    // Allow only numbers and decimal point
+    if (/^\d*\.?\d*$/.test(value)) {
+      setPaymentAmount(value);
+    }
+  };
+
+  const handlePaymentConfirm = () => {
+    if (selectedExpenditure && paymentAmount) {
+      const amount = parseFloat(paymentAmount);
+
+      // Update payment status and amount
+      setPaymentStatus(prev => ({
+        ...prev,
+        [selectedExpenditure.id]: true
+      }));
+
+      setPaymentAmounts(prev => ({
+        ...prev,
+        [selectedExpenditure.id]: amount
+      }));
+
+      // החלף את כל הקוד הישן בפונקציה הזו עם:
+      setUpdatedPayments(prev => {
+        const existingIndex = prev.findIndex(payment => payment.expenditureId === selectedExpenditure.id);
+        const updatedPayment = {
+          expenditureId: selectedExpenditure.id,
+          paidAmount: amount
+        };
+
+        if (existingIndex >= 0) {
+          // עדכן תשלום קיים
+          const newArray = [...prev];
+          newArray[existingIndex] = updatedPayment;
+          return newArray;
+        } else {
+          // הוסף תשלום חדש
+          return [...prev, updatedPayment];
+        }
+      });
+
+      handlePaymentDialogClose();
+    }
+  };
+
+  // פונקציה לשליחת עדכוני התשלומים לשרת
+  // החלף את הפונקציה sendPaymentUpdatesToServer עם:
+
+  // החלף את הפונקציה הקיימת עם זו:
+  const sendPaymentUpdatesToServer = async () => {
+    if (updatedPayments.length === 0) {
+      alert('אין תשלומים לעדכן');
+      return;
+    }
+
+    try {
+      // הכן את הנתונים לשליחה
+      const paymentData = {
+        payments: updatedPayments.map(payment => ({
+          expenditureId: payment.expenditureId,
+          paidAmount: payment.paidAmount
+        })),
+        updatedBy: currUser.id || currUser.schoolSymbol,
+        updateDate: new Date().toISOString()
+      };
+
+      // שלח דרך Redux
+      const result = await dispatch(updatePaymentsThunk(paymentData));
+
+      if (updatePaymentsThunk.fulfilled.match(result)) {
+        alert(`עודכנו ${updatedPayments.length} תשלומים בהצלחה!`);
+        setUpdatedPayments([]); // נקה את המערך אחרי שליחה מוצלחת
+        await fetchData(); // רענן את הנתונים
+        dispatch(clearPaymentStatus()); // נקה את הסטטוס
+      } else {
+        throw new Error(result.payload || 'שגיאה לא ידועה');
+      }
+
+    } catch (error) {
+      console.error('Error updating payments:', error);
+      alert(`שגיאה בעדכון התשלומים: ${error.message}`);
+    }
+  };
+
+
+  const handleSort = (columnId) => {
+    const column = columns.find(col => col.id === columnId);
+    if (!column || !column.sortable) return;
+
+    const label = column.label;
+
+    let direction = 'asc';
+    if (sortConfig.key === label) {
+      direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+    }
+
+    setSortConfig({ key: label, direction });
+
+    const sortedData = [...filteredExpenditures].sort((a, b) => {
+      if (a[label] === null) return 1;
+      if (b[label] === null) return -1;
+      if (a[label] === undefined) return 1;
+      if (b[label] === undefined) return -1;
+
+      let comparison = 0;
+      if (typeof a[label] === 'string') {
+        comparison = a[label].localeCompare(b[label]);
+      } else {
+        comparison = a[label] - b[label];
+      }
+
+      return direction === 'asc' ? comparison : -comparison;
+    });
+
+    setFilteredExpenditures(sortedData);
+  };
+
+  const handleMenuOpen = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleExportToExcel = () => {
+    handleMenuClose();
+
+    // Prepare data for export
+    const dataToExport = filteredExpenditures.map(exp => ({
+      'קוד הוצאה': exp.id,
+      'סמל מוסד': exp.schoolSymbol,
+      'שם מוסד': getSchoolNameBySymbol(exp.schoolSymbol),
+      'סכום הוצאה': exp.expenditureSum,
+      'קטגוריה': exp.categoryName,
+      'שם ספק': exp.supplierName,
+      'שם המזמין': exp.ordererName,
+      'תאריך': formatDate(exp.date),
+      'סטטוס תשלום': paymentStatus[exp.id] ?
+        (paymentAmounts[exp.id] < exp.expenditureSum ? 'תשלום חלקי' : 'שולם במלואו') :
+        'לא שולם',
+      'סכום ששולם': paymentStatus[exp.id] ? paymentAmounts[exp.id] : 0,
+      'יתרה לתשלום': paymentStatus[exp.id] ?
+        (exp.expenditureSum - paymentAmounts[exp.id]) :
+        exp.expenditureSum
+    }));
+
+    // Create worksheet
+    const ws = XLSX.utils.json_to_sheet(dataToExport, {
+      header: [
+        'קוד הוצאה', 'סמל מוסד', 'שם מוסד', 'סכום הוצאה', 'קטגוריה',
+        'שם ספק', 'שם המזמין', 'תאריך', 'סטטוס תשלום', 'סכום ששולם', 'יתרה לתשלום'
+      ]
+    });
+
+    // Set RTL direction
+    ws['!cols'] = [
+      { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 15 },
+      { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 15 }, { wch: 15 }
+    ];
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "הוצאות");
+
+    // Generate filename with current date
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const fileName = `הוצאות_מוסדות_${dateStr}.xlsx`;
+
+    // Export to file
+    XLSX.writeFile(wb, fileName);
+  };
+
+  const handleCloseDebtDialog = () => {
+    setShowDebtDialog(false);
+  };
+
+  // Filter schools for selection dialog
+  const filteredSchoolsForDialog = availableSchools.filter(school =>
+    !selectedSchools.some(s => s.schoolSymbol === school.schoolSymbol) &&
+    (school.schoolName?.toLowerCase().includes(schoolSearchQuery.toLowerCase()) ||
+      school.schoolSymbol?.toString().includes(schoolSearchQuery))
   );
 
-  // Export to Excel (placeholder function)
-  const exportToExcel = () => {
-    alert('פונקציונליות ייצוא לאקסל תתווסף בהמשך');
-    // Implementation would go here
-  };
-
-  // Refresh data
-  const refreshData = () => {
-    dispatch(allSchoolsThunk());
-    setShowDebtResults(false);
-    setShowExpenditureResults(false);
-  };
 
   return (
-    <Root sx={{direction:'rtl'}}>
-      <StyledPaper>
-        <Header>
-          <Typography variant="h4" component="h1" fontWeight="bold" color="primary">
-            <SchoolIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-            ניהול מוסדות חינוך
-          </Typography>
-          
+    <StyledPaper>
+      <HeaderBox>
+        <HeaderWithIcon>
+          <HeaderIcon />
           <Box>
-            <Tooltip title="רענן נתונים">
-              <IconButton onClick={refreshData} color="primary">
-                <RefreshIcon />
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700,
+              color: '#263238',
+              marginBottom: '18px'
+            }}>
+              ניהול הוצאות מוסדות
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#546e7a' }}>
+              צפייה וניהול של הוצאות לפי מוסדות נבחרים
+            </Typography>
+          </Box>
+        </HeaderWithIcon>
+
+        <Box sx={{ display: 'flex', gap: '16px' }}>
+          <ActionButton
+            variant="contained"
+            startIcon={<SchoolIcon />}
+            onClick={handleSchoolDialogOpen}
+            sx={{
+              bgcolor: '#00796b',
+              '&:hover': { bgcolor: '#00695c' },
+            }}
+          >
+            בחירת מוסדות
+          </ActionButton>
+
+          <ActionButton
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={handleExportToExcel}
+            disabled={filteredExpenditures.length === 0}
+            sx={{
+              borderColor: '#00796b',
+              color: '#00796b',
+              '&:hover': { borderColor: '#00695c', color: '#00695c' },
+            }}
+          >
+            ייצוא לאקסל
+          </ActionButton>
+
+          <ActionButton
+            variant="outlined"
+            startIcon={<RefreshIcon sx={{ animation: refreshing ? 'spin 1s infinite linear' : 'none' }} />}
+            onClick={handleRefresh}
+            disabled={refreshing}
+            sx={{
+              borderColor: '#00796b',
+              color: '#00796b',
+              '&:hover': { borderColor: '#00695c', color: '#00695c' },
+            }}
+          >
+            רענון נתונים
+          </ActionButton>
+
+          {/* <IconButton
+    aria-label="אפשרויות נוספות"
+    onClick={handleMenuOpen}
+    sx={{
+      color: '#00796b',
+      '&:hover': { backgroundColor: 'rgba(0, 121, 107, 0.08)' },
+    }}
+  >
+    <MoreVertIcon />
+  </IconButton> */}
+
+          <Menu
+            anchorEl={menuAnchorEl}
+            open={Boolean(menuAnchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              sx: {
+                borderRadius: '12px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                padding: '8px',
+              }
+            }}
+          >
+            {/* <MenuItem onClick={handleExportToExcel} disabled={filteredExpenditures.length === 0}>
+              <ListItemIcon>
+                <DownloadIcon fontSize="small" sx={{ color: '#00796b' }} />
+              </ListItemIcon>
+              <ListItemText primary="ייצוא לאקסל" />
+            </MenuItem> */}
+
+            {/* <MenuItem onClick={fetchDebtData} disabled={selectedSchools.length === 0}>
+              <ListItemIcon>
+                <AnalyticsIcon fontSize="small" sx={{ color: '#00796b' }} />
+              </ListItemIcon>
+              <ListItemText primary="ניתוח חובות" />
+            </MenuItem> */}
+          </Menu>
+        </Box>
+
+      </HeaderBox>
+      {selectedSchools.length > 0 && <TextField
+        fullWidth
+        placeholder="חיפוש לפי ספק, קטגוריה, מזמין, סכום או קוד הוצאה..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            width: '37%',
+            height: '50px',
+            marginTop: '10px',
+
+            marginRight: '10%',
+            borderRadius: '30px',
+            backgroundColor: '#ffffff',
+            transition: 'box-shadow 0.3s ease',
+            '&.Mui-focused': {
+              boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#00796b',
+              borderWidth: '2px',
+            },
+
+          },
+        }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon color="action" />
+            </InputAdornment>
+          ),
+          endAdornment: searchQuery && (
+            <InputAdornment position="end">
+              <IconButton size="small" onClick={handleClearSearch}>
+                <ClearIcon fontSize="small" />
               </IconButton>
-            </Tooltip>
-            <Tooltip title="הוסף מוסד חדש">
-              <ActionButton 
-                variant="contained" 
-                color="primary" 
-                startIcon={<AddIcon />}
-                onClick={() => setAddSchoolDialog(true)}
-              >
-                הוסף מוסד
-              </ActionButton>
-            </Tooltip>
-          </Box>
-        </Header>
+            </InputAdornment>
+          ),
+        }}
+      />}
+      {/* Selected Schools */}
+      {/* <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#263238' }}>
+          מוסדות נבחרים
+        </Typography>
 
-        {loading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-            <CircularProgress />
-          </Box>
-        )}
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {selectedSchools.length === 0 ? (
+            <Typography variant="body2" sx={{ color: '#78909c', fontStyle: 'italic' }}>
+              לא נבחרו מוסדות. לחץ על "בחירת מוסדות" כדי להתחיל.
+            </Typography>
+          ) : (
+            selectedSchools.map(school => (
+              <SchoolChip
+                key={school.schoolSymbol}
+                label={`${school.schoolName} (${school.schoolSymbol})`}
+                onDelete={() => handleRemoveSchool(school)}
+                deleteIcon={<CloseIcon />}
+                // avatar={<Avatar sx={{ bgcolor: getSchoolColor(school.schoolSymbol) }}>{school.schoolSymbol}</Avatar>}
+              />
+            ))
+          )}
+        </Box>
+      </Box> */}
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
-          </Alert>
-        )}
+      {/* Search Box */}
+      {selectedSchools.length > 0 && (
+        // ===================זה כל הסרגל הגדול שבו נמצא החיפוש
+        <Card sx={{
+          //  backgroundColor: 'red',
+          marginTop: '24px',
+          marginBottom: '24px',
+          borderRadius: '16px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+        }}>
+          {/* <CardContent sx={{width:'40%'}}>
+           
+          </CardContent> */}
 
-        {!loading && !error && (
-          <>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" gutterBottom fontWeight="medium">
-                <FilterAltIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                בחר מוסדות לסינון
-              </Typography>
-              
-              <Box sx={{ position: 'relative' }}>
-                <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-                  {selectedSchools.map((school) => (
-                    <StyledTag 
-                      key={school.schoolSymbol} 
-                      onClick={() => toggleSchoolSelection(school)}
-                    >
-                      {school.schoolName}
-                      <DeleteIcon 
-                        sx={{ ml: 1, fontSize: '0.8rem' }}
-                      />
-                    </StyledTag>
-                  ))}
-                  <input {...getInputProps()} placeholder="חפש מוסד..." />
-                </InputWrapper>
-                
-                {groupedOptions.length > 0 && (
-                  <Listbox {...getListboxProps()}>
-                    {groupedOptions.map((option, index) => (
-                      <li 
-                        {...getOptionProps({ option, index })} 
-                        key={option.schoolSymbol || index}
-                        onClick={() => toggleSchoolSelection(option)}
+          {/* להעביר את המוסדות הנבחרים לסרגל זה*/}
+
+
+
+        </Card>
+      )}
+
+      {/* Expenditures Table */}
+      {selectedSchools.length > 0 ? (
+        <>
+          {/* העברת הטבלה לאמצע העמוד וגודל הטבלה*/}
+          <Box sx={{ mb: 3, width: '80%', alignItems: 'center', justifyContent: 'center', margin: 'auto' }}>
+            {/* <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#263238' }}>
+              הוצאות
+              {filteredExpenditures.length > 0 && ` (${filteredExpenditures.length})`}
+            </Typography> */}
+
+            <StyledTableContainer>
+              <Table stickyHeader aria-label="טבלת הוצאות">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <StyledTableCell
+                        key={column.id}
+                        align={column.align}
+                        header={true}
+                        onClick={() => column.sortable && handleSort(column.id)}
+                        sx={{
+                          cursor: column.sortable ? 'pointer' : 'default',
+                          '&:hover': column.sortable ? { opacity: 0.9 } : {}
+                        }}
                       >
-                        {option.schoolName} ({option.schoolSymbol})
-                      </li>
-                    ))}
-                  </Listbox>
-                )}
-              </Box>
-            </Box>
-
-            {selectedSchools.length > 0 && (
-              <>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-                  <ActionButton 
-                    variant="contained" 
-                    color="secondary" 
-                    startIcon={<MoneyOffIcon />}
-                    onClick={calculateTotalDebt}
-                  >
-                    חשב סך חובות
-                  </ActionButton>
-                  
-                  <ActionButton 
-                    variant="contained" 
-                    color="info" 
-                    startIcon={<ReceiptIcon />}
-                    onClick={getExpenditures}
-                  >
-                    הצג הוצאות
-                  </ActionButton>
-                  
-                  <ActionButton 
-                    variant="outlined" 
-                    color="success" 
-                    startIcon={<DownloadIcon />}
-                    onClick={exportToExcel}
-                  >
-                    ייצא לאקסל
-                  </ActionButton>
-                </Box>
-
-                <Divider sx={{ mb: 3 }} />
-
-                {/* Results Section */}
-                {(showDebtResults || showExpenditureResults) && (
-                  <Box sx={{ mt: 2 }}>
-                    <Tabs 
-                      value={tabValue} 
-                      onChange={handleTabChange}
-                      variant="fullWidth"
-                      sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
-                    >
-                      <Tab label="סיכום" value={0} />
-                      <Tab label="פירוט מוסדות" value={1} />
-                      {showExpenditureResults && <Tab label="טבלת הוצאות" value={2} />}
-                    </Tabs>
-
-                    {/* Tab 1: Summary */}
-                    <TabPanel value={tabValue} index={0}>
-                      <ResultCard>
-                        <CardContent>
-                          <Typography variant="h6" gutterBottom color="textSecondary">
-                            סיכום נתונים עבור {selectedSchools.length} מוסדות נבחרים
-                          </Typography>
-                          
-                          <Grid container spacing={3} sx={{ mt: 1 }}>
-                            {showDebtResults && (
-                              <Grid item xs={12} md={6}>
-                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'error.light', color: 'error.contrastText' }}>
-                                  <Typography variant="subtitle1">סך החובות</Typography>
-                                  <Typography variant="h4" fontWeight="bold">
-                                    {formatCurrency(totalDebt)}
-                                  </Typography>
-                                </Paper>
-                              </Grid>
-                            )}
-                            
-                            {showExpenditureResults && (
-                              <Grid item xs={12} md={6}>
-                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'info.light', color: 'info.contrastText' }}>
-                                  <Typography variant="subtitle1">סך ההוצאות</Typography>
-                                  <Typography variant="h4" fontWeight="bold">
-                                    {formatCurrency(expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0))}
-                                  </Typography>
-                                </Paper>
-                              </Grid>
-                            )}
-                            
-                            <Grid item xs={12} md={6}>
-                              <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'primary.light', color: 'primary.contrastText' }}>
-                                <Typography variant="subtitle1">תקציב כולל</Typography>
-                                <Typography variant="h4" fontWeight="bold">
-                                  {formatCurrency(selectedSchools.reduce((sum, school) => sum + (school.budget || 0), 0))}
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                            
-                            <Grid item xs={12} md={6}>
-                              <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'success.light', color: 'success.contrastText' }}>
-                                <Typography variant="subtitle1">יתרה</Typography>
-                                <Typography variant="h4" fontWeight="bold">
-                                  {formatCurrency(
-                                    selectedSchools.reduce((sum, school) => sum + (school.budget || 0), 0) - 
-                                    (showExpenditureResults ? 
-                                      expenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0) : 
-                                      totalDebt)
-                                  )}
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                      </ResultCard>
-                    </TabPanel>
-
-                    {/* Tab 2: Schools Details */}
-                    <TabPanel value={tabValue} index={1}>
-                      <Box>
-                        {selectedSchools.map((school) => (
-                          <ResultCard key={school.schoolSymbol} sx={{ mb: 2 }}>
-                            <CardContent sx={{ p: 0 }}>
-                              <Box 
-                                sx={{ 
-                                  p: 2, 
-                                  display: 'flex', 
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center',
-                                  cursor: 'pointer',
-                                  bgcolor: 'primary.light',
-                                  color: 'primary.contrastText'
-                                }}
-                                onClick={() => toggleSchoolExpansion(school.schoolSymbol)}
-                              >
-                                <Box>
-                                  <Typography variant="h6">
-                                    {school.schoolName}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    סמל מוסד: {school.schoolSymbol}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <Typography variant="h6" sx={{ mr: 2 }}>
-                                    תקציב: {formatCurrency(school.budget || 0)}
-                                  </Typography>
-                                  {expandedSchool === school.schoolSymbol ? 
-                                    <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                </Box>
-                              </Box>
-                              
-                              <Collapse in={expandedSchool === school.schoolSymbol}>
-                                <Box sx={{ p: 2 }}>
-                                  <Grid container spacing={2}>
-                                    <Grid item xs={12} md={6}>
-                                      <Paper sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText' }}>
-                                        <Typography variant="subtitle2">סך החובות</Typography>
-                                        <Typography variant="h5">
-                                          {formatCurrency(
-                                            (school.expenditures || []).reduce(
-                                              (sum, exp) => sum + (exp.remainToPay || 0), 0
-                                            )
-                                          )}
-                                        </Typography>
-                                      </Paper>
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                      <Paper sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText' }}>
-                                        <Typography variant="subtitle2">סך ההוצאות</Typography>
-                                        <Typography variant="h5">
-                                          {formatCurrency(
-                                            (school.expenditures || []).reduce(
-                                              (sum, exp) => sum + (exp.expenditureSum || 0), 0
-                                            )
-                                          )}
-                                        </Typography>
-                                      </Paper>
-                                    </Grid>
-                                  </Grid>
-                                  
-                                  {(school.expenditures?.length > 0) && (
-                                    <Box sx={{ mt: 2 }}>
-                                      <Typography variant="subtitle1" gutterBottom>
-                                        פירוט הוצאות אחרונות
-                                      </Typography>
-                                      <StyledTableContainer component={Paper}>
-                                        <Table size="small">
-                                          <TableHead>
-                                            <TableRow>
-                                              <TableCell>תאריך</TableCell>
-                                              <TableCell>סכום</TableCell>
-                                              <TableCell>קטגוריה</TableCell>
-                                              <TableCell>שם המזמין</TableCell>
-                                              <TableCell>סטטוס</TableCell>
-                                            </TableRow>
-                                          </TableHead>
-                                          <TableBody>
-                                            {(school.expenditures || [])
-                                              .slice(0, 5) // Show only last 5 expenditures
-                                              .map((exp, index) => (
-                                                <TableRow key={index}>
-                                                  
-                                                  <TableCell>{exp.date}</TableCell>
-                                                  <TableCell>{formatCurrency(exp.expenditureSum || 0)}</TableCell>
-                                                  <TableCell>{exp.categorId}</TableCell>
-                                                  <TableCell>{exp.ordererName}</TableCell>
-                                                  <TableCell>
-                                                    <Chip 
-                                                      label={exp.isAccepted ? "אושר" : "ממתין לאישור"} 
-                                                      color={exp.isAccepted ? "success" : "warning"}
-                                                      size="small"
-                                                    />
-                                                  </TableCell>
-                                                </TableRow>
-                                              ))}
-                                          </TableBody>
-                                        </Table>
-                                      </StyledTableContainer>
-                                    </Box>
-                                  )}
-                                </Box>
-                              </Collapse>
-                            </CardContent>
-                          </ResultCard>
-                        ))}
-                      </Box>
-                    </TabPanel>
-
-                    {/* Tab 3: Expenditures Table with Payment Options */}
-                    <TabPanel value={tabValue} index={2}>
-                      {showExpenditureResults && (
-                        <>
-                          <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="h6">
-                              טבלת הוצאות מרוכזת
-                            </Typography>
-                            
-                            <Box sx={{ display: 'flex', gap: 2 }}>
-                              <TextField
-                                placeholder="חיפוש..."
-                                variant="outlined"
-                                size="small"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      <SearchIcon />
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                              
-                              <ActionButton
-                                variant="contained"
-                                color="success"
-                                startIcon={<PaymentIcon />}
-                                onClick={processPayments}
-                                disabled={!Object.values(paymentSelections).some(selected => selected)}
-                              >
-                                בצע תשלום
-                              </ActionButton>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: column.align === 'center' ? 'center' : column.align === 'right' ? 'flex-end' : 'flex-start' }}>
+                          {column.id}
+                          {column.sortable && sortConfig.key === column.label && (
+                            <Box component="span" sx={{ ml: 1 }}>
+                              {sortConfig.direction === 'asc' ?
+                                <ArrowUpwardIcon fontSize="small" /> :
+                                <ArrowDownwardIcon fontSize="small" />}
                             </Box>
-                          </Box>
-                          
-                          <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
-                            <Paper sx={{ p: 2, flex: 1, textAlign: 'center', bgcolor: 'info.light', color: 'info.contrastText' }}>
-                              <Typography variant="subtitle2">סך הכל הוצאות</Typography>
-                              <Typography variant="h6" fontWeight="bold">
-                                {formatCurrency(filteredExpenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0))}
-                              </Typography>
-                            </Paper>
-                            
-                            <Paper sx={{ p: 2, flex: 1, textAlign: 'center', bgcolor: 'error.light', color: 'error.contrastText' }}>
-                              <Typography variant="subtitle2">סך הכל לתשלום</Typography>
-                              <Typography variant="h6" fontWeight="bold">
-                                {formatCurrency(filteredExpenditures.reduce((sum, exp) => sum + (exp.remainToPay || 0), 0))}
-                              </Typography>
-                            </Paper>
-                            
-                            <Paper sx={{ p: 2, flex: 1, textAlign: 'center', bgcolor: 'success.light', color: 'success.contrastText' }}>
-                              <Typography variant="subtitle2">נבחר לתשלום</Typography>
-                              <Typography variant="h6" fontWeight="bold">
-                                {formatCurrency(
-                                  Object.keys(paymentSelections)
-                                    .filter(id => paymentSelections[id])
-                                    .reduce((sum, id) => sum + Number(paymentAmounts[id] || 0), 0)
-                                )}
-                              </Typography>
-                            </Paper>
-                          </Box>
-                          
-                          <StyledTableContainer component={Paper}>
-                            <Table stickyHeader>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell padding="checkbox">
-                                    <Checkbox 
-                                      color="primary"
-                                      onChange={() => {
-                                        const allSelected = Object.values(paymentSelections).every(selected => selected);
-                                        const newSelections = {};
-                                        Object.keys(paymentSelections).forEach(id => {
-                                          newSelections[id] = !allSelected;
-                                        });
-                                        setPaymentSelections(newSelections);
-                                      }}
-                                      checked={
-                                        Object.keys(paymentSelections).length > 0 &&
-                                        Object.values(paymentSelections).every(selected => selected)
-                                      }
-                                      indeterminate={
-                                        Object.values(paymentSelections).some(selected => selected) &&
-                                        !Object.values(paymentSelections).every(selected => selected)
-                                      }
-                                    />
+                          )}
+                        </Box>
+                      </StyledTableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center" sx={{ py: 3 }}>
+                        <CircularProgress size={40} sx={{ color: '#00796b' }} />
+                        <Typography sx={{ mt: 2 }}>טוען נתונים...</Typography>
+                      </TableCell>
+                    </TableRow>
+                  ) : filteredExpenditures.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center" sx={{ py: 3 }}>
+                        <Typography>לא נמצאו הוצאות למוסדות הנבחרים</Typography>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredExpenditures
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row.id || index}
+                            sx={{
+                              backgroundColor: index % 2 === 0 ? 'rgba(224, 242, 241, 0.3)' : 'white',
+                              '&:hover': {
+                                backgroundColor: 'rgba(0, 121, 107, 0.08)',
+                              },
+                            }}
+                          >
+                            {columns.map((column) => {
+                              if (column.label === 'payment') {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    sx={{
+                                      padding: '8px',
+                                      fontSize: '0.875rem',
+                                    }}
+                                  >
+                                    {column.renderCell(row)}
                                   </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'date'}
-                                      direction={orderBy === 'date' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('date')}
-                                    >
-                                      תאריך
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'schoolName'}
-                                      direction={orderBy === 'schoolName' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('schoolName')}
-                                    >
-                                      מוסד
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'expenditureSum'}
-                                      direction={orderBy === 'expenditureSum' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('expenditureSum')}
-                                    >
-                                      סכום הוצאה
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'remainToPay'}
-                                      direction={orderBy === 'remainToPay' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('remainToPay')}
-                                    >
-                                      יתרה לתשלום
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'categorId'}
-                                      direction={orderBy === 'categorId' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('categorId')}
-                                    >
-                                      קטגוריה
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'ordererName'}
-                                      direction={orderBy === 'ordererName' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('ordererName')}
-                                    >
-                                      שם המזמין
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>
-                                    <TableSortLabel
-                                      active={orderBy === 'supplierNum'}
-                                      direction={orderBy === 'supplierNum' ? order : 'asc'}
-                                      onClick={() => handleRequestSort('supplierNum')}
-                                    >
-                                      קוד ספק
-                                    </TableSortLabel>
-                                  </TableCell>
-                                  <TableCell>סטטוס</TableCell>
-                                  <TableCell>תשלום</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {paginatedExpenditures.map((exp, index) => {
-                                  const id = `${exp.schoolSymbol}-${exp.id || index}`;
-                                  return (
-                                    <TableRow key={id} hover>
-                                      <TableCell padding="checkbox">
-                                        <Checkbox
-                                          checked={paymentSelections[id] || false}
-                                          onChange={() => handlePaymentSelectionChange(id)}
-                                          color="primary"
-                                        />
-                                      </TableCell>
-                                      <TableCell>{exp.date}</TableCell>
-                                      <TableCell>
-                                        <Chip 
-                                          label={exp.schoolName || exp.schoolSymbol} 
-                                          size="small"
-                                          sx={{ bgcolor: 'primary.light', color: 'primary.contrastText' }}
-                                        />
-                                      </TableCell>
-                                      <TableCell>{formatCurrency(exp.expenditureSum || 0)}</TableCell>
-                                      <TableCell>{formatCurrency(exp.remainToPay || 0)}</TableCell>
-                                      <TableCell>{exp.categorId}</TableCell>
-                                      <TableCell>{exp.ordererName}</TableCell>
-                                      <TableCell>{exp.supplierNum}</TableCell>
-                                      <TableCell>
-                                        <Chip 
-                                          label={exp.isAccepted ? "אושר" : "ממתין לאישור"} 
-                                          color={exp.isAccepted ? "success" : "warning"}
-                                          size="small"
-                                        />
-                                      </TableCell>
-                                      <TableCell>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                          <TextField
-                                            type="number"
-                                            size="small"
-                                            value={paymentAmounts[id] || 0}
-                                            onChange={(e) => handlePaymentAmountChange(id, e.target.value)}
-                                            disabled={!paymentSelections[id]}
-                                            InputProps={{
-                                              startAdornment: <InputAdornment position="start">₪</InputAdornment>,
-                                            }}
-                                            sx={{ width: '120px' }}
-                                          />
-                                          <Tooltip title="תשלום מלא">
-                                            <IconButton 
-                                              size="small" 
-                                              color={paymentSelections[id] ? "success" : "default"}
-                                              onClick={() => {
-                                                handlePaymentSelectionChange(id);
-                                                handlePaymentAmountChange(id, exp.remainToPay || 0);
-                                              }}
-                                            >
-                                              <CheckCircleIcon />
-                                            </IconButton>
-                                          </Tooltip>
-                                        </Box>
-                                      </TableCell>
-                                    </TableRow>
-                                  );
-                                })}
-                              </TableBody>
-                            </Table>
-                          </StyledTableContainer>
-                          
-                          <TablePagination
-                            component="div"
-                            count={filteredExpenditures.length}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            rowsPerPage={rowsPerPage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            labelRowsPerPage="שורות בעמוד:"
-                            labelDisplayedRows={({ from, to, count }) => `${from}-${to} מתוך ${count}`}
-                            rowsPerPageOptions={[5, 10, 25, 50]}
-                          />
-                        </>
-                      )}
-                    </TabPanel>
-                  </Box>
-                )}
-              </>
-            )}
+                                );
+                              }
 
-            {selectedSchools.length === 0 && !loading && (
-              <Box sx={{ textAlign: 'center', py: 4 }}>
-                <Typography variant="h6" color="textSecondary" gutterBottom>
-                  לא נבחרו מוסדות
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  בחר מוסד אחד או יותר מהרשימה למעלה כדי להציג נתונים
-                </Typography>
-              </Box>
-            )}
-          </>
-        )}
-      </StyledPaper>
+                              const value = row[column.label];
+                              return (
+                                <TableCell
+                                  key={column.id}
+                                  align={column.align}
+                                  sx={{
+                                    padding: '8px 16px',
+                                    fontSize: '0.875rem',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {column.renderCell && column.label !== 'payment'
+                                    ? column.renderCell(value)
+                                    : column.format && typeof value === 'number'
+                                      ? column.format(value)
+                                      : column.label === 'date'
+                                        ? formatDate(value)
+                                        : value}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })
+                  )}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 50, 100]}
+                component="div"
+                count={filteredExpenditures.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="שורות בעמוד:"
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} מתוך ${count}`}
+                sx={{
+                  borderTop: '1px solid #e0e0e0',
+                  '.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows, .MuiTablePagination-select, .MuiTablePagination-selectIcon': {
+                    fontFamily: 'inherit',
+                  }
+                }}
+              />
+              <Button sx={{
+                borderRadius: '30px',
+                minWidth: '80px',
+                color: '#00796b',
+                backgroundColor: '#00695c',
+                fontWeight: 550,
+                bgcolor: '#e0f2f1',
+                '&:hover': { bgcolor: '#00796b' },
+              }}>למעבר לתשלום</Button>
+              
+              <Button
+                onClick={sendPaymentUpdatesToServer}
+                disabled={updatedPayments.length === 0 || paymentsLoading}
+                sx={{
+                  borderRadius: '30px',
+                  minWidth: '120px',
+                  color: 'white',
+                  backgroundColor: '#ff5722',
+                  fontWeight: 550,
+                  '&:hover': { bgcolor: '#e64a19' },
+                  '&:disabled': { bgcolor: '#ccc' }
+                }}
+              >
+                {paymentsLoading ? 'שולח...' : `עדכן ${updatedPayments.length} תשלומים`}
+              </Button>
 
-      {/* Add School Dialog */}
-      <Dialog 
-        open={addSchoolDialog} 
-        onClose={() => setAddSchoolDialog(false)}
+            </Box>
+          </Box>
+
+
+
+
+          {/* Summary Cards */}
+          <Grid container spacing={3} sx={{
+            mt:
+              2
+          }}>
+            <Grid item xs={12} md={4}>
+              <SummaryCard>
+                <CardContent>
+                  <StatBox>
+                    <StatIconBox>
+                      <Typography sx={{ color: '#00796b', fontWeight: 'bold' }}>₪</Typography>
+                    </StatIconBox>
+                    <Box>
+                      <Typography variant="body2" sx={{ color: '#546e7a' }}>
+                        סך הכל הוצאות
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {filteredExpenditures.reduce((sum, exp) => sum + (exp.expenditureSum || 0), 0).toLocaleString('he-IL', { style: 'currency', currency: 'ILS' })}
+                      </Typography>
+                    </Box>
+                  </StatBox>
+                </CardContent>
+              </SummaryCard>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <SummaryCard>
+                <CardContent>
+                  <StatBox>
+                    <StatIconBox>
+                      <PaymentIcon sx={{ color: '#00796b' }} />
+                    </StatIconBox>
+                    <Box>
+                      <Typography variant="body2" sx={{ color: '#546e7a' }}>
+                        סך הכל שולם
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {filteredExpenditures.reduce((sum, exp) => {
+                          if (paymentStatus[exp.id]) {
+                            return sum + (paymentAmounts[exp.id] || 0);
+                          }
+                          return sum;
+                        }, 0).toLocaleString('he-IL', { style: 'currency', currency: 'ILS' })}
+                      </Typography>
+                    </Box>
+                  </StatBox>
+                </CardContent>
+              </SummaryCard>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <SummaryCard>
+                <CardContent>
+                  <StatBox>
+                    <StatIconBox>
+                      <WarningIcon sx={{ color: '#00796b' }} />
+                    </StatIconBox>
+                    <Box>
+                      <Typography variant="body2" sx={{ color: '#546e7a' }}>
+                        יתרה לתשלום
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {filteredExpenditures.reduce((sum, exp) => {
+                          if (paymentStatus[exp.id]) {
+                            return sum + (exp.expenditureSum - paymentAmounts[exp.id]);
+                          }
+                          return sum + exp.expenditureSum;
+                        }, 0).toLocaleString('he-IL', { style: 'currency', currency: 'ILS' })}
+                      </Typography>
+                    </Box>
+                  </StatBox>
+                </CardContent>
+              </SummaryCard>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <Box sx={{ width: '80%', alignItems: 'center', justifyContent: 'center', margin: 'auto', marginTop: '100px' }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 0',
+            backgroundColor: 'rgba(0, 121, 107, 0.04)',
+            borderRadius: '16px',
+            border: '1px dashed rgba(0, 121, 107, 0.3)',
+          }}>
+            <SchoolIcon sx={{ fontSize: 60, color: 'rgba(0, 121, 107, 0.5)', mb: 2 }} />
+            <Typography variant="h6" sx={{ color: '#00796b', mb: 1, fontWeight: 600 }}>
+              לא נבחרו מוסדות
+            </Typography>
+            {selectedSchools.length === 0 && <Typography variant="body1" sx={{ color: '#546e7a', mb: 3, textAlign: 'center' }}>
+              בחר מוסדות כדי להציג את ההוצאות שלהם
+            </Typography>}
+
+          </Box>
+        </Box>
+      )
+      }
+
+      {/* School Selection Dialog */}
+      <Dialog
+        open={schoolDialogOpen}
+        onClose={handleSchoolDialogClose}
         maxWidth="md"
         PaperProps={{
-          sx: { borderRadius: 2 }
+          sx: {
+            borderRadius: '16px',
+            padding: '16px',
+            width: '100%',
+            maxWidth: '600px'
+          }
         }}
       >
-        <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="h6">הוספת מוסד חדש</Typography>
-            <IconButton onClick={() => setAddSchoolDialog(false)}>
-              <DeleteIcon />
-            </IconButton>
+        <DialogTitle sx={{
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SchoolIcon sx={{ color: '#00796b' }} />
+            <Typography variant="h6">בחירת מוסדות</Typography>
+          </Box>
+          <IconButton onClick={handleSchoolDialogClose} size="small">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent  >
+          <TextField
+            fullWidth
+            placeholder="חיפוש לפי שם או סמל מוסד..."
+            value={schoolSearchQuery}
+            onChange={(e) => setSchoolSearchQuery(e.target.value)}
+            sx={{
+              mb: 3,
+
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '30px',
+                height: '45px',
+                marginTop: '10px',
+                backgroundColor: '#ffffff',
+                transition: 'box-shadow 0.3s ease',
+                '&.Mui-focused': {
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#00796b',
+                  borderWidth: '2px',
+                },
+
+
+              },
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+              endAdornment: schoolSearchQuery && (
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={() => setSchoolSearchQuery('')}>
+                    <ClearIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {selectedSchools.length > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: '#00796b' }}>
+                מוסדות נבחרים:
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {selectedSchools.map(school => (
+                  <SchoolChip
+                    key={school.schoolSymbol}
+                    label={`${school.schoolName} (${school.schoolSymbol})`}
+                    onDelete={() => handleRemoveSchool(school)}
+                    deleteIcon={<CloseIcon sx={{ paddingRight: '0.01px', paddingLeft: '8px' }} />}
+
+                  // avatar={<Avatar sx={{ bgcolor: getSchoolColor(school.schoolSymbol) }}>{school.schoolSymbol}</Avatar>}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
+          <Divider sx={{ my: 2 }} />
+
+          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: '#00796b' }}>
+            מוסדות זמינים:
+          </Typography>
+
+          {filteredSchoolsForDialog.length === 0 ? (
+            <Typography variant="body2" sx={{ color: '#78909c', fontStyle: 'italic', textAlign: 'center', py: 2 }}>
+              {schoolSearchQuery ? 'לא נמצאו מוסדות התואמים את החיפוש' : 'אין מוסדות זמינים נוספים'}
+            </Typography>
+          ) : (
+            <Box sx={{
+              maxHeight: '300px',
+              overflowY: 'auto',
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: '#f1f1f1',
+                borderRadius: '10px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: '#c1c1c1',
+                borderRadius: '10px',
+                '&:hover': {
+                  background: '#a8a8a8',
+                },
+              },
+            }}>
+              {filteredSchoolsForDialog.map(school => (
+                <Card
+                  key={school.schoolSymbol}
+                  onClick={() => handleSchoolSelect(school)}
+                  sx={{
+                    mb: 1,
+                    cursor: 'pointer',
+                    borderRadius: '8px',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 121, 107, 0.08)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    }
+                  }}
+                >
+                  <CardContent sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '12px !important',
+                    '&:last-child': { paddingBottom: '12px' }
+                  }}>
+                    {/* <Avatar sx={{
+                      bgcolor: getSchoolColor(school.schoolSymbol),
+                      width: 36,
+                      height: 36,
+                      mr: 2
+                    }}>
+                      {school.schoolSymbol}
+                    </Avatar> */}
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        {school.schoolName}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: '#546e7a' }}>
+                        סמל מוסד: {school.schoolSymbol}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <AddIcon sx={{ color: '#00796b' }} />
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          )}
+        </DialogContent>
+
+        <DialogActions sx={{ padding: '16px', justifyContent: 'space-between' }}>
+          <Button
+            onClick={() => setSelectedSchools(allSchools)}
+            // disabled={selectedSchools.length === 0}
+            sx={{
+              borderRadius: '30px',
+              minWidth: '80px',
+              color: '#00796b',
+              fontWeight: 550,
+              bgcolor: '#e0f2f1',
+              '&:hover': { bgcolor: '#00695c' },
+            }}
+          >
+            בחר הכל
+          </Button>
+          <Button
+            onClick={() => setSelectedSchools([])}
+            disabled={selectedSchools.length === 0}
+            sx={{
+              borderRadius: '30px',
+              minWidth: '80px',
+              fontWeight: 550,
+              color: '#00796b',
+              bgcolor: '#e0f2f1',
+              '&:hover': { bgcolor: '#00695c' },
+            }}
+          >
+            נקה הכל
+          </Button>
+          <Button
+            onClick={handleSchoolDialogClose}
+            variant="contained"
+            sx={{
+              marginRight: '250px',
+              borderRadius: '30px',
+              minWidth: '100px',
+              bgcolor: '#00796b',
+              '&:hover': { bgcolor: '#00695c' },
+            }}
+          >
+            אישור
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Payment Dialog */}
+      <Dialog
+        open={paymentDialogOpen}
+        onClose={handlePaymentDialogClose}
+        PaperProps={{
+          sx: {
+            borderRadius: '16px',
+            padding: '8px',
+            maxWidth: '400px',
+            width: '100%'
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 600, textAlign: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+            <PaymentIcon color="primary" />
+            <Typography variant="h6">הזנת סכום לתשלום</Typography>
           </Box>
         </DialogTitle>
-        <DialogContent dividers>
-          <AddSchool onSuccess={() => {
-            setAddSchoolDialog(false);
-            refreshData();
-          }} />
+
+        <DialogContent>
+          {selectedExpenditure && (
+            <>
+              <Box sx={{ mb: 3, textAlign: 'center' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  סכום ההוצאה המלא:
+                </Typography>
+                <Typography variant="h5" color="text.primary" sx={{ fontWeight: 600 }}>
+                  {selectedExpenditure.expenditureSum.toLocaleString('he-IL')} ₪
+                </Typography>
+              </Box>
+
+              <PaymentInput
+                label="סכום לתשלום"
+                variant="outlined"
+                fullWidth
+                value={paymentAmount}
+                onChange={handlePaymentAmountChange}
+                type="text"
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">₪</InputAdornment>,
+                }}
+                sx={{ mb: 2 }}
+                autoFocus
+              />
+
+              {paymentAmount && parseFloat(paymentAmount) < selectedExpenditure.expenditureSum && (
+                <Box sx={{
+                  backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1
+                }}>
+                  <WarningIcon color="warning" fontSize="small" />
+                  <Typography variant="body2" color="warning.main">
+                    שים לב: הסכום שהזנת נמוך מסכום ההוצאה המלא. זה יסומן כתשלום חלקי.
+                  </Typography>
+                </Box>
+              )}
+            </>
+          )}
         </DialogContent>
+
+        <DialogActions sx={{ padding: '16px', justifyContent: 'center' }}>
+          <Button
+            onClick={handlePaymentDialogClose}
+            variant="outlined"
+            sx={{
+              borderRadius: '30px',
+              minWidth: '100px'
+            }}
+          >
+            ביטול
+          </Button>
+          <Button
+            onClick={handlePaymentConfirm}
+            variant="contained"
+            color="primary"
+            disabled={!paymentAmount || isNaN(parseFloat(paymentAmount)) || parseFloat(paymentAmount) <= 0}
+            sx={{
+              borderRadius: '30px',
+              minWidth: '100px',
+              bgcolor: '#00796b',
+              '&:hover': { bgcolor: '#00695c' },
+            }}
+          >
+            אישור תשלום
+          </Button>
+        </DialogActions>
       </Dialog>
-    </Root>
+
+      {/* Debt Analysis Dialog */}
+      <Dialog
+        open={showDebtDialog}
+        onClose={handleCloseDebtDialog}
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            borderRadius: '16px',
+            padding: '16px',
+            width: '100%',
+            maxWidth: '700px'
+          }
+        }}
+      >
+        {/* ======== */}
+        <DialogTitle sx={{
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <AnalyticsIcon sx={{ color: '#00796b' }} />
+            <Typography variant="h6">ניתוח חובות</Typography>
+          </Box>
+          <IconButton onClick={handleCloseDebtDialog} size="small">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+      </Dialog>
+    </StyledPaper >
   );
 };
+

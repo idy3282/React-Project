@@ -170,54 +170,67 @@
 
 
 
+// 
+// גרסא שניה
+
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  TextField,
-  Grid,
-  InputAdornment,
-  Button,
   Box,
+  Container,
   Typography,
-  Divider,
+  Grid,
+  Button,
+  TextField,
+  Avatar,
+  InputAdornment,
+  Alert,
+  Snackbar,
   CircularProgress,
-  IconButton,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SchoolIcon from "@mui/icons-material/School";
 import SaveIcon from "@mui/icons-material/Save";
-import CloseIcon from "@mui/icons-material/Close";
 import NumbersIcon from "@mui/icons-material/Numbers";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import InfoIcon from "@mui/icons-material/Info";
 import { addSchoolThunk } from "../../Redux/Slices/Schools/schoolThunk";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  "& .MuiOutlinedInput-root": {
-    borderRadius: 8,
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#00796b",
-    },
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "#00796b",
-  },
-  "& .MuiInputLabel-root": {
-    fontFamily: 'Rubik, sans-serif',
-  },
-  "& .MuiInputBase-input": {
-    fontFamily: 'Rubik, sans-serif',
-  },
+const PageContainer = styled(Box)(({ theme }) => ({
+  minHeight: "100vh",
+  background: "#f8f9fa",
+  paddingTop: theme.spacing(4),
+  paddingBottom: theme.spacing(4),
 }));
 
-const FormButton = styled(Button)(({ theme }) => ({
+const ContentContainer = styled(Container)(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(4),
+}));
+
+const FormCard = styled(Card)(({ theme }) => ({
+  borderRadius: 16,
+  overflow: "hidden",
+  boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+  border: "1px solid #e0e0e0",
+}));
+
+const FormSection = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(4),
+}));
+
+const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: 30,
   padding: "10px 24px",
   fontWeight: 700,
   textTransform: "none",
-  fontSize: "0.9rem",
-  fontFamily: 'Rubik, sans-serif',
+  fontSize: "1rem",
   boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
   transition: "all 0.3s ease",
   "&:hover": {
@@ -226,15 +239,16 @@ const FormButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const AddSchool = ({onClose}) => {
+export const AddSchool = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // Colors based on your theme
+  // Institution color palette - Teal and Orange accents
   const colors = {
     primary: "#00796b", // Teal
     primaryLight: "#48a999",
     primaryDark: "#004c40",
-    secondary: "#ff5722", // Deep Orange
+    secondary: "#115293", // Deep Orange
     secondaryLight: "#ff8a50",
     secondaryDark: "#c41c00",
     text: "#263238",
@@ -242,224 +256,335 @@ export const AddSchool = ({onClose}) => {
     background: "#f5f5f5",
     card: "#ffffff",
     border: "#e0e0e0",
+    success: "#4caf50",
+    warning: "#ff9800",
+    error: "#f44336",
+    info: "#2196f3",
   };
-  
-  const [newSchool, setNewSchool] = useState({
+
+  // Local state
+  const [schoolDetails, setSchoolDetails] = useState({
     schoolSymbol: '',
     schoolName: '',
     budget: '',
   });
   
+  const [errors, setErrors] = useState({
+    schoolSymbol: false,
+    schoolName: false,
+    budget: false,
+  });
+  
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   
+  // Handle input change and clear errors when field is filled
   const handleInputChange = (field, value) => {
-    setNewSchool({
-      ...newSchool,
-      [field]: value
-    });
-    setError('');
+    setSchoolDetails(prev => ({ ...prev, [field]: value }));
+    if (value && errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: false }));
+    }
   };
   
+  // Validate form fields
   const validateForm = () => {
-    if (!newSchool.schoolName.trim()) {
-      setError('שם המוסד הוא שדה חובה');
-      return false;
-    }
+    const newErrors = {
+      schoolName: !schoolDetails.schoolName.trim(),
+      schoolSymbol: !schoolDetails.schoolSymbol || isNaN(schoolDetails.schoolSymbol) || parseInt(schoolDetails.schoolSymbol) <= 0,
+      budget: schoolDetails.budget && (isNaN(schoolDetails.budget) || parseFloat(schoolDetails.budget) < 0)
+    };
     
-    if (!newSchool.schoolSymbol) {
-      setError('סמל מוסד הוא שדה חובה');
-      return false;
-    }
+    setErrors(newErrors);
     
-    if (isNaN(Number(newSchool.schoolSymbol))) {
-      setError('סמל מוסד חייב להיות מספר');
-      return false;
-    }
-    
-    if (newSchool.budget && isNaN(Number(newSchool.budget))) {
-      setError('תקציב חייב להיות מספר');
-      return false;
-    }
-    
-    return true;
+    return !Object.values(newErrors).some(error => error);
   };
   
+  // Handle form submission
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
     
+    await addSchool();
+  };
+  
+  // Add school to the system
+  const addSchool = async () => {
     try {
       setLoading(true);
       
-      const schoolData = {
-        ...newSchool,
-        schoolSymbol: Number(newSchool.schoolSymbol),
-        budget: newSchool.budget ? Number(newSchool.budget) : 0,
+      const newSchool = {
+        schoolSymbol: parseInt(schoolDetails.schoolSymbol),
+        schoolName: schoolDetails.schoolName,
+        budget: schoolDetails.budget ? parseFloat(schoolDetails.budget) : 0,
       };
       
-      await dispatch(addSchoolThunk(schoolData));
+      await dispatch(addSchoolThunk(newSchool));
       
-      if (onClose) {
-        onClose();
-      }
+      setSuccess(true);
+      
+      // Reset form after successful submission
+      setSchoolDetails({
+        schoolSymbol: '',
+        schoolName: '',
+        budget: '',
+      });
+      
     } catch (error) {
-      console.error("שגיאה בהוספת מוסד:", error);
-      setError('אירעה שגיאה בהוספת המוסד. אנא נסה שנית.');
+      console.error("Error adding school:", error);
     } finally {
       setLoading(false);
     }
   };
   
+  // Handle success message close
+  const handleSuccessClose = () => {
+    setSuccess(false);
+    navigate("/work");
+  };
+
   return (
-    <Box sx={{ p: 2 ,direction: 'rtl'}}>
-      <Box sx={{ mb: 3 }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            fontWeight: 700, 
-            color: colors.text,
-            fontFamily: 'Rubik, sans-serif',
-            textAlign: 'right'
-          }}
-        >
-          הוספת מוסד חדש
-        </Typography>
-        
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: colors.textLight,
-            fontFamily: 'Rubik, sans-serif',
-            textAlign: 'right'
-          }}
-        >
-          אנא מלא את הפרטים הבאים להוספת מוסד חדש למערכת
-        </Typography>
-      </Box>
-      
-      <Divider sx={{ mb: 3 }} />
-      
-      {error && (
-        <Box 
-          sx={{ 
-            bgcolor: '#ffebee', 
-            color: '#c62828', 
-            p: 2, 
-            borderRadius: 1, 
-            mb: 2,
-            fontFamily: 'Rubik, sans-serif',
-            textAlign: 'right'
-          }}
-        >
-          {error}
+    <PageContainer sx={{direction: "rtl"}}>
+      <ContentContainer maxWidth="md">
+        {/* Header */}
+        <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              sx={{
+                bgcolor: `${colors.primary}15`,
+                color: colors.primary,
+                width: 55,
+                height: 55,
+                mr: 2,
+                ml:3
+              }}
+            >
+              <AddCircleOutlineIcon sx={{ fontSize: 29 }} />
+            </Avatar>
+            <Box >
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 800,
+                  color: colors.text,
+                }}
+              >
+                הוספת מוסד חדש
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: colors.textLight,
+                  fontFamily: 'Rubik, sans-serif',
+                }}
+              >
+                הזן את פרטי המוסד החדש
+              </Typography>
+            </Box>
+          </Box>
+          <ActionButton
+            variant="outlined"
+            sx={{
+              borderColor: colors.primary,
+              color: colors.primary,
+              "&:hover": {
+                borderColor: colors.primaryDark,
+                bgcolor: `${colors.primary}10`,
+              },
+              fontFamily: 'Rubik, sans-serif',
+            }}
+            onClick={() => navigate(-1)}
+          >
+            חזרה
+            <ArrowBackIcon sx={{ fontSize: 19, marginRight: "7px" }}/>
+          </ActionButton>
         </Box>
-      )}
-      
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <StyledTextField
-            fullWidth
-            required
-            label="שם מוסד"
-            variant="outlined"
-            value={newSchool.schoolName}
-            onChange={(e) => handleInputChange('schoolName', e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SchoolIcon sx={{ color: colors.primary }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ textAlign: 'right' }}
-            inputProps={{ dir: 'rtl' }}
-          />
-        </Grid>
-        
-        <Grid item xs={12}>
-          <StyledTextField
-            fullWidth
-            required
-            label="סמל מוסד"
-            variant="outlined"
-            type="number"
-            value={newSchool.schoolSymbol}
-            onChange={(e) => handleInputChange('schoolSymbol', e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <NumbersIcon sx={{ color: colors.primary }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ textAlign: 'right' }}
-            inputProps={{ dir: 'rtl' }}
-          />
-        </Grid>
-        
-        <Grid item xs={12}>
-          <StyledTextField
-            fullWidth
-            label="תקציב כללי"
-            variant="outlined"
-            type="number"
-            value={newSchool.budget}
-            onChange={(e) => handleInputChange('budget', e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountBalanceWalletIcon sx={{ color: colors.primary }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Typography sx={{ fontFamily: 'Rubik, sans-serif' }}>₪</Typography>
-                </InputAdornment>
-              ),
-            }}
-            sx={{ textAlign: 'right' }}
-            inputProps={{ dir: 'rtl' }}
-          />
-        </Grid>
-        
-        <Grid item xs={12} sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 2 }}>
-          <FormButton 
-            variant="outlined"
-            onClick={onClose}
-            disabled={loading}
+
+        {/* Form Card */}
+        <FormCard>
+          <FormSection>
+            <Grid container spacing={3}>
+              {/* School Name */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="שם מוסד"
+                  variant="outlined"
+                  value={schoolDetails.schoolName}
+                  onChange={(e) => handleInputChange('schoolName', e.target.value)}
+                  error={errors.schoolName}
+                  helperText={errors.schoolName ? "יש להזין שם מוסד" : ""}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SchoolIcon sx={{ color: colors.primary }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: colors.primary,
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: colors.primary,
+                    },
+                    "& .MuiInputLabel-root": {
+                      fontFamily: 'Rubik, sans-serif',
+                    },
+                    "& .MuiInputBase-input": {
+                      fontFamily: 'Rubik, sans-serif',
+                    },
+                  }}
+                />
+              </Grid>
+
+              {/* School Symbol */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="סמל מוסד"
+                  variant="outlined"
+                  type="number"
+                  value={schoolDetails.schoolSymbol}
+                  onChange={(e) => handleInputChange('schoolSymbol', e.target.value)}
+                  error={errors.schoolSymbol}
+                  helperText={errors.schoolSymbol ? "יש להזין סמל מוסד תקין (מספר חיובי)" : ""}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <NumbersIcon sx={{ color: colors.primary }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: colors.primary,
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: colors.primary,
+                    },
+                    "& .MuiInputLabel-root": {
+                      fontFamily: 'Rubik, sans-serif',
+                    },
+                    "& .MuiInputBase-input": {
+                      fontFamily: 'Rubik, sans-serif',
+                    },
+                  }}
+                />
+              </Grid>
+
+              {/* Budget */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="תקציב כללי"
+                  variant="outlined"
+                  type="number"
+                  value={schoolDetails.budget}
+                  onChange={(e) => handleInputChange('budget', e.target.value)}
+                  error={errors.budget}
+                  helperText={errors.budget ? "יש להזין תקציב תקין (מספר חיובי)" : ""}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountBalanceWalletIcon sx={{ color: colors.primary }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: colors.primary,
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: colors.primary,
+                    },
+                    "& .MuiInputLabel-root": {
+                      fontFamily: 'Rubik, sans-serif',
+                    },
+                    "& .MuiInputBase-input": {
+                      fontFamily: 'Rubik, sans-serif',
+                    },
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            {/* Submit Button */}
+            <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+              <ActionButton
+                variant="contained"
+                disabled={loading}
+                startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <AddCircleOutlineIcon sx={{marginLeft:"10px"}}/>}
+                sx={{
+                  bgcolor: colors.primary,
+                  color: "white",
+                  minWidth: 200,
+                  "&:hover": {
+                    bgcolor: colors.primaryDark,
+                  },
+                  fontFamily: 'Rubik, sans-serif',
+                }}
+                onClick={handleSubmit}
+              >
+                {loading ? "מוסיף מוסד..." : "הוסף מוסד"}
+              </ActionButton>
+            </Box>
+          </FormSection>
+        </FormCard>
+
+        {/* Information Card */}
+        <Box sx={{ mt: 4 }}>
+          <Card
+            elevation={0}
             sx={{
-              borderColor: colors.textLight,
-              color: colors.textLight,
-              "&:hover": {
-                borderColor: colors.text,
-                color: colors.text,
-              },
+              p: 3,
+              borderRadius: 4,
+              border: `1px dashed ${colors.primary}`,
+              bgcolor: `${colors.primary}08`,
             }}
           >
-            ביטול
-          </FormButton>
-          
-          <FormButton
-         
-            variant="contained"
-            onClick={()=>{debugger;handleSubmit(); }}
-            disabled={loading}
-            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
-            sx={{
-              bgcolor: colors.primary,
-              color: "white",
-              "&:hover": {
-                bgcolor: colors.primaryDark,
-              },
-            }}
+            <Typography variant="h6" sx={{ fontWeight: 700, color: colors.text, mb: 1, fontFamily: 'Rubik, sans-serif' }}>
+              <InfoIcon sx={{ verticalAlign: "middle", mr: 1, color: colors.primary }} />
+              מידע חשוב
+            </Typography>
+            <Typography variant="body2" sx={{ color: colors.textLight, fontFamily: 'Rubik, sans-serif' }}>
+              • סמל המוסד חייב להיות מספר חיובי ייחודי
+            </Typography>
+            <Typography variant="body2" sx={{ color: colors.textLight, fontFamily: 'Rubik, sans-serif' }}>
+              • שם המוסד הוא שדה חובה
+            </Typography>
+            <Typography variant="body2" sx={{ color: colors.textLight, fontFamily: 'Rubik, sans-serif' }}>
+              • התקציב הכללי הוא שדה אופציונלי (ברירת מחדל: 0)
+            </Typography>
+          </Card>
+        </Box>
+
+        {/* Success Snackbar */}
+        <Snackbar
+          open={success}
+          autoHideDuration={3000}
+          onClose={handleSuccessClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleSuccessClose}
+            severity="success"
+            variant="filled"
+            sx={{ width: '100%', borderRadius: 2, fontFamily: 'Rubik, sans-serif' }}
           >
-            
-            {loading ? "שומר..." : "הוסף מוסד"}
-          </FormButton>
-        </Grid>
-      </Grid>
-    </Box>
+            המוסד נוסף בהצלחה!
+          </Alert>
+        </Snackbar>
+      </ContentContainer>
+    </PageContainer>
   );
 };

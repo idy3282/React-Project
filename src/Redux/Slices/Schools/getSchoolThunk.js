@@ -7,7 +7,7 @@ export const allSchoolsThunk = createAsyncThunk(
 
    async() => {
 
-    const response = await fetch(`https://localhost:7222/api/School`);
+    const response = await fetch(`https://localhost:7086/api/School`);
         if(response.ok){
 
             const data= await response.json();
